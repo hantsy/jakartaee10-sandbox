@@ -5,6 +5,10 @@ Personal sandbox to experience the new features of the upcoming Jakarta EE 10.
 
 ## Resources
 
+### Books
+
+* [The Definitive Guide to Jakarta Faces in Jakarta EE 10: Building Java-Based Enterprise Web Applications 2nd ed. Edition ](https://www.amazon.com/Definitive-Guide-Jakarta-Faces-Applications/dp/1484273095)
+
 ### News and Activities
 
 * [What's new in Faces 4.0](https://balusc.omnifaces.org/2021/11/whats-new-in-faces-40.html)
