@@ -1,7 +1,9 @@
 # Jakarta EE 10 Sandbox
 Personal sandbox to experience the new features of the upcoming Jakarta EE 10.
 
-
+Example projects for previous Java EE/Jakarta EE versions.
+* [Java EE 7 sandbox](https://github.com/hantsy/ee7-sandbox)
+* [Java EE 8/Jakarta EE 8 sandbox](https://github.com/hantsy/ee8-sandbox)
 
 ## Resources
 
