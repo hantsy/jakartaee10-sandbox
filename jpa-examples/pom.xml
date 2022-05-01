@@ -59,7 +59,8 @@ under the License.
         <jersey.version>3.1.0-M2</jersey.version>
 
         <!-- by default skip tests -->
-        <skipTests>true</skipTests>
+        <skip.unit.tests>false</skip.unit.tests>
+        <skip.integration.tests>true</skip.integration.tests>
     </properties>
 
     <dependencyManagement>
@@ -133,6 +134,59 @@ under the License.
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <goal>test</goal>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <skipTests>${skip.unit.tests}</skipTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/it/**</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <configuration>
+                    <skipITs>${skip.integration.tests}</skipITs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/it/**</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -170,7 +224,8 @@ under the License.
         <profile>
             <id>arq-glassfish-managed</id>
             <properties>
-                <skipTests>false</skipTests>
+                <skip.unit.tests>true</skip.unit.tests>
+                <skip.integration.tests>false</skip.integration.tests>
             </properties>
             <dependencies>
                 <!-- Jersey -->
@@ -208,6 +263,9 @@ under the License.
             <build>
                 <testResources>
                     <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
                         <directory>src/test/arq-glassfish-managed</directory>
                     </testResource>
                 </testResources>
@@ -244,7 +302,7 @@ under the License.
                         <version>${maven-failsafe-plugin.version}</version>
                         <configuration>
                             <environmentVariables>
-                                <GLASSFISH_HOME>${project.build.directory}/glassfish6</GLASSFISH_HOME>
+                                <GLASSFISH_HOME>${project.build.directory}/glassfish7</GLASSFISH_HOME>
                             </environmentVariables>
                         </configuration>
                     </plugin>
