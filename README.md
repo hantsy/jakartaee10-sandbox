@@ -13,6 +13,10 @@ Example projects for previous Java EE/Jakarta EE versions.
 
 ### News and Activities
 
+* [What's new in Faces 4.0? ](https://balusc.omnifaces.org/2021/11/whats-new-in-faces-40.html?m=1)
+* [What’s New in Jakarta Persistence 3.1 ](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/what%E2%80%99s-new-jakarta-persistence-31)
+* [What’s Coming in Jakarta REST 3.1? ](https://dev.to/andymc12/what-s-coming-in-jakarta-rest-3-1-ole)
+* [The Top 5 New Features Coming in Jakarta EE 10](https://newsroom.eclipse.org/eclipse-newsletter/2022/april/top-5-new-features-coming-jakarta-ee-10)
 * [What's new in Faces 4.0](https://balusc.omnifaces.org/2021/11/whats-new-in-faces-40.html)
 * [Java for the enterprise: What to expect in Jakarta EE 10](https://blogs.oracle.com/javamagazine/java-jakartaee-cdi-ejb-jsf-tijms)
 * [Guide to Contributing to Jakarta EE 10](https://jakartaee-ambassadors.io/guide-to-contributing-to-jakarta-ee-10/)
