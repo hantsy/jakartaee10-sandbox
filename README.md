@@ -13,6 +13,8 @@ Example projects for previous Java EE/Jakarta EE versions.
 
 ### News and Activities
 
+* [Jakarta EE Security Specifications](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/jakarta-ee-security-specifications)
+* [New Features in Jakarta JSON Processing and JSON Binding](https://jaxenter.com/jakarta-json-processing-177030.html)
 * [What’s New in Jakarta Persistence 3.1 ](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/what%E2%80%99s-new-jakarta-persistence-31)
 * [What’s Coming in Jakarta REST 3.1? ](https://dev.to/andymc12/what-s-coming-in-jakarta-rest-3-1-ole)
 * [The Top 5 New Features Coming in Jakarta EE 10](https://newsroom.eclipse.org/eclipse-newsletter/2022/april/top-5-new-features-coming-jakarta-ee-10)
