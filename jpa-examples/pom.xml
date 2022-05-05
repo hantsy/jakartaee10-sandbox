@@ -44,7 +44,7 @@ under the License.
 
         <!-- Cargo maven plugin -->
         <!-- Since 1.9.0, cargo-maven3-plugin is the default for cargo prefix. -->
-        <cargo-maven3-plugin.version>1.9.10</cargo-maven3-plugin.version>
+        <cargo-maven3-plugin.version>1.9.11</cargo-maven3-plugin.version>
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
@@ -94,6 +94,12 @@ under the License.
             <artifactId>jakarta.jakartaee-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+            <version>4.0.0-M3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jboss.arquillian.junit5</groupId>
             <artifactId>arquillian-junit5-container</artifactId>
             <scope>test</scope>
@@ -133,14 +139,6 @@ under the License.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <goal>test</goal>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -195,6 +193,10 @@ under the License.
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+            <cargo.zipUrlInstaller.downloadDir>${project.build.directory}/../installs
+                </cargo.zipUrlInstaller.downloadDir>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -203,11 +205,16 @@ under the License.
                         <configuration>
                             <container>
                                 <containerId>glassfish6x</containerId>
-                                <artifactInstaller>
+                               
+                                <!-- <artifactInstaller>
                                     <groupId>org.glassfish.main.distributions</groupId>
                                     <artifactId>glassfish</artifactId>
                                     <version>${glassfish.version}</version>
-                                </artifactInstaller>
+                                </artifactInstaller> -->
+                                <zipUrlInstaller>
+                                    <url>https://github.com/eclipse-ee4j/glassfish/releases/download/${glassfish.version}/glassfish-${glassfish.version}.zip</url>
+                                    <downloadDir>${cargo.zipUrlInstaller.downloadDir}</downloadDir>
+                                </zipUrlInstaller>
                             </container>
                             <configuration>
                                 <!-- the configuration used to deploy -->
