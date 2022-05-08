@@ -13,6 +13,8 @@ Example projects for previous Java EE/Jakarta EE versions.
 
 ### News and Activities
 
+* [On the Way to CDI 4.0](https://eclipse-ee4j.github.io/cdi/2021/10/25/way-to-cdi4.html)
+* [CDI Full vs CDI Lite: What's new in Contexts and Dependency Injection 4.0](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/CDI-Full-vs-CDI-Lite-What-changed-in-Contexts-and-Dependency-Injection-40)
 * [Jakarta EE Security Specifications](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/jakarta-ee-security-specifications)
 * [New Features in Jakarta JSON Processing and JSON Binding](https://jaxenter.com/jakarta-json-processing-177030.html)
 * [What’s New in Jakarta Persistence 3.1 ](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/what%E2%80%99s-new-jakarta-persistence-31)
