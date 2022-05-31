@@ -19,9 +19,11 @@ under the License.
 package com.example.it;
 
 import com.example.Person;
+import com.example.Person.Gender;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Status;
 import jakarta.transaction.UserTransaction;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
@@ -46,7 +48,7 @@ public class UUIDStrategyTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addClass(Person.class)
+                .addClasses(Person.class, Gender.class)
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -74,7 +76,9 @@ public class UUIDStrategyTest {
 
     private void endTx() throws Exception {
         try {
-            ux.commit();
+            if( ux.getStatus() == Status.STATUS_ACTIVE ) {
+                ux.commit();
+            }
         } catch (Exception e) {
             ux.rollback();
         }

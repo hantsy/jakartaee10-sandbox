@@ -41,7 +41,7 @@ under the License.
             <property name="allowConnectingToRunningServer">false</property>
             <property name="outputToConsole">true</property>
             <!-- true enables verbose logging of the jaxrs requests -->
-            <property name="debugRequests">true</property>
+            <property name="debugRequests">false</property>
         </configuration>
     </container>
 
