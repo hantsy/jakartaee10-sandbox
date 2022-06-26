@@ -25,8 +25,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Status;
 import jakarta.transaction.UserTransaction;
-import org.eclipse.persistence.config.QueryHints;
-import org.eclipse.persistence.config.ResultType;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -38,18 +36,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(ArquillianExtension.class)
-public class JPQLCriteriaTest {
+public class JPQLCriteriaBuilderTest {
 
-    private final static Logger LOGGER = Logger.getLogger(JPQLCriteriaTest.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(JPQLCriteriaBuilderTest.class.getName());
 
     @Deployment
     public static WebArchive createDeployment() {

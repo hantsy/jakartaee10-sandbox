@@ -46,9 +46,9 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(ArquillianExtension.class)
-public class JPQLExtensionsTest {
+public class JPQLFunctionsTest {
 
-    private final static Logger LOGGER = Logger.getLogger(JPQLExtensionsTest.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(JPQLFunctionsTest.class.getName());
 
     @Deployment
     public static WebArchive createDeployment() {
