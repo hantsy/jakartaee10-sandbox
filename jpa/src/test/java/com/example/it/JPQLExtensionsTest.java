@@ -52,7 +52,10 @@ public class JPQLExtensionsTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class).addClasses(Person.class, Gender.class).addAsResource("test-persistence.xml", "META-INF/persistence.xml").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(WebArchive.class)
+                .addClasses(Person.class, Gender.class)
+                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @PersistenceContext
@@ -127,7 +130,9 @@ public class JPQLExtensionsTest {
             query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
             List<Map<String, Object>> resultList = query.getResultList();
             LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
-            resultList.forEach(data -> data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v})));
+            resultList.forEach(data -> {
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
+            });
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -156,7 +161,9 @@ public class JPQLExtensionsTest {
             query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
             List<Map<String, Object>> resultList = query.getResultList();
             LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
-            resultList.forEach(data -> data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v})));
+            resultList.forEach(data -> {
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
+            });
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -189,7 +196,9 @@ public class JPQLExtensionsTest {
             query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
             List<Map<String, Object>> resultList = query.getResultList();
             LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
-            resultList.forEach(data -> data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v})));
+            resultList.forEach(data -> {
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
+            });
         } catch (Exception ex) {
             ex.printStackTrace();
         }
