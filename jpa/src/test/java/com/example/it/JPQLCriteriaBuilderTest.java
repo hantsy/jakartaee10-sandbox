@@ -159,7 +159,7 @@ public class JPQLCriteriaBuilderTest {
             ex.printStackTrace();
         }
     }
-
+// see: https://github.com/eclipse-ee4j/jpa-api/pull/356
 //    @Test
 //    @DisplayName(">>> test `EXTRACT` functions")
 //    public void testExtractFunctions() throws Exception {

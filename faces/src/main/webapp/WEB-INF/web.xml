@@ -7,8 +7,14 @@
 
     <!-- Change to "Production" when you are ready to deploy -->
     <context-param>
-        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-name>jakarta.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
+    </context-param>
+
+    <!-- /foo.xhtml -> /foo mapping is registered automatically. -->
+    <context-param>
+        <param-name>jakarta.faces.AUTOMATIC_EXTENSIONLESS_MAPPING</param-name>
+        <param-value>true</param-value>
     </context-param>
 
     <!-- Welcome page -->

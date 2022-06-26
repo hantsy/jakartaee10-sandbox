@@ -194,8 +194,7 @@ under the License.
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-            <cargo.zipUrlInstaller.downloadDir>${project.build.directory}/installs
-                </cargo.zipUrlInstaller.downloadDir>
+            <cargo.zipUrlInstaller.downloadDir>${project.basedir}/../installs</cargo.zipUrlInstaller.downloadDir>
             </properties>
             <build>
                 <plugins>

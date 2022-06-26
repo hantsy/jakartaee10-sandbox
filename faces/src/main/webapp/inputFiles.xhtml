@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html">
+<f:view>
+    <h:head>
+        <title>New attribute `accept` and `multiple` in inputFile tag!</title>
+    </h:head>
+    <h:body>
+        <h:form prependId="false" enctype="multipart/form-data">
+            <label jsf:for="files">Upload files:</label>
+            <h:inputFile
+                    multiple="true"
+                    accept="image/png,image/jpeg,image/gif"
+                    id="files"
+                    value="#{inputFiles.files}"
+                    required="true"
+                    requiredMessage="Files is required."
+                    placeholder="Choose files from Disk..."
+            />
+            <h:message for="files"/>
+            <br/>
+            <input type="submit" jsf:id="submit" value="Upload Now" jsf:action="#{inputFiles.submit()}">
+            </input>
+            <br/>
+            <p>#{inputFiles.uploadedFiles}</p>
+            <h:message globalOnly="true" showSummary="true"></h:message>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
