@@ -14,18 +14,22 @@ public class Person {
     private UUID id;
     private String name;
     private int age = 30;
+
+    @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     private Integer yearsWorked = 2;
     private LocalDateTime birthDay = LocalDateTime.now().minusYears(30);
-    private BigDecimal salary = new BigDecimal("81234.56");
-    private BigDecimal hourlyRate = new BigDecimal("33.33");
+    private BigDecimal salary = new BigDecimal("12345.678");
+    private BigDecimal hourlyRate = new BigDecimal("34.56");
 
     public Person() {
     }
 
     public Person(String name, int age) {
+        assert age > 0;
         this.name = name;
         this.age = age;
+        this.birthDay = LocalDateTime.now().minusYears(this.age);
     }
 
     public UUID getId() {

@@ -34,12 +34,12 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,10 +52,7 @@ public class JPQLExtensionsTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-                .addClasses(Person.class, Gender.class)
-                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(WebArchive.class).addClasses(Person.class, Gender.class).addAsResource("test-persistence.xml", "META-INF/persistence.xml").addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @PersistenceContext
@@ -101,6 +98,7 @@ public class JPQLExtensionsTest {
     }
 
     @Test
+    @DisplayName(">>> test numeric functions")
     public void testNumericFunctions() throws Exception {
         var person = new Person("John", 30);
         em.persist(person);
@@ -109,31 +107,34 @@ public class JPQLExtensionsTest {
         endTx();
 
         startTx();
-        var queryString = """
-                SELECT p.name as name,
-                CEILING(p.salary) as ceiling,
-                FLOOR(p.salary) as floor,
-                ROUND(p.salary, 1) as round,
-                EXP(p.yearsWorked) as exp,
-                LN(p.yearsWorked) as ln,
-                POWER(p.yearsWorked,2) as power,
-                SIGN(p.yearsWorked) as sign
-                FROM Person p
-                WHERE p.id=:id
-                """;
-        var query = em.createQuery(queryString);
+        try {
+            var queryString = """
+                    SELECT p.name as name,
+                    CEILING(p.salary) as ceiling,
+                    FLOOR(p.salary) as floor,
+                    ROUND(p.salary, 1) as round,
+                    EXP(p.yearsWorked) as exp,
+                    LN(p.yearsWorked) as ln,
+                    POWER(p.yearsWorked,2) as power,
+                    SIGN(p.yearsWorked) as sign
+                    FROM Person p
+                    WHERE p.id=:id
+                    """;
+            var query = em.createQuery(queryString);
 
-        query.setParameter("id", id);
-        // for EclipseLinks
-        query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
-        List<Map<String, Object>> resultList = query.getResultList();
-        LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
-        resultList.forEach(data ->
-                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}))
-        );
+            query.setParameter("id", id);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List<Map<String, Object>> resultList = query.getResultList();
+            LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+            resultList.forEach(data -> data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v})));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Test
+    @DisplayName(">>> test nen datetime functions")
     public void testDateTimeFunctions() throws Exception {
         var person = new Person("John", 30);
         em.persist(person);
@@ -141,25 +142,28 @@ public class JPQLExtensionsTest {
         endTx();
 
         startTx();
-        var queryString = """
-                SELECT p.name as name,
-                LOCAL TIME as localTime,
-                LOCAL DATETIME as localDateTime,
-                LOCAL DATE as localDate
-                FROM Person p
-                """;
-        // for EclipseLinks
-        var query = em.createQuery(queryString);
-        // for EclipseLinks
-        query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
-        List<Map<String, Object>> resultList = query.getResultList();
-        LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
-        resultList.forEach(data ->
-                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}))
-        );
+        try {
+            var queryString = """
+                    SELECT p.name as name,
+                    LOCAL TIME as localTime,
+                    LOCAL DATETIME as localDateTime,
+                    LOCAL DATE as localDate
+                    FROM Person p
+                    """;
+            // for EclipseLinks
+            var query = em.createQuery(queryString);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List<Map<String, Object>> resultList = query.getResultList();
+            LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+            resultList.forEach(data -> data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v})));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Test
+    @DisplayName(">>> test `EXTRACT` functions")
     public void testExtractFunctions() throws Exception {
         var person = new Person("John", 30);
         em.persist(person);
@@ -167,25 +171,27 @@ public class JPQLExtensionsTest {
         endTx();
 
         startTx();
-        var queryString = """
-                SELECT p.name as name,
-                EXTRACT(YEAR FROM p.birthDate) as year,
-                EXTRACT(QUARTER FROM p.birthDate) as quarter,
-                EXTRACT(MONTH FROM p.birthDate) as month,
-                EXTRACT(WEEK FROM p.birthDate) as week,
-                EXTRACT(DAY FROM p.birthDate) as day,
-                EXTRACT(HOUR FROM p.birthDate) as hour,
-                EXTRACT(MINUTE FROM p.birthDate) as minute,
-                EXTRACT(SECOND FROM p.birthDate) as second
-                FROM Person p
-                """;
-        var query = em.createQuery(queryString);
-        // for EclipseLinks
-        query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
-        List<Map<String, Object>> resultList = query.getResultList();
-        LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
-        resultList.forEach(data ->
-                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}))
-        );
+        try {
+            var queryString = """
+                    SELECT p.name as name,
+                    EXTRACT(YEAR FROM p.birthDate) as year,
+                    EXTRACT(QUARTER FROM p.birthDate) as quarter,
+                    EXTRACT(MONTH FROM p.birthDate) as month,
+                    EXTRACT(WEEK FROM p.birthDate) as week,
+                    EXTRACT(DAY FROM p.birthDate) as day,
+                    EXTRACT(HOUR FROM p.birthDate) as hour,
+                    EXTRACT(MINUTE FROM p.birthDate) as minute,
+                    EXTRACT(SECOND FROM p.birthDate) as second
+                    FROM Person p
+                    """;
+            var query = em.createQuery(queryString);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List<Map<String, Object>> resultList = query.getResultList();
+            LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+            resultList.forEach(data -> data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v})));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
