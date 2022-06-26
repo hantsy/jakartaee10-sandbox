@@ -20,12 +20,13 @@ package com.example.it;
 
 import com.example.Person;
 import com.example.Person.Gender;
-
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Status;
 import jakarta.transaction.UserTransaction;
+import org.eclipse.persistence.config.QueryHints;
+import org.eclipse.persistence.config.ResultType;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -36,6 +37,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,23 +104,33 @@ public class JPQLExtensionsTest {
     public void testNumericFunctions() throws Exception {
         var person = new Person("John", 30);
         em.persist(person);
-        assertNotNull(person.getId());
+        var id = person.getId();
+        assertNotNull(id);
         endTx();
 
         startTx();
-        var query = """
-                SELECT p.name,
-                CEILING(p.salary) as ceiling, 
+        var queryString = """
+                SELECT p.name as name,
+                CEILING(p.salary) as ceiling,
                 FLOOR(p.salary) as floor,
-                ROUND(p.salary, 2) as round,
+                ROUND(p.salary, 1) as round,
                 EXP(p.yearsWorked) as exp,
                 LN(p.yearsWorked) as ln,
                 POWER(p.yearsWorked,2) as power,
                 SIGN(p.yearsWorked) as sign
                 FROM Person p
+                WHERE p.id=:id
                 """;
-        var resultList = em.createQuery(query).getResultList();
-        LOGGER.log(Level.INFO, "resultList: {0}", resultList);
+        var query = em.createQuery(queryString);
+
+        query.setParameter("id", id);
+        // for EclipseLinks
+        query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+        List<Map<String, Object>> resultList = query.getResultList();
+        LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+        resultList.forEach(data ->
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}))
+        );
     }
 
     @Test
@@ -127,15 +141,22 @@ public class JPQLExtensionsTest {
         endTx();
 
         startTx();
-        var query = """
-                SELECT p.name,
+        var queryString = """
+                SELECT p.name as name,
                 LOCAL TIME as localTime,
                 LOCAL DATETIME as localDateTime,
                 LOCAL DATE as localDate
                 FROM Person p
                 """;
-        var resultList = em.createQuery(query).getResultList();
-        LOGGER.log(Level.INFO, "resultList: {0}", resultList);
+        // for EclipseLinks
+        var query = em.createQuery(queryString);
+        // for EclipseLinks
+        query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+        List<Map<String, Object>> resultList = query.getResultList();
+        LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+        resultList.forEach(data ->
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}))
+        );
     }
 
     @Test
@@ -146,8 +167,8 @@ public class JPQLExtensionsTest {
         endTx();
 
         startTx();
-        var query = """
-                SELECT p.name,
+        var queryString = """
+                SELECT p.name as name,
                 EXTRACT(YEAR FROM p.birthDate) as year,
                 EXTRACT(QUARTER FROM p.birthDate) as quarter,
                 EXTRACT(MONTH FROM p.birthDate) as month,
@@ -158,7 +179,13 @@ public class JPQLExtensionsTest {
                 EXTRACT(SECOND FROM p.birthDate) as second
                 FROM Person p
                 """;
-        var resultList = em.createQuery(query).getResultList();
-        LOGGER.log(Level.INFO, "resultList: {0}", resultList);
+        var query = em.createQuery(queryString);
+        // for EclipseLinks
+        query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+        List<Map<String, Object>> resultList = query.getResultList();
+        LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+        resultList.forEach(data ->
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}))
+        );
     }
 }

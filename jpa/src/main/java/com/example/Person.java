@@ -3,7 +3,6 @@ package com.example;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,8 +17,9 @@ public class Person {
     private Gender gender = Gender.MALE;
     private Integer yearsWorked = 2;
     private LocalDateTime birthDay = LocalDateTime.now().minusYears(30);
-    private BigDecimal salary = new BigDecimal("1234.5678");
+    private BigDecimal salary = new BigDecimal("81234.56");
     private BigDecimal hourlyRate = new BigDecimal("33.33");
+
     public Person() {
     }
 
@@ -96,4 +96,17 @@ public class Person {
         MALE, FEMALE;
     }
 
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", gender=" + gender +
+                ", yearsWorked=" + yearsWorked +
+                ", birthDay=" + birthDay +
+                ", salary=" + salary +
+                ", hourlyRate=" + hourlyRate +
+                '}';
+    }
 }
