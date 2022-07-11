@@ -18,7 +18,7 @@ public class Person {
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.MALE;
     private Integer yearsWorked = 2;
-    private LocalDateTime birthDay = LocalDateTime.now().minusYears(30);
+    private LocalDateTime birthDate = LocalDateTime.now().minusYears(30);
     private BigDecimal salary = new BigDecimal("12345.678");
     private BigDecimal hourlyRate = new BigDecimal("34.56");
 
@@ -29,7 +29,7 @@ public class Person {
         assert age > 0;
         this.name = name;
         this.age = age;
-        this.birthDay = LocalDateTime.now().minusYears(this.age);
+        this.birthDate = LocalDateTime.now().minusYears(this.age);
     }
 
     public UUID getId() {
@@ -72,12 +72,12 @@ public class Person {
         this.gender = gender;
     }
 
-    public LocalDateTime getBirthDay() {
-        return birthDay;
+    public LocalDateTime getBirthDate() {
+        return birthDate;
     }
 
-    public void setBirthDay(LocalDateTime birthDay) {
-        this.birthDay = birthDay;
+    public void setBirthDate(LocalDateTime birthDay) {
+        this.birthDate = birthDay;
     }
 
     public BigDecimal getSalary() {
@@ -108,7 +108,7 @@ public class Person {
                 ", age=" + age +
                 ", gender=" + gender +
                 ", yearsWorked=" + yearsWorked +
-                ", birthDay=" + birthDay +
+                ", birthDate=" + birthDate +
                 ", salary=" + salary +
                 ", hourlyRate=" + hourlyRate +
                 '}';
