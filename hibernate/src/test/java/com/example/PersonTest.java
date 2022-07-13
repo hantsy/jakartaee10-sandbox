@@ -62,7 +62,7 @@ class PersonTest {
     }
 
     @Test
-    @DisplayName(">>> test nen datetime functions")
+    @DisplayName(">>> test datetime functions")
     public void testDateTimeFunctions() throws Exception {
         var person = new Person("John", 30);
         var entityManager = entityManagerFactory.createEntityManager();
