@@ -75,7 +75,7 @@ class PersonCriteriaBuilderTest {
                             result.get(3, BigDecimal.class),
                             result.get(4, Double.class),
                             result.get(5, Double.class),
-                           // result.get(6, Double.class),
+                            // result.get(6, Double.class),
                             result.get(6, Integer.class)
                     )
             );
