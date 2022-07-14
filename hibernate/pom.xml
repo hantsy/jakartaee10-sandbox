@@ -72,6 +72,12 @@
             <artifactId>hibernate-testing</artifactId>
             <version>${version.hibernate}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
