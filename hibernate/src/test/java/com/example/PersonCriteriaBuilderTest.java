@@ -59,6 +59,7 @@ class PersonCriteriaBuilderTest {
                     cb.round(root.get("salary"), 1),
                     cb.exp(root.get("yearsWorked")),
                     cb.ln(root.get("yearsWorked")),
+                    // see: https://hibernate.atlassian.net/browse/HHH-15395
                     //cb.power(root.get("yearsWorked"), 2),
                     cb.sign(root.get("yearsWorked"))
             );
