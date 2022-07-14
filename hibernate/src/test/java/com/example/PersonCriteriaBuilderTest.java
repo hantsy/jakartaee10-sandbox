@@ -2,6 +2,7 @@ package com.example;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +42,8 @@ class PersonCriteriaBuilderTest {
         assertNotNull(id);
 
         try {
-            var cb = entityManager.getCriteriaBuilder();
+            // see: https://hibernate.zulipchat.com/#narrow/stream/132096-hibernate-user/topic/New.20functions.20in.20JPA.203.2E1/near/289429903
+            var cb = (HibernateCriteriaBuilder)entityManager.getCriteriaBuilder();
             var query = cb.createTupleQuery();
             var root = query.from(Person.class);
 
@@ -75,7 +77,7 @@ class PersonCriteriaBuilderTest {
         assertNotNull(id);
 
         try {
-            var cb = entityManager.getCriteriaBuilder();
+            var cb = (HibernateCriteriaBuilder)entityManager.getCriteriaBuilder();
             var query = cb.createTupleQuery();
             var root = query.from(Person.class);
 
