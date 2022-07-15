@@ -36,10 +36,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @ExtendWith(ArquillianExtension.class)
 public class JPQLCriteriaBuilderTest {
@@ -124,9 +126,24 @@ public class JPQLCriteriaBuilderTest {
 
             var resultList = em.createQuery(query).getResultList();
             LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
-            resultList.forEach(data -> LOGGER.log(Level.INFO, "tuple data :{0}", new Object[]{data}));
+            resultList.forEach(result ->
+                    LOGGER.log(
+                            Level.INFO,
+                            "tuple data :{0},{1},{2},{3},{4},{5},{6},{7}",
+                            new Object[]{
+                                    result.get(0, String.class),
+                                    result.get(1, BigDecimal.class),
+                                    result.get(2, BigDecimal.class),
+                                    result.get(3, BigDecimal.class),
+                                    result.get(4, Double.class),
+                                    result.get(5, Double.class),
+                                    result.get(6, Double.class),
+                                    result.get(7, Integer.class)
+                            }
+                    )
+            );
         } catch (Exception ex) {
-            ex.printStackTrace();
+            fail(ex);
         }
     }
 
@@ -154,9 +171,20 @@ public class JPQLCriteriaBuilderTest {
 
             var resultList = em.createQuery(query).getResultList();
             LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
-            resultList.forEach(data -> LOGGER.log(Level.INFO, "tuple data :{0}", new Object[]{data}));
+            resultList.forEach(data ->
+                    LOGGER.log(
+                            Level.INFO,
+                            "tuple data :{0},{1},{2},{3}",
+                            new Object[]{
+                                    data.get(0, String.class),
+                                    data.get(1, java.time.LocalTime.class),
+                                    data.get(2, java.time.LocalDateTime.class),
+                                    data.get(3, java.time.LocalDate.class)
+                            }
+                    )
+            );
         } catch (Exception ex) {
-            ex.printStackTrace();
+            fail(ex);
         }
     }
 // see: https://github.com/eclipse-ee4j/jpa-api/pull/356
