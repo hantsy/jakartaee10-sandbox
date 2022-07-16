@@ -90,7 +90,7 @@ public class MultipartResourceTest {
     @RunAsClient
     public void testUploadSingleFile() throws Exception {
         var target = client.target(URI.create(baseUrl.toExternalForm() + "api/multiparts/simple"));
-        var part = EntityPart.withName("part").fileName("test.text")
+        var part = EntityPart.withName("part").fileName("test.txt")
                 .content(this.getClass().getResourceAsStream("/test.txt"))
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
                 .build();
@@ -106,11 +106,11 @@ public class MultipartResourceTest {
     public void testUploadMultiFiles() throws Exception {
         var target = client.target(URI.create(baseUrl.toExternalForm() + "api/multiparts/list"));
         List<EntityPart> parts = List.of(
-                EntityPart.withName("name1").fileName("file1.text")
+                EntityPart.withName("textFile").fileName("test.txt")
                         .content(this.getClass().getResourceAsStream("/test.txt"))
                         .mediaType(MediaType.TEXT_PLAIN_TYPE)
                         .build(),
-                EntityPart.withName("name3").fileName("file3.xml")
+                EntityPart.withName("imageFile").fileName("test.svg")
                         .content(this.getClass().getResourceAsStream("/test.svg"))
                         .mediaType(MediaType.APPLICATION_SVG_XML_TYPE)
                         .build()
@@ -120,7 +120,7 @@ public class MultipartResourceTest {
         var entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA);
         Response r = target.request().post(entity);
         assertEquals(200, r.getStatus());
-        LOGGER.log(Level.INFO, "response status: {0}", r.getStatus());
+        LOGGER.log(Level.INFO, "Upload multiple files response status: {0}", r.getStatus());
     }
 
     @Test
@@ -130,11 +130,12 @@ public class MultipartResourceTest {
         Response response = target.request().accept(MediaType.MULTIPART_FORM_DATA).get();
 
         assertEquals(200, response.getStatus());
+        LOGGER.log(Level.INFO, "GetFiles response status: {0}", response.getStatus());
         List<EntityPart> parts = response.readEntity(new GenericType<List<EntityPart>>() {
         });
         parts.forEach(part -> LOGGER.log(
                 Level.INFO,
-                "{0},{1},{2},{3}",
+                "Get file: {0},{1},{2},{3}",
                 new Object[]{
                         part.getMediaType(),
                         part.getName(),

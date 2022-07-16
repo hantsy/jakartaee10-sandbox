@@ -56,7 +56,7 @@ public class MultipartResource {
                 }
         );
         try {
-            Files.copy(part.getContent(), uploadedPath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(part.getContent(), Paths.get(uploadedPath.toString(), part.getFileName().get()), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -82,7 +82,7 @@ public class MultipartResource {
                             }
                     );
                     try {
-                        copy(part.getContent(), uploadedPath, StandardCopyOption.REPLACE_EXISTING);
+                        copy(part.getContent(), Paths.get(uploadedPath.toString(), part.getFileName().get()), StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
