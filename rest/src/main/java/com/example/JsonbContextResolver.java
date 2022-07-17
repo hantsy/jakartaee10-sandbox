@@ -7,6 +7,7 @@ import jakarta.json.bind.config.PropertyNamingStrategy;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
 
+// see: https://www.adam-bien.com/roller/abien/entry/jax_rs_json_b_configuration
 @Provider
 public class JsonbContextResolver implements ContextResolver<Jsonb> {
     @Override

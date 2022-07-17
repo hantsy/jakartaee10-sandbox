@@ -2,10 +2,7 @@ package com.example;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -43,7 +40,7 @@ public class MultipartResource {
     @Path("simple")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(EntityPart part) {
+    public Response uploadFile(@FormParam("part") EntityPart part) {
         LOGGER.info("Uploading file");
         LOGGER.log(
                 Level.INFO,
