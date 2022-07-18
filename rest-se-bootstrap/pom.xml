@@ -54,7 +54,7 @@ under the License.
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
 
         <!-- Glassfish server -->
-        <glassfish.version>7.0.0-M6</glassfish.version>
+        <glassfish.version>7.0.0-M7</glassfish.version>
         <arquillian-glassfish-jakarta.version>1.0.0.Final-SNAPSHOT</arquillian-glassfish-jakarta.version>
         <jersey.version>3.1.0-M7</jersey.version>
 

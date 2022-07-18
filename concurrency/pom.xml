@@ -49,12 +49,12 @@ under the License.
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
 
-        <!-- Arquillian BOM -->
+        <!-- Arquillian BOM -->6.
         <arquillian-bom.version>1.7.0.Alpha10</arquillian-bom.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
 
         <!-- Glassfish server -->
-        <glassfish.version>7.0.0-M6</glassfish.version>
+        <glassfish.version>7.0.0-M7</glassfish.version>
         <arquillian-glassfish-jakarta.version>1.0.0.Final-SNAPSHOT</arquillian-glassfish-jakarta.version>
         <jersey.version>3.1.0-M7</jersey.version>
 
