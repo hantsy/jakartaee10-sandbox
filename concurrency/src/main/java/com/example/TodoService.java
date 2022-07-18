@@ -44,6 +44,10 @@ public class TodoService {
                 );
     }
 
+    java.util.List<Todo> getAllTodos() {
+        return entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
+    }
+
     Todo create(Todo todo) throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         ux.begin();
         entityManager.persist(todo);

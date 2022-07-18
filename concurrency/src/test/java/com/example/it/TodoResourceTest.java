@@ -63,8 +63,8 @@ public class TodoResourceTest {
         var war = ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(extraJars)
                 .addClasses(
-                        TodoResource.class,
                         TodoResources.class,
+                        TodoResource.class,
                         Todo.class,
                         TodoService.class,
                         TodoSamples.class,
