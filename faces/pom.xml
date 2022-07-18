@@ -38,9 +38,9 @@ under the License.
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M6</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M6</maven-failsafe-plugin.version>
-        <maven-surefire-report-plugin.version>3.0.0-M6</maven-surefire-report-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M7</maven-failsafe-plugin.version>
+        <maven-surefire-report-plugin.version>3.0.0-M7</maven-surefire-report-plugin.version>
 
         <!-- Cargo maven plugin -->
         <!-- Since 1.9.0, cargo-maven3-plugin is the default for cargo prefix. -->
@@ -54,9 +54,9 @@ under the License.
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
 
         <!-- Glassfish server -->
-        <glassfish.version>7.0.0-M4</glassfish.version>
+        <glassfish.version>7.0.0-M7</glassfish.version>
         <arquillian-glassfish-jakarta.version>1.0.0.Final-SNAPSHOT</arquillian-glassfish-jakarta.version>
-        <jersey.version>3.1.0-M2</jersey.version>
+        <jersey.version>3.1.0-M7</jersey.version>
 
         <!-- by default skip tests -->
         <skip.unit.tests>false</skip.unit.tests>
