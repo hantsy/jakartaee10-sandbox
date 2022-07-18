@@ -14,6 +14,7 @@ Example projects for previous Java EE/Jakarta EE versions.
 ### News and Activities
 
 * [ What’s new in Jakarta Security 3](https://arjan-tijms.omnifaces.org/2022/04/whats-new-in-jakarta-security-3.html)
+* [Build Compatible Extensions Proposal](https://www.cdi-spec.org/news/2020/09/15/CDI_Lite_extension/)
 * [On the Way to CDI 4.0](https://eclipse-ee4j.github.io/cdi/2021/10/25/way-to-cdi4.html)
 * [CDI Full vs CDI Lite: What's new in Contexts and Dependency Injection 4.0](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/CDI-Full-vs-CDI-Lite-What-changed-in-Contexts-and-Dependency-Injection-40)
 * [Jakarta EE Security Specifications](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/jakarta-ee-security-specifications)
