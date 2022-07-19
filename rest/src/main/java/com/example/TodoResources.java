@@ -9,6 +9,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
@@ -16,30 +17,27 @@ import jakarta.ws.rs.core.UriInfo;
 @RequestScoped
 public class TodoResources {
 
-    @PersistenceContext
-    EntityManager entityManager;
-
-    @Inject
+    //@Inject
+    @Context
     ResourceContext resourceContext;
 
-    @Inject
+    //@Inject
+    @Context
     UriInfo uriInfo;
 
     @Inject
-    UserTransaction tx;
+    TodoService todoService;
 
     @GET
     public Response getAllTodos() {
-        var todos = entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
+        var todos = todoService.findAll();
         return Response.ok(todos).build();
     }
 
     @POST
     public Response createTodo(Todo todo) throws Exception {
-        tx.begin();
-        entityManager.persist(todo);
-        tx.commit();
-        return Response.created(uriInfo.getBaseUriBuilder().path("todos/{id}").build(todo.getId())).build();
+        var saved = todoService.create(todo);
+        return Response.created(uriInfo.getBaseUriBuilder().path("todos/{id}").build(saved.getId())).build();
     }
 
     @GET

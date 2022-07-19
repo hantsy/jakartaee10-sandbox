@@ -14,14 +14,14 @@ import java.util.UUID;
 
 @RequestScoped
 public class TodoResource {
-    @PersistenceContext
-    EntityManager entityManager;
+    @Inject
+    TodoService todoService;
 
     @PathParam("id") UUID id;
 
     @GET
     public Response getById() {
-        var todos = entityManager.find(Todo.class, id);
+        var todos = todoService.findById(id);
         return Response.ok(todos).build();
     }
 

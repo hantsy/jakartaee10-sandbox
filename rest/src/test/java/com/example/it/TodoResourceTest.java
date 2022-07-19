@@ -61,7 +61,13 @@ public class TodoResourceTest {
                 .asFile();
         var war = ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(extraJars)
-                .addClasses(TodoResource.class, TodoResources.class, Todo.class, TodoSamples.class, RestConfig.class)
+                .addClasses(
+                        TodoResource.class,
+                        TodoResources.class,
+                        TodoService.class,
+                        Todo.class,
+                        TodoSamples.class,
+                        RestConfig.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         LOGGER.log(Level.INFO, "war deployment: {0}", new Object[]{war.toString(true)});
         return war;
