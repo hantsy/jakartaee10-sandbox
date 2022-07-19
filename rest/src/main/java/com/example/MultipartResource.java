@@ -9,16 +9,14 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static java.nio.file.Files.copy;
 
 @Path("multiparts")
 @RequestScoped
@@ -40,11 +38,12 @@ public class MultipartResource {
     @Path("simple")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(@FormParam("part") EntityPart part) {
-        LOGGER.info("Uploading file");
+    public Response uploadFile(@FormParam("name") String name,
+                               @FormParam("part") EntityPart part) {
+        LOGGER.log(Level.INFO, "name: {0} ", name);
         LOGGER.log(
                 Level.INFO,
-                "{0},{1},{2},{3}",
+                "uploading file: {0},{1},{2},{3}",
                 new Object[]{
                         part.getMediaType(),
                         part.getName(),
@@ -53,7 +52,11 @@ public class MultipartResource {
                 }
         );
         try {
-            Files.copy(part.getContent(), Paths.get(uploadedPath.toString(), part.getFileName().get()), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(
+                    part.getContent(),
+                    Paths.get(uploadedPath.toString(), part.getFileName().orElse(generateFileName(UUID.randomUUID().toString(), mediaTypeToFileExtension(part.getMediaType())))),
+                    StandardCopyOption.REPLACE_EXISTING
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,7 +82,11 @@ public class MultipartResource {
                             }
                     );
                     try {
-                        copy(part.getContent(), Paths.get(uploadedPath.toString(), part.getFileName().get()), StandardCopyOption.REPLACE_EXISTING);
+                        Files.copy(
+                                part.getContent(),
+                                Paths.get(uploadedPath.toString(), part.getFileName().orElse(generateFileName(UUID.randomUUID().toString(), mediaTypeToFileExtension(part.getMediaType())))),
+                                StandardCopyOption.REPLACE_EXISTING
+                        );
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -130,6 +137,18 @@ public class MultipartResource {
             case "txt" -> MediaType.TEXT_PLAIN_TYPE;
             case "svg" -> MediaType.APPLICATION_SVG_XML_TYPE;
             default -> MediaType.APPLICATION_OCTET_STREAM_TYPE;
+        };
+    }
+
+    private String generateFileName(String fileName, String extension) {
+        return fileName + "." + extension;
+    }
+
+    private String mediaTypeToFileExtension(MediaType mediaType) {
+        return switch (mediaType.toString()) {
+            case "text/plain" -> "txt";
+            case "application/svg+xml" -> "svg";
+            default -> "bin";
         };
     }
 }

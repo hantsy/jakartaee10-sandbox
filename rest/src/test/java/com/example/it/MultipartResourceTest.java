@@ -94,7 +94,8 @@ public class MultipartResourceTest {
                 .content(this.getClass().getResourceAsStream("/test.txt"))
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
                 .build();
-        var genericEntity = new GenericEntity<List<EntityPart>>(List.of(part)) {};
+        var name = EntityPart.withName( "name").content("test").build();
+        var genericEntity = new GenericEntity<List<EntityPart>>(List.of(name, part)) {};
         var entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA);
         Response r = target.request(MediaType.MULTIPART_FORM_DATA).post(entity);
         LOGGER.log(Level.INFO, "response status: {0}", r.getStatus());
