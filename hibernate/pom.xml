@@ -15,6 +15,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <version.h2>2.1.214</version.h2>
         <version.junit-jupiter>5.8.2</version.junit-jupiter>
+        <!-- requires 6.1.2.Final or higher -->
         <version.hibernate>6.1.1.Final</version.hibernate>
         <version.org.slf4j>1.7.33</version.org.slf4j>
     </properties>

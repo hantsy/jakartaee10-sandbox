@@ -60,7 +60,7 @@ class PersonCriteriaBuilderTest {
                     cb.exp(root.get("yearsWorked")),
                     cb.ln(root.get("yearsWorked")),
                     // see: https://hibernate.atlassian.net/browse/HHH-15395
-                    //cb.power(root.get("yearsWorked"), 2),
+                    cb.power(root.get("yearsWorked"), 2),
                     cb.sign(root.get("yearsWorked"))
             );
             query.where(cb.equal(root.get("id"), id));
@@ -69,15 +69,15 @@ class PersonCriteriaBuilderTest {
 
             resultList.forEach(result ->
                     log.debug(
-                            "result: ({},{},{},{},{},{},{})",
+                            "result: ({},{},{},{},{},{},{},{})",
                             result.get(0, String.class),
                             result.get(1, BigDecimal.class),
                             result.get(2, BigDecimal.class),
                             result.get(3, BigDecimal.class),
                             result.get(4, Double.class),
                             result.get(5, Double.class),
-                            // result.get(6, Double.class),
-                            result.get(6, Integer.class)
+                            result.get(6, Double.class),
+                            result.get(7, Integer.class)
                     )
             );
         } catch (Exception ex) {
