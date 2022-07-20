@@ -44,6 +44,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @ExtendWith(ArquillianExtension.class)
 public class JPQLFunctionsTest {
@@ -134,7 +135,7 @@ public class JPQLFunctionsTest {
                 data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
             });
         } catch (Exception ex) {
-            ex.printStackTrace();
+            fail(ex);
         }
     }
 
@@ -165,7 +166,7 @@ public class JPQLFunctionsTest {
                 data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
             });
         } catch (Exception ex) {
-            ex.printStackTrace();
+            fail(ex);
         }
     }
 
@@ -200,7 +201,7 @@ public class JPQLFunctionsTest {
                 data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
             });
         } catch (Exception ex) {
-            ex.printStackTrace();
+            fail(ex);
         }
     }
 }

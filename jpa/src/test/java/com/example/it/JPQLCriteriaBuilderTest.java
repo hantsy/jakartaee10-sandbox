@@ -36,7 +36,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -129,12 +128,13 @@ public class JPQLCriteriaBuilderTest {
             resultList.forEach(result ->
                     LOGGER.log(
                             Level.INFO,
+                            //John,12,345,12,345,12,345,7.389,0.693,4,1
                             "tuple data :{0},{1},{2},{3},{4},{5},{6},{7}",
                             new Object[]{
                                     result.get(0, String.class),
-                                    result.get(1, BigDecimal.class),
-                                    result.get(2, BigDecimal.class),
-                                    result.get(3, BigDecimal.class),
+                                    result.get(1, Double.class), // hibernate returns BigDecimal
+                                    result.get(2, Double.class), // hibernate returns BigDecimal
+                                    result.get(3, Double.class), // hibernate returns BigDecimal
                                     result.get(4, Double.class),
                                     result.get(5, Double.class),
                                     result.get(6, Double.class),
