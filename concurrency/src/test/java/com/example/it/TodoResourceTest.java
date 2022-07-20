@@ -108,7 +108,6 @@ public class TodoResourceTest {
                             assertEquals(200, r.getStatus());
                             String jsonString = r.readEntity(String.class);
                             LOGGER.log(Level.INFO, "Get /todos result string: {0}", jsonString);
-                            assertThat(jsonString).doesNotContain("email");
                         }
                 )
                 .toCompletableFuture()
