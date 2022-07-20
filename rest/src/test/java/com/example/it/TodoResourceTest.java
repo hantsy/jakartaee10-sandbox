@@ -67,7 +67,9 @@ public class TodoResourceTest {
                         TodoService.class,
                         Todo.class,
                         TodoSamples.class,
-                        RestConfig.class)
+                        RestConfig.class
+                )
+                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         LOGGER.log(Level.INFO, "war deployment: {0}", new Object[]{war.toString(true)});
         return war;
