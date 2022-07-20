@@ -13,7 +13,7 @@ public class JsonbContextResolver implements ContextResolver<Jsonb> {
     @Override
     public Jsonb getContext(Class<?> type) {
         JsonbConfig config = new JsonbConfig()
-                .withPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CASE_WITH_UNDERSCORES)
+                .withPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE)
                 .withNullValues(false);
         return JsonbBuilder.newBuilder().
                 withConfig(config).

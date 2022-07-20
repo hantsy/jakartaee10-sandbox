@@ -26,7 +26,7 @@ under the License.
         <property name="deploymentExportPath">target/</property>
     </engine>
 
-    <container qualifier="glassfish" default="true">
+    <container qualifier="glassfish-managed">
         <configuration>
             <property name="adminHost">localhost</property>
             <property name="adminPort">4848</property>
@@ -42,6 +42,15 @@ under the License.
             <property name="outputToConsole">true</property>
             <!-- true enables verbose logging of the jaxrs requests -->
             <property name="debugRequests">false</property>
+        </configuration>
+    </container>
+
+    <container qualifier="glassfish-remote">
+        <configuration>
+            <property name="adminHost">localhost</property>
+            <property name="adminPort">4848</property>
+            <property name="adminUser">admin</property>
+            <property name="adminPassword"></property>
         </configuration>
     </container>
 

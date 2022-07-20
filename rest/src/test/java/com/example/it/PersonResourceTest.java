@@ -98,6 +98,7 @@ public class PersonResourceTest {
         String jsonString = r.readEntity(String.class);
         LOGGER.log(Level.INFO, "Get person result string: {0}", jsonString);
         assertThat(jsonString).doesNotContain("email");
+        assertThat(jsonString).contains("Name");
     }
 
 
