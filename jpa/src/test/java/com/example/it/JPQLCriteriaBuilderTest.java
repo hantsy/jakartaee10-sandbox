@@ -128,7 +128,8 @@ public class JPQLCriteriaBuilderTest {
             resultList.forEach(result ->
                     LOGGER.log(
                             Level.INFO,
-                            //John,12,345,12,345,12,345,7.389,0.693,4,1
+                            // see: https://github.com/eclipse-ee4j/eclipselink/issues/1593
+                            // John,12,345,12,345,12,345,7.389,0.693,4,1
                             "tuple data :{0},{1},{2},{3},{4},{5},{6},{7}",
                             new Object[]{
                                     result.get(0, String.class),
