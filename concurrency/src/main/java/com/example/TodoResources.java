@@ -10,6 +10,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.ResourceContext;
 import jakarta.ws.rs.container.Suspended;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
@@ -24,10 +25,12 @@ public class TodoResources {
 
     private static final Logger LOGGER = Logger.getLogger(TodoResources.class.getName());
 
-    @Inject
+    //@Inject
+    @Context
     ResourceContext resourceContext;
 
-    @Inject
+    //@Inject
+    @Context
     UriInfo uriInfo;
 
     @Inject

@@ -43,8 +43,8 @@ under the License.
         <maven-surefire-report-plugin.version>3.0.0-M7</maven-surefire-report-plugin.version>
 
         <!-- Cargo maven plugin -->
-        <!-- Since 1.9.0, cargo-maven3-plugin is the default for cargo prefix. -->
-        <cargo-maven3-plugin.version>1.9.11</cargo-maven3-plugin.version>
+        <!-- Since 1.9.14, it includes Glassfish 7.0.0 support. -->
+        <cargo-maven3-plugin.version>1.9.14</cargo-maven3-plugin.version>
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
@@ -213,7 +213,7 @@ under the License.
                         <artifactId>cargo-maven3-plugin</artifactId>
                         <configuration>
                             <container>
-                                <containerId>glassfish6x</containerId>
+                                <containerId>glassfish7x</containerId>
                                
                                 <!-- <artifactInstaller>
                                     <groupId>org.glassfish.main.distributions</groupId>
@@ -227,7 +227,7 @@ under the License.
                             </container>
                             <configuration>
                                 <!-- the configuration used to deploy -->
-                                <home>${project.build.directory}/glassfish6x-home</home>
+                                <home>${project.build.directory}/glassfish7x-home</home>
                                 <properties>
                                     <cargo.remote.password></cargo.remote.password>
                                 </properties>
@@ -259,7 +259,7 @@ under the License.
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.jersey.inject</groupId>
-                    <artifactId>jersey-cdi2-se</artifactId>
+                    <artifactId>jersey-hk2</artifactId>
                     <version>${jersey.version}</version>
                     <scope>test</scope>
                 </dependency>

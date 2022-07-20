@@ -33,9 +33,6 @@ public class TodoService {
     @PersistenceContext
     EntityManager entityManager;
 
-    @Inject
-    UserTransaction ux;
-
     CompletionStage<java.util.List<Todo>> getAllTodosAsync() {
         return CompletableFuture
                 .supplyAsync(
@@ -48,10 +45,9 @@ public class TodoService {
         return entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
     }
 
-    Todo create(Todo todo) throws SystemException, NotSupportedException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
-        ux.begin();
+    @Transactional
+    Todo create(Todo todo) {
         entityManager.persist(todo);
-        ux.commit();
         return todo;
     }
 }
