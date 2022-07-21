@@ -20,6 +20,7 @@ Example projects for previous Java EE/Jakarta EE versions.
 * [Jakarta EE Security Specifications](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/jakarta-ee-security-specifications)
 * [New Features in Jakarta JSON Processing and JSON Binding](https://jaxenter.com/jakarta-json-processing-177030.html)
 * [What’s New in Jakarta Persistence 3.1 ](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/what%E2%80%99s-new-jakarta-persistence-31)
+* [New Features in Jakarta RESTful Web Services 3.1](https://newsroom.eclipse.org/eclipse-newsletter/2021/november/new-features-jakarta-restful-web-services-31)
 * [What’s Coming in Jakarta REST 3.1? ](https://dev.to/andymc12/what-s-coming-in-jakarta-rest-3-1-ole)
 * [Top 7 Features in Jakarta EE 10 Release](https://dzone.com/articles/top-7-features-in-jakarta-ee-10-release)
 * [The Top 5 New Features Coming in Jakarta EE 10](https://newsroom.eclipse.org/eclipse-newsletter/2022/april/top-5-new-features-coming-jakarta-ee-10)
