@@ -14,13 +14,16 @@ Example projects for previous Java EE/Jakarta EE versions.
 ### News and Activities
 
 * [ What’s new in Jakarta Security 3](https://arjan-tijms.omnifaces.org/2022/04/whats-new-in-jakarta-security-3.html)
+* [Jakarta EE Security Specifications](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/jakarta-ee-security-specifications)
+* [Jakarta Concurrency: Present and Future ](https://newsroom.eclipse.org/eclipse-newsletter/2021/november/jakarta-concurrency-present-and-future)
 * [Build Compatible Extensions Proposal](https://www.cdi-spec.org/news/2020/09/15/CDI_Lite_extension/)
 * [On the Way to CDI 4.0](https://eclipse-ee4j.github.io/cdi/2021/10/25/way-to-cdi4.html)
 * [CDI Full vs CDI Lite: What's new in Contexts and Dependency Injection 4.0](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/CDI-Full-vs-CDI-Lite-What-changed-in-Contexts-and-Dependency-Injection-40)
-* [Jakarta EE Security Specifications](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/jakarta-ee-security-specifications)
 * [New Features in Jakarta JSON Processing and JSON Binding](https://jaxenter.com/jakarta-json-processing-177030.html)
 * [What’s New in Jakarta Persistence 3.1 ](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/what%E2%80%99s-new-jakarta-persistence-31)
+* [New Features in Jakarta RESTful Web Services 3.1](https://newsroom.eclipse.org/eclipse-newsletter/2021/november/new-features-jakarta-restful-web-services-31)
 * [What’s Coming in Jakarta REST 3.1? ](https://dev.to/andymc12/what-s-coming-in-jakarta-rest-3-1-ole)
+* [Concurrency 3.0 for Jakarta EE 10 in Open Liberty 22.0.0.3-beta](https://openliberty.io/blog/2022/02/17/concurrency-3.0-22003-beta.html)
 * [Top 7 Features in Jakarta EE 10 Release](https://dzone.com/articles/top-7-features-in-jakarta-ee-10-release)
 * [The Top 5 New Features Coming in Jakarta EE 10](https://newsroom.eclipse.org/eclipse-newsletter/2022/april/top-5-new-features-coming-jakarta-ee-10)
 * [What's new in Faces 4.0](https://balusc.omnifaces.org/2021/11/whats-new-in-faces-40.html)
