@@ -93,6 +93,36 @@ under the License.
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
         </dependency>
+
+        <!-- @Inject support in Jersey -->
+        <!-- see: https://github.com/eclipse-ee4j/jersey/issues/5100 -->
+        <dependency>
+            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+            <artifactId>jersey-cdi-rs-inject</artifactId>
+            <version>${jersey.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.core</groupId>
+                    <artifactId>jersey-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.inject</groupId>
+                    <artifactId>jakarta.inject-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.hk2</groupId>
+                    <artifactId>osgi-resource-locator</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.ws.rs</groupId>
+                    <artifactId>jakarta.ws.rs-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
@@ -230,6 +260,7 @@ under the License.
                                 <home>${project.build.directory}/glassfish7x-home</home>
                                 <properties>
                                     <cargo.remote.password></cargo.remote.password>
+                                    <cargo.glassfish.removeDefaultDatasource>false</cargo.glassfish.removeDefaultDatasource>
                                 </properties>
                             </configuration>
                         </configuration>
