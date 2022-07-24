@@ -13,7 +13,7 @@ import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet("/Username")
+@WebServlet("/username")
 public class UserNameServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(UserNameServlet.class.getName());
 

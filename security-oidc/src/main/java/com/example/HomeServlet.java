@@ -18,7 +18,7 @@ import java.io.IOException;
         providerURI = "https://dev-due1wofp.us.auth0.com/",
         clientId = "uXNJPxVo1XgtMpZ8K97lvdEUUAFaa85u",
         clientSecret = "PAqXSI5jh26T7QjB7lYyD9KKKv_nNrtB35s3F1iUTYfQ1VVBoyptXIA-99lCD-GN",
-        redirectURI = "${baseURL}/Callback")
+        redirectURI = "${baseURL}/callback")
 @DeclareRoles("all")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "all"))
 public class HomeServlet extends HttpServlet {

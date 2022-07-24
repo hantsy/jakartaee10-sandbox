@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/Callback")
+@WebServlet("/callback")
 public class CallbackServlet extends HttpServlet {
 
 //    @Inject
