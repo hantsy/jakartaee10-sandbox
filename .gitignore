@@ -39,3 +39,4 @@ build/
 logs/
 *.log*
 /security-oidc/src/main/resources/openid.properties
+/security-oidc/src/main/resources/openid.properties

@@ -13,12 +13,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/")
+
 @OpenIdAuthenticationMechanismDefinition(
         providerURI = "https://${openIdConfig.domain}/",
         clientId = "${openIdConfig.clientId}",
         clientSecret = "${openIdConfig.clientSecret}",
-        redirectURI = "${baseURL}/callback")
+        redirectURI = "${baseURL}/callback"
+)
+@WebServlet("/")
 @DeclareRoles("all")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "all"))
 public class HomeServlet extends HttpServlet {
