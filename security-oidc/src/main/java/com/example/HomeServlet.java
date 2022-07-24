@@ -15,9 +15,9 @@ import java.io.IOException;
 
 @WebServlet("/")
 @OpenIdAuthenticationMechanismDefinition(
-        providerURI = "https://dev-due1wofp.us.auth0.com/",
-        clientId = "uXNJPxVo1XgtMpZ8K97lvdEUUAFaa85u",
-        clientSecret = "PAqXSI5jh26T7QjB7lYyD9KKKv_nNrtB35s3F1iUTYfQ1VVBoyptXIA-99lCD-GN",
+        providerURI = "https://${openIdConfig.domain}/",
+        clientId = "${openIdConfig.clientId}",
+        clientSecret = "${openIdConfig.clientSecret}",
         redirectURI = "${baseURL}/callback")
 @DeclareRoles("all")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "all"))

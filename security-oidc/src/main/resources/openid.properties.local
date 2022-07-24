@@ -1,0 +1,4 @@
+# fill the following variables and rename the this file to openid.properties.
+domain=
+clientId=
+clientSecret=
