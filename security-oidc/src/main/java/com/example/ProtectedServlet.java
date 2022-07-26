@@ -15,7 +15,7 @@ import java.io.IOException;
 
 
 @OpenIdAuthenticationMechanismDefinition(
-        providerURI = "https://${openIdConfig.domain}/",
+        providerURI = "${openIdConfig.issueUri}",
         clientId = "${openIdConfig.clientId}",
         clientSecret = "${openIdConfig.clientSecret}",
         redirectURI = "${baseURL}/callback"

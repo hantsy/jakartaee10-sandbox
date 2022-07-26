@@ -2,6 +2,7 @@ package com.example;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -9,8 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class OpenIdConfig {
-    private static final Logger LOGGER = Logger.getLogger(OpenIdConfig.class.getName());
+@Named("openIdConfig")
+public class Auth0OpenIdConfig {
+    private static final Logger LOGGER = Logger.getLogger(Auth0OpenIdConfig.class.getName());
 
     private String domain;
     private String clientId;
