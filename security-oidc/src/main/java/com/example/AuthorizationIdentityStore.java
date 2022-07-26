@@ -13,7 +13,7 @@ import static jakarta.security.enterprise.identitystore.IdentityStore.Validation
 @ApplicationScoped
 public class AuthorizationIdentityStore implements IdentityStore {
 
-    private Map<String, Set<String>> authorization = Map.of("user", Set.of("foo", "bar"));
+    private final Map<String, Set<String>> authorization = Map.of("user", Set.of("foo", "bar"));
 
     @Override
     public Set<ValidationType> validationTypes() {

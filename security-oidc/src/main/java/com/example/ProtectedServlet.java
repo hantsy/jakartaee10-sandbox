@@ -3,6 +3,7 @@ package com.example;
 import jakarta.annotation.security.DeclareRoles;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.authentication.mechanism.http.OpenIdAuthenticationMechanismDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata;
 import jakarta.security.enterprise.identitystore.openid.OpenIdContext;
 import jakarta.servlet.annotation.HttpConstraint;
 import jakarta.servlet.annotation.ServletSecurity;
@@ -18,7 +19,10 @@ import java.io.IOException;
         providerURI = "${openIdConfig.issueUri}",
         clientId = "${openIdConfig.clientId}",
         clientSecret = "${openIdConfig.clientSecret}",
-        redirectURI = "${baseURL}/callback"
+        redirectURI = "${baseURL}/callback",
+        providerMetadata = @OpenIdProviderMetadata(
+                issuer = "${openIdConfig.issuerUri}"
+        )
 )
 @WebServlet("/protected")
 @DeclareRoles({ "foo", "bar", "kaz" })
