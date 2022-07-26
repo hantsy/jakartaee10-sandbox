@@ -260,8 +260,17 @@ under the License.
                                 <home>${project.build.directory}/glassfish7x-home</home>
                                 <properties>
                                     <cargo.remote.password></cargo.remote.password>
-                                    <cargo.glassfish.removeDefaultDatasource>false</cargo.glassfish.removeDefaultDatasource>
+                                    <cargo.glassfish.removeDefaultDatasource>true</cargo.glassfish.removeDefaultDatasource>
                                 </properties>
+                                <datasources>
+                                    <datasource>
+                                        <driverClass>org.apache.derby.jdbc.EmbeddedDriver</driverClass>
+                                        <url>jdbc:derby:derbyDB;create=true</url>
+                                        <jndiName>java:comp/DefaultDataSource</jndiName>
+                                        <username>APP</username>
+                                        <password>nonemptypassword</password>
+                                    </datasource>
+                                </datasources>
                             </configuration>
                         </configuration>
                     </plugin>
