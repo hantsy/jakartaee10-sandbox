@@ -266,7 +266,7 @@ under the License.
                                     <datasource>
                                         <driverClass>org.apache.derby.jdbc.EmbeddedDriver</driverClass>
                                         <url>jdbc:derby:derbyDB;create=true</url>
-                                        <jndiName>java:comp/DefaultDataSource</jndiName>
+                                        <jndiName>jdbc/__default</jndiName>
                                         <username>APP</username>
                                         <password>nonemptypassword</password>
                                     </datasource>

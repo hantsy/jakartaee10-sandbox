@@ -44,7 +44,7 @@ under the License.
 
         <!-- Cargo maven plugin -->
         <!-- Since 1.9.14, Cargo includes Glassfish 7.0 support. -->
-        <cargo-maven3-plugin.version>1.9.13</cargo-maven3-plugin.version>
+        <cargo-maven3-plugin.version>1.9.14-SNAPSHOT</cargo-maven3-plugin.version>
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
@@ -97,20 +97,22 @@ under the License.
             <groupId>jakarta.security.enterprise</groupId>
             <artifactId>jakarta.security.enterprise-api</artifactId>
             <version>3.0.0</version>
+            <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.glassfish.soteria/jakarta.security.enterprise -->
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
             <artifactId>jakarta.security.enterprise</artifactId>
             <version>3.0.0</version>
+            <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.glassfish.soteria/soteria.spi.bean.decorator.weld -->
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
             <artifactId>soteria.spi.bean.decorator.weld</artifactId>
             <version>3.0.0</version>
+            <scope>provided</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -222,7 +224,7 @@ under the License.
                         <artifactId>cargo-maven3-plugin</artifactId>
                         <configuration>
                             <container>
-                                <containerId>glassfish6x</containerId>
+                                <containerId>glassfish7x</containerId>
                                
                                 <!-- <artifactInstaller>
                                     <groupId>org.glassfish.main.distributions</groupId>
@@ -236,7 +238,7 @@ under the License.
                             </container>
                             <configuration>
                                 <!-- the configuration used to deploy -->
-                                <home>${project.build.directory}/glassfish6x-home</home>
+                                <home>${project.build.directory}/glassfish7x-home</home>
                                 <properties>
                                     <cargo.remote.password></cargo.remote.password>
                                 </properties>

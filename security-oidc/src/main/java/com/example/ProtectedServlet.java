@@ -20,10 +20,10 @@ import java.io.IOException;
         clientSecret = "${openIdConfig.clientSecret}",
         redirectURI = "${baseURL}/callback"
 )
-@WebServlet("/")
-@DeclareRoles("all")
-@ServletSecurity(@HttpConstraint(rolesAllowed = "all"))
-public class HomeServlet extends HttpServlet {
+@WebServlet("/protected")
+@DeclareRoles({ "foo", "bar", "kaz" })
+@ServletSecurity(@HttpConstraint(rolesAllowed = "foo"))
+public class ProtectedServlet extends HttpServlet {
 
     @Inject
     private OpenIdContext context;
