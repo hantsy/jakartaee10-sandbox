@@ -11,20 +11,25 @@
     <description>Hibernate 6/JPA 3.1 example</description>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <version.h2>2.1.214</version.h2>
-        <version.junit-jupiter>5.8.2</version.junit-jupiter>
+        <maven.compiler.release>17</maven.compiler.release>
+
         <!-- requires 6.1.2.Final or higher -->
-        <version.hibernate>6.1.1.Final</version.hibernate>
-        <version.org.slf4j>1.7.33</version.org.slf4j>
+        <hibernate.version>6.1.2.Final</hibernate.version>
+        <h2.version>2.1.214</h2.version>
+
+        <!-- test deps -->
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
+        <assertj-core.version>3.23.1</assertj-core.version>
+
+        <slf4j.version>1.7.36</slf4j.version>
+        <logback.version>1.2.11</logback.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${version.hibernate}</version>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
@@ -36,42 +41,48 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${version.h2}</version>
+            <version>${h2.version}</version>
         </dependency>
 
         <!-- logging with logback -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.36</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.2.11</version>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.11</version>
+            <version>${logback.version}</version>
         </dependency>
 
         <!-- test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${version.junit-jupiter}</version>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-testing</artifactId>
-            <version>${version.hibernate}</version>
+            <version>${hibernate.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>

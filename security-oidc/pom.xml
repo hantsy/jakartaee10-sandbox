@@ -67,9 +67,10 @@ under the License.
         <dependencies>
             <dependency>
                 <groupId>jakarta.platform</groupId>
-                <artifactId>jakarta.jakartaee-api</artifactId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
                 <version>${jakartaee-api.version}</version>
-                <scope>provided</scope>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
