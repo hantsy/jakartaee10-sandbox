@@ -50,8 +50,8 @@ under the License.
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
 
         <!-- Arquillian BOM -->
-        <arquillian-bom.version>1.7.0.Alpha10</arquillian-bom.version>
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <arquillian-bom.version>1.7.0.Alpha12</arquillian-bom.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
 
         <!-- Glassfish server -->
         <glassfish.version>7.0.0-M7</glassfish.version>
@@ -96,7 +96,7 @@ under the License.
 
         <!-- @Inject support in Jersey -->
         <!-- see: https://github.com/eclipse-ee4j/jersey/issues/5100 -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi-rs-inject</artifactId>
             <version>${jersey.version}</version>
@@ -122,7 +122,7 @@ under the License.
                     <artifactId>jakarta.ws.rs-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
@@ -348,6 +348,25 @@ under the License.
                                             <outputDirectory>${project.build.directory}</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                                            <artifactId>jersey-cdi-rs-inject</artifactId>
+                                            <version>${jersey.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}/glassfish7/glassfish/modules</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
