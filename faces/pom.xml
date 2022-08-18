@@ -44,7 +44,7 @@ under the License.
 
         <!-- Cargo maven plugin -->
         <!-- Since 1.9.0, cargo-maven3-plugin is the default for cargo prefix. -->
-        <cargo-maven3-plugin.version>1.9.11</cargo-maven3-plugin.version>
+        <cargo-maven3-plugin.version>1.10.0</cargo-maven3-plugin.version>
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
