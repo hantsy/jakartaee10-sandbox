@@ -17,6 +17,7 @@ public class Auth0OpenIdConfig {
     private String domain;
     private String clientId;
     private String clientSecret;
+    private String issuerUri;
 
     @PostConstruct
     void init() {
@@ -27,13 +28,15 @@ public class Auth0OpenIdConfig {
             domain = properties.getProperty("domain");
             clientId = properties.getProperty("clientId");
             clientSecret = properties.getProperty("clientSecret");
+            issuerUri = "https://" + this.domain + "/";
             LOGGER.log(
                     Level.INFO,
-                    "domain: {0}, clientId: {1}, clientSecret:{2}",
+                    "domain: {0}, clientId: {1}, clientSecret:{2}, issuerUri: {3}",
                     new Object[]{
                             domain,
                             clientId,
-                            clientSecret
+                            clientSecret,
+                            issuerUri
                     }
             );
         } catch (IOException e) {
@@ -51,5 +54,9 @@ public class Auth0OpenIdConfig {
 
     public String getClientSecret() {
         return clientSecret;
+    }
+
+    public String getIssuerUri() {
+        return issuerUri;
     }
 }

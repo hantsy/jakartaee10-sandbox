@@ -67,10 +67,9 @@ under the License.
         <dependencies>
             <dependency>
                 <groupId>jakarta.platform</groupId>
-                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <artifactId>jakarta.jakartaee-api</artifactId>
                 <version>${jakartaee-api.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
@@ -228,6 +227,51 @@ under the License.
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>wildfly</id>
+            <properties>
+                <!-- Wildfly server -->
+                <wildfly.artifactId>wildfly-preview-dist</wildfly.artifactId>
+                <wildfly.version>27.0.0.Alpha4</wildfly.version>
+                <wildfly-maven-plugin.version>4.0.0.Beta3</wildfly-maven-plugin.version>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- The WildFly plugin deploys your war to a local running WildFly container -->
+                    <!-- To use, run: mvn package wildfly:deploy -->
+                    <!-- For Jakarta EE 9, use `wildfly-preview-dist` as artifactId instead to start and deploy applications-->
+                    <!-- Run: mvn clean wildfly:run -PWildfly -Dwildfly.artifactId=wildfly-preview-dist -Dwildfly.version=22.0.0.Alpha1 -->
+                    <!-- or set the `jboss-as.home` to run: mvn clean wildfly:run -PWildfly -Djboss-as.home=D:\appsvr\wildfly-preview-22.0.0.Alpha1-->
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${wildfly-maven-plugin.version}</version>
+                        <configuration>
+                            <!-- if a jboss-as.home or jboss.home property is not present, firstly it will download
+                            a copy of wildfly distribution automatically -->
+                            <!-- <jossHome>${env.WILDFLY_HOME}</jbossHome>-->
+                            <!--<jbossHome>D:\appsvr\wildfly-preview-22.0.0.Alpha1</jbossHome>-->
+
+                            <!-- To deploy a running wildfly server -->
+                            <!-- <hostname></hostname>
+                            <port></port>
+                            <username></username>
+                            <password></password> -->
+
+                            <!-- or set a wildfly.id property to add a server in settings.xml -->
+                            <!--<id>wildfly-svr</id> -->
+
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <repositories>
+                <repository>
+                    <id>opensaml</id>
+                    <url>https://build.shibboleth.net/nexus/content/repositories/releases/</url>
+                </repository>
+            </repositories>
         </profile>
         <profile>
             <id>arq-glassfish-managed</id>
