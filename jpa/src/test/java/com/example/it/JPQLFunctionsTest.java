@@ -113,14 +113,14 @@ public class JPQLFunctionsTest {
         startTx();
         try {
             var queryString = """
-                    SELECT p.name as name,
-                    CEILING(p.salary) as ceiling,
-                    FLOOR(p.salary) as floor,
-                    ROUND(p.salary, 1) as round,
-                    EXP(p.yearsWorked) as exp,
-                    LN(p.yearsWorked) as ln,
-                    POWER(p.yearsWorked,2) as power,
-                    SIGN(p.yearsWorked) as sign
+                    SELECT p.name,
+                    CEILING(p.salary),
+                    FLOOR(p.salary),
+                    ROUND(p.salary, 1),
+                    EXP(p.yearsWorked),
+                    LN(p.yearsWorked),
+                    POWER(p.yearsWorked,2),
+                    SIGN(p.yearsWorked)
                     FROM Person p
                     WHERE p.id=:id
                     """;
