@@ -50,7 +50,7 @@ under the License.
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
 
         <!-- Arquillian BOM -->
-        <arquillian-bom.version>1.7.0.Alpha10</arquillian-bom.version>
+        <arquillian-bom.version>1.7.0.Alpha12</arquillian-bom.version>
         <junit-jupiter.version>5.9.0</junit-jupiter.version>
 
         <!-- Glassfish server -->
