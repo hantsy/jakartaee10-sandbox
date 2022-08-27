@@ -191,9 +191,8 @@
             <url>https://nexus.payara.fish/repository/payara-artifacts/</url>
         </repository>
         <repository>
-            <id>hantsy-github-public</id>
-            <url>https://public:&#48;28d0c8f723084e499eb87a6fe173b3af295d618@maven.pkg.github.com/hantsy/*</url>
-            <snapshots>
+            <id>github-public</id>
+            <url>https://public:&#103;hp_lHiX2AD7C80BCj8m8fo2LloHkWh1el1D0VXI@maven.pkg.github.com/hantsy/*</url>            <snapshots>
                 <enabled>true</enabled>
             </snapshots>
         </repository>
