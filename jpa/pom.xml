@@ -26,67 +26,17 @@ under the License.
     <artifactId>jpa-examples</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>jakartaee10-sandbox-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
 
     <name>jpa-examples</name>
-    <description>A Jakarta EE starter boilerplate for Jakarta EE 9</description>
+    <description>Jakarta EE 10 Sandbox: Persistence 3.1 Examples</description>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.release>17</maven.compiler.release>
-
-        <!-- Official Maven Plugins -->
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
-        <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M7</maven-failsafe-plugin.version>
-        <maven-surefire-report-plugin.version>3.0.0-M7</maven-surefire-report-plugin.version>
-
-        <!-- Cargo maven plugin -->
-        <!-- Since 1.10.1, Cargo includes Glassfish 7.0 support. -->
-        <cargo-maven3-plugin.version>1.10.1</cargo-maven3-plugin.version>
-
-        <!-- Jakarta EE API -->
-        <jakartaee-api.version>10.0.0</jakartaee-api.version>
-
-        <!-- Arquillian BOM -->
-        <arquillian-bom.version>1.7.0.Alpha12</arquillian-bom.version>
-        <junit-jupiter.version>5.9.0</junit-jupiter.version>
-
-        <!-- Glassfish server -->
-        <glassfish.version>7.0.0-M8</glassfish.version>
-        <arquillian-glassfish-jakarta.version>1.0.0.Final-SNAPSHOT</arquillian-glassfish-jakarta.version>
-        <jersey.version>3.1.0-M7</jersey.version>
-
-        <!-- by default skip tests -->
-        <skip.unit.tests>false</skip.unit.tests>
-        <skip.integration.tests>true</skip.integration.tests>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>jakarta.platform</groupId>
-                <artifactId>jakarta.jakartaee-api</artifactId>
-                <version>${jakartaee-api.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>${arquillian-bom.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${junit-jupiter.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -117,76 +67,6 @@ under the License.
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.codehaus.cargo</groupId>
-                    <artifactId>cargo-maven3-plugin</artifactId>
-                    <version>${cargo-maven3-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${maven-war-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <skipTests>${skip.unit.tests}</skipTests>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/it/**</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-failsafe-plugin.version}</version>
-                <configuration>
-                    <skipITs>${skip.integration.tests}</skipITs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/it/**</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
     <profiles>
         <profile>
             <id>glassfish</id>
@@ -316,22 +196,4 @@ under the License.
             </build>
         </profile>
     </profiles>
-    <repositories>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Sonatype Nexus Staging</name>
-            <url>https://jakarta.oss.sonatype.org/content/repositories/staging/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>payara-nexus</id>
-            <name>Payara Nexus Artifacts</name>
-            <url>https://nexus.payara.fish/repository/payara-artifacts/</url>
-        </repository>
-    </repositories>
 </project>

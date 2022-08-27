@@ -7,8 +7,15 @@
     <groupId>org.example</groupId>
     <artifactId>hibernate6</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>jakartaee10-sandbox-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
     <name>hibernate6</name>
-    <description>Hibernate 6/JPA 3.1 example</description>
+    <description>Jakarta EE 10 Sandbox: Hibernate 6/JPA 3.1 example</description>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
@@ -107,5 +114,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
