@@ -36,7 +36,7 @@ under the License.
 
         <!-- Official Maven Plugins -->
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
+        <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M7</maven-failsafe-plugin.version>
@@ -50,8 +50,8 @@ under the License.
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
 
         <!-- Arquillian BOM -->
-        <arquillian-bom.version>1.7.0.Alpha10</arquillian-bom.version>
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <arquillian-bom.version>1.7.0.Alpha12</arquillian-bom.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
 
         <!-- Glassfish server -->
         <glassfish.version>7.0.0-M8</glassfish.version>
@@ -96,7 +96,7 @@ under the License.
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
-            <version>4.0.0-M3</version>
+            <version>4.0.0-M4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -124,7 +124,7 @@ under the License.
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.22.0</version>
+            <version>3.23.1</version>
         </dependency>
     </dependencies>
 

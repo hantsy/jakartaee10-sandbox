@@ -36,7 +36,7 @@ under the License.
 
         <!-- Official Maven Plugins -->
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
+        <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M7</maven-failsafe-plugin.version>
@@ -50,8 +50,8 @@ under the License.
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
 
         <!-- Arquillian BOM -->
-        <arquillian-bom.version>1.7.0.Alpha10</arquillian-bom.version>
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <arquillian-bom.version>1.7.0.Alpha12</arquillian-bom.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
 
         <!-- Glassfish server -->
         <glassfish.version>7.0.0-M8</glassfish.version>
@@ -120,12 +120,12 @@ under the License.
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -172,7 +172,7 @@ under the License.
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <configuration>
                     <mainClass>com.example.Main</mainClass>
                 </configuration>
