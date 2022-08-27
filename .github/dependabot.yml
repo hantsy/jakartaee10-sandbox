@@ -5,36 +5,41 @@
 
 version: 2
 updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+
   - package-ecosystem: "maven" # See documentation for possible values
     directory: "/jpa" # Location of package manifests
     schedule:
       interval: "daily"
-      
-  - package-ecosystem: "maven" 
-    directory: "/concurrency" 
-    schedule:
-      interval: "daily"    
-  - package-ecosystem: "maven" 
-    directory: "/faces" 
-    schedule:
-      interval: "daily"  
 
-  - package-ecosystem: "maven" 
-    directory: "/hibernate" 
+  - package-ecosystem: "maven"
+    directory: "/concurrency"
     schedule:
-      interval: "daily"  
+      interval: "daily"
+  - package-ecosystem: "maven"
+    directory: "/faces"
+    schedule:
+      interval: "daily"
 
-  - package-ecosystem: "maven" 
-    directory: "/rest" 
+  - package-ecosystem: "maven"
+    directory: "/hibernate"
     schedule:
-      interval: "daily"  
+      interval: "daily"
 
-  - package-ecosystem: "maven" 
-    directory: "/rest-se-bootstrap" 
+  - package-ecosystem: "maven"
+    directory: "/rest"
     schedule:
-      interval: "daily"  
+      interval: "daily"
 
-  - package-ecosystem: "maven" 
-    directory: "/security-oidc" 
+  - package-ecosystem: "maven"
+    directory: "/rest-se-bootstrap"
     schedule:
-      interval: "daily"  
+      interval: "daily"
+
+  - package-ecosystem: "maven"
+    directory: "/security-oidc"
+    schedule:
+      interval: "daily"
