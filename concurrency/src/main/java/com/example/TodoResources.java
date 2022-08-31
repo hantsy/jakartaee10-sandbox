@@ -30,7 +30,7 @@ public class TodoResources {
     TodoService todoService;
 
     @GET
-    public CompletionStage<Response> getAllTodos() {
+    public CompletableFuture<Response> getAllTodos() {
         return todoService.getAllTodosAsync().thenApply(todos -> Response.ok(todos).build());
     }
 

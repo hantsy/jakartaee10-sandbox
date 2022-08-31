@@ -35,7 +35,7 @@ public class TodoService {
     EntityManager entityManager;
 
     @Asynchronous
-    CompletionStage<List<Todo>> getAllTodosAsync() {
+    CompletableFuture<List<Todo>> getAllTodosAsync() {
         return CompletableFuture
                 .supplyAsync(
                         () -> entityManager.createQuery("select t from Todo t", Todo.class).getResultList(),
