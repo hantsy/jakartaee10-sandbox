@@ -190,12 +190,12 @@
             <name>Payara Nexus Artifacts</name>
             <url>https://nexus.payara.fish/repository/payara-artifacts/</url>
         </repository>
-        <repository>
+<!--        <repository>
             <id>github-public</id>
-            <url>https://public:&#103;hp_lHiX2AD7C80BCj8m8fo2LloHkWh1el1D0VXI@maven.pkg.github.com/hantsy/*</url>            
+            <url>https://public:&#103;hp_lHiX2AD7C80BCj8m8fo2LloHkWh1el1D0VXI@maven.pkg.github.com/hantsy/*</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
+        </repository>-->
     </repositories>
 </project>

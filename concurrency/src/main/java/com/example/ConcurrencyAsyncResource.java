@@ -1,7 +1,5 @@
 package com.example;
 
-import jakarta.ejb.Asynchronous;
-import jakarta.ejb.Stateless;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.container.AsyncResponse;
@@ -11,15 +9,13 @@ import jakarta.ws.rs.core.Response;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Path("ejb")
-@Stateless
-public class EjbAsyncResource {
-    private static final Logger LOGGER = Logger.getLogger(EjbAsyncResource.class.getName());
+@Path("concurrencyAsync")
+public class ConcurrencyAsyncResource {
+    private static final Logger LOGGER = Logger.getLogger(ConcurrencyAsyncResource.class.getName());
 
     @GET
-    @Asynchronous
+    @jakarta.enterprise.concurrent.Asynchronous
     public void getAsync(final @Suspended AsyncResponse res) {
-
         //perform long run operations.
         try {
             LOGGER.log(Level.INFO, " execute long run task in EjbAsyncResource");
@@ -28,7 +24,7 @@ public class EjbAsyncResource {
             LOGGER.log(Level.SEVERE, "error :" + ex.getMessage());
         }
 
-        res.resume(Response.ok("Asynchronus EJB resource").build());
+        res.resume(Response.ok("Concurrency Async resource").build());
     }
 
 }

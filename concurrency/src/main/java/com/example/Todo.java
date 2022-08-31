@@ -19,6 +19,12 @@ public class Todo implements Serializable {
     public Todo() {
     }
 
+    public static Todo of(String title) {
+        var todo = new Todo();
+        todo.setTitle(title);
+        return todo;
+    }
+
     public Todo(String title) {
         this.title = title;
     }

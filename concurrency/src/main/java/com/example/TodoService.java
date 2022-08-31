@@ -1,15 +1,16 @@
 package com.example;
 
 import jakarta.annotation.Resource;
+import jakarta.enterprise.concurrent.Asynchronous;
 import jakarta.enterprise.concurrent.ContextServiceDefinition;
 import jakarta.enterprise.concurrent.ManagedExecutorDefinition;
 import jakarta.enterprise.concurrent.ManagedExecutorService;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.*;
+import jakarta.transaction.Transactional;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -33,7 +34,8 @@ public class TodoService {
     @PersistenceContext
     EntityManager entityManager;
 
-    CompletionStage<java.util.List<Todo>> getAllTodosAsync() {
+    @Asynchronous
+    CompletionStage<List<Todo>> getAllTodosAsync() {
         return CompletableFuture
                 .supplyAsync(
                         () -> entityManager.createQuery("select t from Todo t", Todo.class).getResultList(),
@@ -41,7 +43,7 @@ public class TodoService {
                 );
     }
 
-    java.util.List<Todo> getAllTodos() {
+    List<Todo> getAllTodos() {
         return entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
     }
 
@@ -49,5 +51,13 @@ public class TodoService {
     Todo create(Todo todo) {
         entityManager.persist(todo);
         return todo;
+    }
+
+    // when using @Transactional with @Asynchronous, only `REQUIRES_NEW` and `NOT_SUPPORTED` are supported.
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Asynchronous
+    CompletionStage<Todo> createAsync(Todo todo) {
+        entityManager.persist(todo);
+        return CompletableFuture.supplyAsync(() -> todo);
     }
 }

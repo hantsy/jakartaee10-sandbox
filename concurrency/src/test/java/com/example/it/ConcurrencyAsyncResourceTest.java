@@ -1,9 +1,9 @@
 package com.example.it;
 
-import com.example.*;
+import com.example.ConcurrencyAsyncResource;
+import com.example.RestConfig;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -26,14 +26,12 @@ import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(ArquillianExtension.class)
-public class TodoResourceTest {
+public class ConcurrencyAsyncResourceTest {
 
-    private final static Logger LOGGER = Logger.getLogger(TodoResourceTest.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(ConcurrencyAsyncResourceTest.class.getName());
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
@@ -47,14 +45,9 @@ public class TodoResourceTest {
         var war = ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(extraJars)
                 .addClasses(
-                        TodoResources.class,
-                        TodoResource.class,
-                        Todo.class,
-                        TodoService.class,
-                        TodoSamples.class,
+                        ConcurrencyAsyncResource.class,
                         RestConfig.class
                 )
-                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         LOGGER.log(Level.INFO, "war deployment: {0}", new Object[]{war.toString(true)});
         return war;
@@ -78,8 +71,8 @@ public class TodoResourceTest {
 
     @Test
     @RunAsClient
-    public void testGetTodos() throws Exception {
-        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos"));
+    public void testConcurrencyAsyncResource() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/concurrencyAsync"));
         CompletionStage<Response> responseCompletionStage = target
                 .request()
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -88,34 +81,11 @@ public class TodoResourceTest {
         responseCompletionStage
                 .thenAccept(
                         r -> {
-                            LOGGER.log(Level.INFO, "Get /todos response status: {0}", r.getStatus());
+                            LOGGER.log(Level.INFO, "Get /concurrencyAsync response status: {0}", r.getStatus());
                             assertEquals(200, r.getStatus());
                             String jsonString = r.readEntity(String.class);
-                            LOGGER.log(Level.INFO, "Get /todos result string: {0}", jsonString);
-                        }
-                )
-                .toCompletableFuture()
-                .join();
-
-    }
-
-    @Test
-    @RunAsClient
-    public void testCreateTodo() throws Exception {
-        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos"));
-        CompletionStage<Response> responseCompletionStage = target
-                .request()
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .rx().post(Entity.json(Todo.of("test")));
-
-        responseCompletionStage
-                .thenAccept(
-                        r -> {
-                            LOGGER.log(Level.INFO, "Post /todos response status: {0}", r.getStatus());
-                            assertEquals(201, r.getStatus());
-                            var location = r.getHeaderString("Location");
-                            LOGGER.log(Level.INFO, "Create todo response header Location: {0}", location);
-                            assertNotNull(location);
+                            LOGGER.log(Level.INFO, "Get /concurrencyAsync result string: {0}", jsonString);
+                            assertEquals("Concurrency Async resource", jsonString);
                         }
                 )
                 .toCompletableFuture()
