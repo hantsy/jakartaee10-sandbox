@@ -37,7 +37,7 @@
         <!-- Glassfish server -->
         <glassfish.version>7.0.0-M8</glassfish.version>
         <arquillian-glassfish-jakarta.version>1.0.0.Final-SNAPSHOT</arquillian-glassfish-jakarta.version>
-        <jersey.version>3.1.0-M7</jersey.version>
+        <jersey.version>3.1.0-M8</jersey.version>
 
         <!-- by default skip tests -->
         <skip.unit.tests>false</skip.unit.tests>
