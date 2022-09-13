@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @OpenIdAuthenticationMechanismDefinition(providerURI = "${openIdConfig.issuerUri}", clientId = "${openIdConfig.clientId}", clientSecret = "${openIdConfig.clientSecret}", redirectURI = "${baseURL}/callback", providerMetadata = @OpenIdProviderMetadata(issuer = "${openIdConfig.issuerUri}"))
-@WebServlet("/protected")
+@WebServlet({ "/protected", "/" })
 @DeclareRoles({ "foo", "bar", "kaz" })
 @ServletSecurity(@HttpConstraint(rolesAllowed = "foo"))
 public class ProtectedServlet extends HttpServlet {
