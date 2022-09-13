@@ -114,7 +114,7 @@ under the License.
             <properties>
                 <!-- Wildfly server -->
                 <wildfly.artifactId>wildfly-preview-dist</wildfly.artifactId>
-                <wildfly.version>27.0.0.Alpha4</wildfly.version>
+                <wildfly.version>27.0.0.Alpha5</wildfly.version>
                 <wildfly-maven-plugin.version>4.0.0.Beta3</wildfly-maven-plugin.version>
             </properties>
             <build>

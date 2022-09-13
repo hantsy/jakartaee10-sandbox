@@ -19,7 +19,7 @@ public class CallbackServlet extends HttpServlet {
         //response.getWriter().println(context.getAccessToken());
 
         String referer = (String) request.getSession().getAttribute("Referer");
-        String redirectTo = referer != null ? referer : "/";
+        String redirectTo = referer != null ? referer : "/protected";
 
         response.sendRedirect(redirectTo);
     }
