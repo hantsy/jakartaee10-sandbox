@@ -24,9 +24,15 @@ public class CallbackServlet extends HttpServlet {
 
         String referer = (String) request.getSession().getAttribute("Referer");
         String redirectTo = referer != null ? referer : "/";
-        LOGGER.log(Level.INFO, "redirect to: {0}", redirectTo);
+        LOGGER.log(Level.FINEST, "In /callback, redirect to: {0}", redirectTo);
 
         response.sendRedirect(redirectTo);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        this.doGet(request, response);
     }
 
 }
