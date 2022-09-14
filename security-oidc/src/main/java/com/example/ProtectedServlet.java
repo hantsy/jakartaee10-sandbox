@@ -17,11 +17,11 @@ import jakarta.servlet.http.HttpServletResponse;
         providerURI = "${openIdConfig.issuerUri}",
         clientId = "${openIdConfig.clientId}",
         clientSecret = "${openIdConfig.clientSecret}", 
-        redirectURI = "${baseURL}/callback" //, 
+        redirectURI = "${baseURL}/callback"  
         // redirectToOriginalResource = true
         // providerMetadata = @OpenIdProviderMetadata(issuer = "${openIdConfig.issuerUri}")
   )
-@WebServlet({ "/protected", "/" })
+@WebServlet("/protected")
 @DeclareRoles({ "foo", "bar", "kaz" })
 @ServletSecurity(@HttpConstraint(rolesAllowed = "foo"))
 public class ProtectedServlet extends HttpServlet {

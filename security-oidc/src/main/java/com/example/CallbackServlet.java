@@ -20,10 +20,10 @@ public class CallbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        LOGGER.log(Level.FINEST, "Enter callback servlet");
         // response.getWriter().println(context.getAccessToken());
-
         String referer = (String) request.getSession().getAttribute("Referer");
-        String redirectTo = referer != null ? referer : "/";
+        String redirectTo = referer != null ? referer : "/protected";
         LOGGER.log(Level.FINEST, "In /callback, redirect to: {0}", redirectTo);
 
         response.sendRedirect(redirectTo);
