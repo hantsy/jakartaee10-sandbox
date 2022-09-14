@@ -142,7 +142,9 @@ under the License.
 
                             <!-- or set a wildfly.id property to add a server in settings.xml -->
                             <!--<id>wildfly-svr</id> -->
-
+                            <commands>
+                                <command>/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)</command>
+                            </commands>
                         </configuration>
                     </plugin>
                 </plugins>
