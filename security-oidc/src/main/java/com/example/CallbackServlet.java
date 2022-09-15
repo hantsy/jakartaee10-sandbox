@@ -24,17 +24,12 @@ public class CallbackServlet extends HttpServlet {
             throws ServletException, IOException {
         LOGGER.log(Level.FINEST, "Enter callback servlet");
         // response.getWriter().println(context.getAccessToken());
+        
         String referer = (String) request.getSession().getAttribute("Referer");
         String redirectTo = referer != null ? referer : request.getContextPath() + "/protected";
         LOGGER.log(Level.FINEST, "In /callback, redirect to: {0}", redirectTo);
 
         response.sendRedirect(redirectTo);
     }
-
-    // @Override
-    // protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    //         throws ServletException, IOException {
-    //     this.doGet(request, response);
-    // }
 
 }
