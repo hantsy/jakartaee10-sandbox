@@ -19,8 +19,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>security-oidc-examples</artifactId>
@@ -35,8 +34,7 @@ under the License.
 
     <name>security-oidc-examples</name>
     <description>Jakarta EE 10 Sandbox: OpenIDConnect example</description>
-    <properties>
-    </properties>
+    <properties></properties>
 
     <dependencies>
         <dependency>
@@ -68,7 +66,7 @@ under the License.
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <profiles>
         <profile>
             <id>glassfish</id>
@@ -76,7 +74,7 @@ under the License.
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-            <cargo.zipUrlInstaller.downloadDir>${project.basedir}/../installs</cargo.zipUrlInstaller.downloadDir>
+                <cargo.zipUrlInstaller.downloadDir>${project.basedir}/../installs</cargo.zipUrlInstaller.downloadDir>
             </properties>
             <build>
                 <plugins>
@@ -86,7 +84,7 @@ under the License.
                         <configuration>
                             <container>
                                 <containerId>glassfish7x</containerId>
-                               
+
                                 <!-- <artifactInstaller>
                                     <groupId>org.glassfish.main.distributions</groupId>
                                     <artifactId>glassfish</artifactId>
@@ -116,9 +114,39 @@ under the License.
                 <wildfly.artifactId>wildfly-preview-dist</wildfly.artifactId>
                 <wildfly.version>27.0.0.Alpha5</wildfly.version>
                 <wildfly-maven-plugin.version>4.0.0.Beta3</wildfly-maven-plugin.version>
+                <jboss-as.home>${project.build.directory}/wildfly-preview-${wildfly.version}</jboss-as.home>
             </properties>
             <build>
                 <plugins>
+
+                    <!-- unpack a copy of WildFly-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>${maven-dependency-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>${wildfly.artifactId}</artifactId>
+                                            <version>${wildfly.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <!-- The WildFly plugin deploys your war to a local running WildFly container -->
                     <!-- To use, run: mvn package wildfly:deploy -->
                     <!-- For Jakarta EE 9, use `wildfly-preview-dist` as artifactId instead to start and deploy applications-->
@@ -130,20 +158,24 @@ under the License.
                         <version>${wildfly-maven-plugin.version}</version>
                         <configuration>
                             <!-- if a jboss-as.home or jboss.home property is not present, firstly it will download
-                            a copy of wildfly distribution automatically -->
+                                    a copy of wildfly distribution automatically -->
                             <!-- <jossHome>${env.WILDFLY_HOME}</jbossHome>-->
                             <!--<jbossHome>D:\appsvr\wildfly-preview-22.0.0.Alpha1</jbossHome>-->
 
                             <!-- To deploy a running wildfly server -->
                             <!-- <hostname></hostname>
-                            <port></port>
-                            <username></username>
-                            <password></password> -->
+                                    <port></port>
+                                    <username></username>
+                                    <password></password> -->
 
                             <!-- or set a wildfly.id property to add a server in settings.xml -->
                             <!--<id>wildfly-svr</id> -->
+                            <!-- <scripts>
+                                <script>config.cli</script>
+                            </scripts> -->
                             <commands>
                                 <command>/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)</command>
+                                <command>:reload</command>
                             </commands>
                         </configuration>
                     </plugin>

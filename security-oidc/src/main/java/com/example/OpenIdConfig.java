@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 @Named("openIdConfig")
-public class Auth0OpenIdConfig {
-    private static final Logger LOGGER = Logger.getLogger(Auth0OpenIdConfig.class.getName());
+public class OpenIdConfig {
+    private static final Logger LOGGER = Logger.getLogger(OpenIdConfig.class.getName());
 
     private String domain;
     private String clientId;
@@ -28,17 +28,21 @@ public class Auth0OpenIdConfig {
             domain = properties.getProperty("domain");
             clientId = properties.getProperty("clientId");
             clientSecret = properties.getProperty("clientSecret");
-            issuerUri = "https://" + this.domain + "/";
+            issuerUri = properties.getProperty("issuerUri");
+
+            if (issuerUri == null && domain != null) {
+                issuerUri = "https://" + this.domain + "/";
+            }
+
             LOGGER.log(
                     Level.INFO,
                     "domain: {0}, clientId: {1}, clientSecret:{2}, issuerUri: {3}",
-                    new Object[]{
+                    new Object[] {
                             domain,
                             clientId,
                             clientSecret,
                             issuerUri
-                    }
-            );
+                    });
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to load openid.properties", e);
         }

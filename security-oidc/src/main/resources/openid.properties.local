@@ -1,4 +1,6 @@
 # fill the following variables and rename the this file to openid.properties.
+# requires one of domain or issuerUri 
+issuerUri=
 domain=
 clientId=
 clientSecret=

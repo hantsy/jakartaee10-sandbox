@@ -1,0 +1,7 @@
+batch
+# set integrated-jaspi to false
+/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)
+
+# Execute and reload
+run-batch
+:reload
