@@ -5,6 +5,7 @@ import java.io.IOException;
 import jakarta.annotation.security.DeclareRoles;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.authentication.mechanism.http.OpenIdAuthenticationMechanismDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata;
 import jakarta.security.enterprise.identitystore.openid.OpenIdContext;
 import jakarta.servlet.annotation.HttpConstraint;
 import jakarta.servlet.annotation.ServletSecurity;
@@ -19,7 +20,10 @@ import jakarta.servlet.http.HttpServletResponse;
         clientSecret = "${openIdConfig.clientSecret}", 
         redirectURI = "${baseURL}/callback"  
         // redirectToOriginalResource = true
-        // providerMetadata = @OpenIdProviderMetadata(issuer = "${openIdConfig.issuerUri}")
+        // providerMetadata = @OpenIdProviderMetadata(
+        //         issuer = "${openIdConfig.issuerUri}",
+        //         jwksURI = "https://${openIdConfig.domain}/.well-known/jwks.json" 
+        // )
   )
 @WebServlet("/protected")
 @DeclareRoles({ "foo", "bar", "kaz" })
