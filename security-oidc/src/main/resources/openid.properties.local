@@ -1,5 +1,6 @@
-# fill the following variables and rename the this file to openid.properties.
-# requires one of domain or issuerUri 
+# Rename this file to openid.properties
+# Configure the following properties.
+# NOTE: Either domain or issuerUri is required. 
 issuerUri=
 domain=
 clientId=
