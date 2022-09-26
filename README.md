@@ -13,6 +13,7 @@ Example projects for previous Java EE/Jakarta EE versions.
 
 ### News and Activities
 
+* [Jakarta EE 10 Brings Java Development Into the Modern Cloud Native Era](https://eclipse-foundation.blog/2022/09/22/jakarta-ee-10-brings-java-development-into-the-modern-cloud-native-era)
 * [ What’s new in Jakarta Security 3](https://arjan-tijms.omnifaces.org/2022/04/whats-new-in-jakarta-security-3.html)
 * [Jakarta EE Security Specifications](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/jakarta-ee-security-specifications)
 * [Jakarta Concurrency: Present and Future ](https://newsroom.eclipse.org/eclipse-newsletter/2021/november/jakarta-concurrency-present-and-future)
