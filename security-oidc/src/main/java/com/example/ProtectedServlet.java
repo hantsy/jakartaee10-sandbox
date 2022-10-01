@@ -17,31 +17,33 @@ import jakarta.servlet.http.HttpServletResponse;
 @OpenIdAuthenticationMechanismDefinition(
         providerURI = "${openIdConfig.issuerUri}",
         clientId = "${openIdConfig.clientId}",
-        clientSecret = "${openIdConfig.clientSecret}", 
-        redirectURI = "${baseURL}/callback"  
+        clientSecret = "${openIdConfig.clientSecret}",
+        redirectURI = "${baseURL}/callback",
         // redirectToOriginalResource = true
-        // providerMetadata = @OpenIdProviderMetadata(
-        //         issuer = "${openIdConfig.issuerUri}",
-        //         jwksURI = "https://${openIdConfig.domain}/.well-known/jwks.json" 
-        // )
-  )
+//        providerMetadata = @OpenIdProviderMetadata(
+//                //issuer = "${openIdConfig.issuerUri}",
+//                jwksURI = "https://${openIdConfig.domain}/.well-known/jwks.json"
+//        ), 
+        jwksReadTimeout=5000 
+)
 @WebServlet("/protected")
-@DeclareRoles({ "foo", "bar", "kaz" })
-@ServletSecurity(@HttpConstraint(rolesAllowed = "foo"))
+@DeclareRoles({"foo", "bar", "kaz"})
+@ServletSecurity(
+        @HttpConstraint(rolesAllowed = "foo"))
 public class ProtectedServlet extends HttpServlet {
 
-        @Inject
-        private OpenIdContext context;
+    @Inject
+    private OpenIdContext context;
 
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-                response.setContentType("text/html");
-                response.getWriter().println("<h1>Protected Servlet</h1>");
-                response.getWriter().println("<p>access token:" + context.getAccessToken() + "</p>");
-                response.getWriter().println("<p>token type:" + context.getTokenType() + "</p>");
-                response.getWriter().println("<p>subject:" + context.getSubject() + "</p>");
-                response.getWriter().println("<p>expires in:" + context.getExpiresIn() + "</p>");
-                response.getWriter().println("<p>refresh token:" + context.getRefreshToken() + "</p>");
-                response.getWriter().println("<p>claims json:" + context.getClaimsJson() + "</p>");
-        }
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html");
+        response.getWriter().println("<h1>Protected Servlet</h1>");
+        response.getWriter().println("<p>access token:" + context.getAccessToken() + "</p>");
+        response.getWriter().println("<p>token type:" + context.getTokenType() + "</p>");
+        response.getWriter().println("<p>subject:" + context.getSubject() + "</p>");
+        response.getWriter().println("<p>expires in:" + context.getExpiresIn() + "</p>");
+        response.getWriter().println("<p>refresh token:" + context.getRefreshToken() + "</p>");
+        response.getWriter().println("<p>claims json:" + context.getClaimsJson() + "</p>");
+    }
 }
