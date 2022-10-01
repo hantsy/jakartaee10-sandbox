@@ -1,6 +1,7 @@
 package com.example;
 
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,10 +19,12 @@ import jakarta.ws.rs.core.UriInfo;
 public class TodoResources {
 
     @Inject
+    @Any
     //@Context
     ResourceContext resourceContext;
 
     @Inject
+    @Any // or  @JaxRsContext
     //@Context
     UriInfo uriInfo;
 

@@ -46,33 +46,12 @@ under the License.
 
         <!-- @Inject support in Jersey -->
         <!-- see: https://github.com/eclipse-ee4j/jersey/issues/5100 -->
-        <!--<dependency>
+        <!-- <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi-rs-inject</artifactId>
             <version>${jersey.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.glassfish.jersey.core</groupId>
-                    <artifactId>jersey-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.annotation</groupId>
-                    <artifactId>jakarta.annotation-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.glassfish.hk2</groupId>
-                    <artifactId>osgi-resource-locator</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.ws.rs</groupId>
-                    <artifactId>jakarta.ws.rs-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
+            <optional>true</optional>
+        </dependency> -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
@@ -231,7 +210,7 @@ under the License.
                                     </artifactItems>
                                 </configuration>
                             </execution>
-                            <execution>
+                            <!-- <execution>
                                 <id>copy</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
@@ -249,7 +228,7 @@ under the License.
                                     </artifactItems>
                                     <outputDirectory>${project.build.directory}/glassfish7/glassfish/modules</outputDirectory>
                                 </configuration>
-                            </execution>
+                            </execution> -->
                         </executions>
                     </plugin>
                     <plugin>
