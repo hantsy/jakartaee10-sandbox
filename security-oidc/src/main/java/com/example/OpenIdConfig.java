@@ -3,12 +3,25 @@ package com.example;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
+import jakarta.security.enterprise.authentication.mechanism.http.OpenIdAuthenticationMechanismDefinition;
 
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@OpenIdAuthenticationMechanismDefinition(
+        providerURI = "${openIdConfig.issuerUri}",
+        clientId = "${openIdConfig.clientId}",
+        clientSecret = "${openIdConfig.clientSecret}",
+        redirectURI = "${baseURL}/callback",
+        // redirectToOriginalResource = true
+//        providerMetadata = @OpenIdProviderMetadata(
+//                //issuer = "${openIdConfig.issuerUri}",
+//                jwksURI = "https://${openIdConfig.domain}/.well-known/jwks.json"
+//        ),
+        jwksReadTimeout = 5000
+)
 @ApplicationScoped
 @Named("openIdConfig")
 public class OpenIdConfig {

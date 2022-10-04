@@ -210,6 +210,25 @@ under the License.
                                     </artifactItems>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>copy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                                            <artifactId>jersey-cdi-rs-inject</artifactId>
+                                            <version>${jersey.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}/glassfish7/glassfish/modules</outputDirectory>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>

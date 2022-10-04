@@ -1,11 +1,8 @@
 package com.example;
 
-import java.io.IOException;
-
 import jakarta.annotation.security.DeclareRoles;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.authentication.mechanism.http.OpenIdAuthenticationMechanismDefinition;
-import jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata;
 import jakarta.security.enterprise.identitystore.openid.OpenIdContext;
 import jakarta.servlet.annotation.HttpConstraint;
 import jakarta.servlet.annotation.ServletSecurity;
@@ -14,22 +11,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@OpenIdAuthenticationMechanismDefinition(
-        providerURI = "${openIdConfig.issuerUri}",
-        clientId = "${openIdConfig.clientId}",
-        clientSecret = "${openIdConfig.clientSecret}",
-        redirectURI = "${baseURL}/callback",
-        // redirectToOriginalResource = true
-//        providerMetadata = @OpenIdProviderMetadata(
-//                //issuer = "${openIdConfig.issuerUri}",
-//                jwksURI = "https://${openIdConfig.domain}/.well-known/jwks.json"
-//        ), 
-        jwksReadTimeout=5000 
-)
+import java.io.IOException;
+
+
 @WebServlet("/protected")
 @DeclareRoles({"foo", "bar", "kaz"})
 @ServletSecurity(
-        @HttpConstraint(rolesAllowed = "foo"))
+        @HttpConstraint(rolesAllowed = "foo")
+)
 public class ProtectedServlet extends HttpServlet {
 
     @Inject
