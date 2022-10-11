@@ -36,7 +36,7 @@
 
         <!-- Glassfish server -->
         <glassfish.version>7.0.0-M9</glassfish.version>
-        <arquillian-glassfish-jakarta.version>1.0.0.Final-SNAPSHOT</arquillian-glassfish-jakarta.version>
+        <arquillian-glassfish-jakarta.version>master-SNAPSHOT</arquillian-glassfish-jakarta.version>
         <jersey.version>3.1.0-M8</jersey.version>
 
         <!-- by default skip tests -->
@@ -190,12 +190,9 @@
             <name>Payara Nexus Artifacts</name>
             <url>https://nexus.payara.fish/repository/payara-artifacts/</url>
         </repository>
-<!--        <repository>
-            <id>github-public</id>
-            <url>https://public:&#103;hp_lHiX2AD7C80BCj8m8fo2LloHkWh1el1D0VXI@maven.pkg.github.com/hantsy/*</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>-->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 </project>
