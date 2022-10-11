@@ -142,7 +142,7 @@ under the License.
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
+                    <groupId>com.github.hantsy</groupId>
                     <artifactId>arquillian-glassfish-managed-jakarta</artifactId>
                     <version>${arquillian-glassfish-jakarta.version}</version>
                     <scope>test</scope>
