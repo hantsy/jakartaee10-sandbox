@@ -13,6 +13,8 @@ Example projects for previous Java EE/Jakarta EE versions.
 
 ### News and Activities
 
+* [The Future of EJB](https://omnifish.ee/2022/06/29/the-future-of-ejb/)
+* [Using jakartaee 10 security OIDC with wildfly 27 preview](https://blogs.nologin.es/rickyepoderi/index.php?/archives/198-Using-jakartaee-10-security-OIDC-with-wildfly-27-preview.html)
 * [Jakarta EE 10 Brings Java Development Into the Modern Cloud Native Era](https://eclipse-foundation.blog/2022/09/22/jakarta-ee-10-brings-java-development-into-the-modern-cloud-native-era)
 * [ What’s new in Jakarta Security 3](https://arjan-tijms.omnifaces.org/2022/04/whats-new-in-jakarta-security-3.html)
 * [Jakarta EE Security Specifications](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/jakarta-ee-security-specifications)
