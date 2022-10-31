@@ -255,3 +255,4 @@ We use logback as the logging framework in this project. In the *src/main/resour
 ```
 
 We set `org.hibernate.SQL` logging level to `DEBUG` and `org.hibernate.type.descriptor.sql` to `trace`, it will help you to dig into the Hibernate generated sql at runtime.
+
