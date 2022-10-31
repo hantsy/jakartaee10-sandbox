@@ -15,9 +15,12 @@ Generate a simple **Java application** project via [Maven Quickstart archetype](
 
 ```bash
 mvn archetype:generate
-    -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart
+    -DarchetypeGroupId=org.apache.maven.archetypes
+    -DarchetypeArtifactId=maven-archetype-quickstart
     -DarchetypeVersion=1.4
 ```
+
+There are some interactive steps to guide you setup the project info, such as groupId, artifact, version etc. In this example project, we use `com.example` as groupId, and `demo` as artifactId. Then confirm and begin to generate the project source codes.
 
 After it is done, open the project in a Java IDE such as IntelliJ IDEA(Community Edition is free), or Eclipse Java/Java EE bundle, or NetBeans IDE, or a simple text editor, eg. VS Code.
 
@@ -251,6 +254,4 @@ We use logback as the logging framework in this project. In the *src/main/resour
 </configuration>
 ```
 
-We set `org.hibernate.SQL` logging level to `DEBUG` and `org.hibernate.type.descriptor.sql` to `trace` to gid into the Hibernate generated sql at runtime.
-
-
+We set `org.hibernate.SQL` logging level to `DEBUG` and `org.hibernate.type.descriptor.sql` to `trace`, it will help you to dig into the Hibernate generated sql at runtime.
