@@ -256,3 +256,94 @@ We use logback as the logging framework in this project. In the *src/main/resour
 
 We set `org.hibernate.SQL` logging level to `DEBUG` and `org.hibernate.type.descriptor.sql` to `trace`, it will help you to dig into the Hibernate generated sql at runtime.
 
+### UUID Type Support
+
+JPA 3.1 allows to use UUID as basic Java type, especially it add a UUID ID generator.
+
+Create a simple `Entity`.
+
+```java
+@Entity
+public class Person {
+    @Id
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private String name;
+    private int age = 30;
+
+    public Person() {
+    }
+
+    public Person(String name, int age) {
+        assert age > 0;
+        this.name = name;
+        this.age = age;
+        this.birthDate = LocalDateTime.now().minusYears(this.age);
+    }
+
+    // getters and setters
+    // override equals and hashCode
+}
+```
+
+An entity class is annotated with an `@Entity`, optionally you can specify the entity name and add table definition with an extra `@Table` annotation.
+
+Here we defined a UUID type ID, and use a UUID generation strategy.
+
+JPA requires an Entity should includes a no-arguments constructor, if you declare another constructor with a few arguments, you should declare this no-arguments constructor explicitly.
+
+Create a simple JUnit test to verify if the UUID type working as expected.
+
+```java
+class PersonUUIDTest {
+    private static final Logger log = LoggerFactory.getLogger(PersonUUIDTest.class);
+
+    private EntityManagerFactory entityManagerFactory;
+
+    @BeforeEach
+    void setUp() {
+        entityManagerFactory = Persistence.createEntityManagerFactory("defaultPU");
+        var entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        var deleteFromPerson = entityManager.createQuery("DELETE FROM Person").executeUpdate();
+        log.debug("Deleted {} persons", deleteFromPerson);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    @Test
+    @DisplayName("insert person and verify person")
+    public void testInsertAndFindPerson() throws Exception {
+        var person = new Person("John", 30);
+        var entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.persist(person);
+        entityManager.getTransaction().commit();
+        var id = person.getId();
+        assertNotNull(id);
+
+        try {
+            var foundPerson = entityManager.find(Person.class, id);
+            assertThat(foundPerson.getId()).isNotNull();
+            assertThat(foundPerson.getName()).isEqualTo("John");
+            assertThat(foundPerson.getAge()).isEqualTo(30);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @AfterEach
+    void tearDown() {
+        entityManagerFactory.close();
+    }
+}
+```
+
+In the `@BeforeEach` method, we will create an `EntityManagerFactory` instance. And in the `@AfterEach` we call the `EntityManagerFactory.close` to release the resource.
+
+In the `@BeforeEach` we try to clean up the Person data.
+
+Now in the `testInsertAndFindPerson` test, we insert a new person, then utilize `entityManager.find` to find the inserted person.
+
+The person id is annotated with `@ID` and `@GeneratedValue`, when inserting a person into table, hibernate will generate an ID automatically. After it is persisted, the returned instance is filled with the generated id, it should not be a null.

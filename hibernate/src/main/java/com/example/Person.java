@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -98,6 +99,35 @@ public class Person {
 
     public static enum Gender {
         MALE, FEMALE;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return getAge() == person.getAge() &&
+                Objects.equals(getId(), person.getId()) &&
+                getName().equals(person.getName()) &&
+                getGender() == person.getGender() &&
+                Objects.equals(getYearsWorked(), person.getYearsWorked()) &&
+                getBirthDate().equals(person.getBirthDate()) &&
+                Objects.equals(getSalary(), person.getSalary()) &&
+                Objects.equals(getHourlyRate(), person.getHourlyRate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                getId(),
+                getName(),
+                getAge(),
+                getGender(),
+                getYearsWorked(),
+                getBirthDate(),
+                getSalary(),
+                getHourlyRate()
+        );
     }
 
     @Override
