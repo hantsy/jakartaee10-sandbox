@@ -256,7 +256,7 @@ We use logback as the logging framework in this project. In the *src/main/resour
 
 We set `org.hibernate.SQL` logging level to `DEBUG` and `org.hibernate.type.descriptor.sql` to `trace`, it will help you to dig into the Hibernate generated sql at runtime.
 
-### UUID Type Support
+### UUID Basic Type Support
 
 JPA 3.1 allows to use UUID as basic Java type, especially it add a UUID ID generator.
 
@@ -347,3 +347,237 @@ In the `@BeforeEach` we try to clean up the Person data.
 Now in the `testInsertAndFindPerson` test, we insert a new person, then utilize `entityManager.find` to find the inserted person.
 
 The person id is annotated with `@ID` and `@GeneratedValue`, when inserting a person into table, hibernate will generate an ID automatically. After it is persisted, the returned instance is filled with the generated id, it should not be a null.
+
+### Numeric Functions
+
+JPA 3.1 adds a collection of new numeric functions in literal JPQL query and type-safe Criteria Builder API.
+
+Add some extra properties in the above `Person` class.
+
+```java
+public class Person{
+    private Integer yearsWorked = 2;
+    private LocalDateTime birthDate = LocalDateTime.now().minusYears(30);
+    private BigDecimal salary = new BigDecimal("12345.678");
+    private BigDecimal hourlyRate = new BigDecimal("34.56");
+
+    // setters and getters
+}
+```
+
+Create a new test to verify the new numeric functions: `ceiling`, `floor`, `round`, `exp`, `ln`, `power`, `sign`.
+
+```java
+@Test
+@DisplayName(">>> test numeric functions")
+public void testNumericFunctions() throws Exception {
+    var person = new Person("John", 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        var queryString = """
+                SELECT p.name as name,
+                CEILING(p.salary) as ceiling,
+                FLOOR(p.salary) as floor,
+                ROUND(p.salary, 1) as round,
+                EXP(p.yearsWorked) as exp,
+                LN(p.yearsWorked) as ln,
+                POWER(p.yearsWorked,2) as power,
+                SIGN(p.yearsWorked) as sign
+                FROM Person p
+                WHERE p.id=:id
+                """;
+        var query = entityManager.createQuery(queryString);
+        query.setParameter("id", id);
+        var resultList = query.getResultList();
+        log.debug("Result list: {}", resultList);
+        resultList.forEach(result -> log.debug("result: {}", result));
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+```
+
+Next, let's have a look at how to use them in the Criteria APIs.
+
+```java
+@Test
+@DisplayName(">>> test numeric functions")
+public void testNumericFunctions() throws Exception {
+    var person = new Person("John", 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        // see: https://hibernate.zulipchat.com/#narrow/stream/132096-hibernate-user/topic/New.20functions.20in.20JPA.203.2E1/near/289429903
+        var cb = (HibernateCriteriaBuilder) entityManager.getCriteriaBuilder();
+        var query = cb.createTupleQuery();
+        var root = query.from(Person.class);
+
+        query.multiselect(root.get("name"),
+                cb.ceiling(root.get("salary")),
+                cb.floor(root.get("salary")),
+                cb.round(root.get("salary"), 1),
+                cb.exp(root.get("yearsWorked")),
+                cb.ln(root.get("yearsWorked")),
+                // see: https://hibernate.atlassian.net/browse/HHH-15395
+                cb.power(root.get("yearsWorked"), 2),
+                cb.sign(root.get("yearsWorked"))
+        );
+        query.where(cb.equal(root.get("id"), id));
+        var resultList = entityManager.createQuery(query).getResultList();
+        log.debug("Result list: {}", resultList);
+
+        resultList.forEach(result ->
+                log.debug(
+                        "result: ({},{},{},{},{},{},{},{})",
+                        result.get(0, String.class),
+                        result.get(1, BigDecimal.class),
+                        result.get(2, BigDecimal.class),
+                        result.get(3, BigDecimal.class),
+                        result.get(4, Double.class),
+                        result.get(5, Double.class),
+                        result.get(6, Double.class),
+                        result.get(7, Integer.class)
+                )
+        );
+    } catch (Exception ex) {
+        fail(ex);
+    }
+}
+```
+
+Note, when using Hibernate 6.1, we have to cast `CriteriaBuilder` to `HibernateCriteriaBuilder` to experience the new numeric functions. Hibernate 6.2 will align to JPA 3.1 and fix the issue.
+
+### DateTime Functions
+
+JPA 3.1 add a series of datetime functions and ease the usage of Java 8 DateTime APIs.
+
+```java
+ @Test
+@DisplayName(">>> test datetime functions")
+public void testDateTimeFunctions() throws Exception {
+    var person = new Person("John", 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        var queryString = """
+                SELECT p.name as name,
+                LOCAL TIME as localTime,
+                LOCAL DATETIME as localDateTime,
+                LOCAL DATE as localDate
+                FROM Person p
+                """;
+
+        var query = entityManager.createQuery(queryString);
+        var resultList = query.getResultList();
+        log.debug("Result list: {}", resultList);
+        resultList.forEach(result -> log.debug("result: {}", result));
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+```
+
+The `LOCAL TIME`, `LOCAL DATETIME`, `LOCAL DATE` query result will be treated as Java 8 `LocalTime`, `LocalDateTime`, `LocalDate` directly.
+
+Let's have a look at the usage in the CriteriaBuilder APIs.
+
+```java
+@Test
+@DisplayName(">>> test datetime functions")
+public void testDateTimeFunctions() throws Exception {
+    var person = new Person("John", 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        var cb = (HibernateCriteriaBuilder) entityManager.getCriteriaBuilder();
+        var query = cb.createTupleQuery();
+        var root = query.from(Person.class);
+
+        query.multiselect(root.get("name"),
+                cb.localTime(),
+                cb.localDateTime(),
+                cb.localDate()
+        );
+        query.where(cb.equal(root.get("id"), id));
+
+        var resultList = entityManager.createQuery(query).getResultList();
+        log.debug("Result list: {}", resultList);
+        resultList.forEach(result ->
+                log.debug(
+                        "result: ({},{},{},{})",
+                        result.get(0, String.class),
+                        result.get(1, LocalTime.class),
+                        result.get(2, LocalDateTime.class),
+                        result.get(3, LocalDate.class)
+                )
+        );
+    } catch (Exception ex) {
+        fail(ex);
+    }
+}
+```
+
+### `EXTRACT` function
+
+JPA 3.1 introduces a `extract` function to decode fragments from a datetime value.
+
+```java
+@Test
+@DisplayName(">>> test `EXTRACT` functions")
+public void testExtractFunctions() throws Exception {
+    var person = new Person("John", 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        var queryString = """
+                SELECT p.name as name,
+                EXTRACT(YEAR FROM p.birthDate) as year,
+                EXTRACT(QUARTER FROM p.birthDate) as quarter,
+                EXTRACT(MONTH FROM p.birthDate) as month,
+                EXTRACT(WEEK FROM p.birthDate) as week,
+                EXTRACT(DAY FROM p.birthDate) as day,
+                EXTRACT(HOUR FROM p.birthDate) as hour,
+                EXTRACT(MINUTE FROM p.birthDate) as minute,
+                EXTRACT(SECOND FROM p.birthDate) as second
+                FROM Person p
+                """;
+        var query = entityManager.createQuery(queryString);
+
+        var resultList = query.getResultList();
+        log.debug("Result list: {}", resultList);
+        resultList.forEach(result -> log.debug("result: {}", result));
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+```
+
+Use the new `extract` function, we can read the `year`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second` values from a Java 8 DateTime type property.
+
+Note, there is no mapped extract function in the CriteriaBuilder APIs, for more details, check issue: <https://github.com/eclipse-ee4j/jpa-api/pull/356>
