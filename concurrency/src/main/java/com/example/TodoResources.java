@@ -34,6 +34,13 @@ public class TodoResources {
         return todoService.getAllTodosAsync().thenApply(todos -> Response.ok(todos).build());
     }
 
+    @GET
+    @Path("async1")
+    public CompletableFuture<Response> getAllTodosAndAsync() {
+        var todos = todoService.getAllTodos();
+        return CompletableFuture.supplyAsync(() -> todos).thenApply(data -> Response.ok(data).build());
+    }
+
     @POST
     public CompletionStage<Response> createTodo(Todo todo) throws Exception {
         var uriBuilder = uriInfo.getBaseUriBuilder();

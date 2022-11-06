@@ -101,6 +101,29 @@ public class TodoResourceTest {
 
     @Test
     @RunAsClient
+    public void testGetTodosAndAsync() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos/async1"));
+        CompletionStage<Response> responseCompletionStage = target
+                .request()
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .rx().get();
+
+        responseCompletionStage
+                .thenAccept(
+                        r -> {
+                            LOGGER.log(Level.INFO, "Get /todos/async1 response status: {0}", r.getStatus());
+                            assertEquals(200, r.getStatus());
+                            String jsonString = r.readEntity(String.class);
+                            LOGGER.log(Level.INFO, "Get /todos/async1 result string: {0}", jsonString);
+                        }
+                )
+                .toCompletableFuture()
+                .join();
+
+    }
+
+    @Test
+    @RunAsClient
     public void testCreateTodo() throws Exception {
         var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos"));
         CompletionStage<Response> responseCompletionStage = target
