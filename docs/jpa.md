@@ -3,7 +3,7 @@
 Jakarta Persistence(aka JPA) 3.1 brings a collection of improvements.
 
 * The `UUID` class now is treated as Basic Java Type. To support UUID type `ID` in `Entity` class, JPA introduces a new UUID generator.
-* Several numeric functions and some date/time specific functions are added in JPQL and type-safe Criteria API.
+* Several numeric functions and date/time specific functions are added in JPQL and type-safe Criteria API.
 
 More details please read [What's New in Jakarta Persistence 3.1](https://newsroom.eclipse.org/eclipse-newsletter/2022/march/what%E2%80%99s-new-jakarta-persistence-31).
 
@@ -147,6 +147,8 @@ The final *pom.xml* looks like the following.
     </build>
 </project>
 ```
+
+NOTE: To share common resources for all feature-based projects, create a parent POM to centralize the common configurations in one place, check [the parent pom.xml file](https://github.com/hantsy/jakartaee10-sandbox/blob/master/pom.xml).
 
 In this example project, we use H2 embedded database for test purpose. Hibernate 6.1 implements the features of Jakarta Persistence 3.1, but it includes a Jakarta Persistence 3.0 API in the transitive dependency tree.
 
@@ -578,6 +580,111 @@ public void testExtractFunctions() throws Exception {
 }
 ```
 
-Use the new `extract` function, we can read the `year`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second` values from a Java 8 DateTime type property.
+Use the new `extract` function, we can read the `year`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second` values from a Java 8 DateTime type property in the JPQL query.
 
 Note, there is no mapped extract function in the CriteriaBuilder APIs, for more details, check issue: <https://github.com/eclipse-ee4j/jpa-api/pull/356>
+
+## JakartaEE Runtime
+
+Next let's go to the Jakarta EE 10 compatible products to experience the new features of JPA 3.1.
+
+Firstly we will prepare a Jakarta EE 10 web application.
+
+Simply generate a web application skeleton via [Maven Webapp Archetype](https://maven.apache.org/archetypes/maven-archetype-webapp/).
+
+```bash
+mvn archetype:generate
+    -DarchetypeGroupId=org.apache.maven.archetypes
+    -DarchetypeArtifactId=maven-archetype-webapp
+    -DarchetypeVersion=1.4
+```
+
+Then add Jakarta EE 10 dependency into the project pom.xml. Let's have a look at the modified pom.xml.
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example</groupId>
+    <artifactId>jpa-examples</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>jakartaee10-sandbox-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <name>jpa-examples</name>
+    <description>Jakarta EE 10 Sandbox: Persistence 3.1 Examples</description>
+    <properties>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- see: https://github.com/arquillian/arquillian-core/issues/248 -->
+        <!-- and https://github.com/arquillian/arquillian-core/pull/246/files -->
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+In the above pom.xml, we also add JUnit 5 and [Arquillian](https://arquillian.org) related dependencies in test scope. Through the container specific Aquillian adapter, we can run the tests in Jakarta EE application servers.
+
+In this project, we reuse the the `Person` entity we have introduced in the Hibernate section.
+
+Now let's move to persistence configuration. Create a *persistence.xml* in the *src/main/resources/META-INFO* folder.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+    <persistence-unit name="defaultPU" transaction-type="JTA">
+        <jta-data-source>java:comp/DefaultDataSource</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+
+            <!-- for  Glassfish/Payara/EclipseLink -->
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+
+            <!-- for WildFly/Hibernate -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
+```
+
+The configuration is a little different from the one we introduced in the Hibernate section.
+
+* In a container environment, we would like choose `JTA` as transaction-type.
+* We do not setup database connection info, instead we configure a built-in DataSource. The `java:comp/DefaultDataSource` is the default DataSource for all Jakarta EE compatible products.
+

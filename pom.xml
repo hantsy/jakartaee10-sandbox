@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>jakartaee10-sandbox-parent</artifactId>
@@ -25,19 +25,19 @@
 
         <!-- Cargo maven plugin -->
         <!-- Since 1.10.1, it includes Glassfish 7 support -->
-        <cargo-maven3-plugin.version>1.10.2</cargo-maven3-plugin.version>
+        <cargo-maven3-plugin.version>1.10.3</cargo-maven3-plugin.version>
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
 
         <!-- Arquillian BOM -->
-        <arquillian-bom.version>1.7.0.Alpha12</arquillian-bom.version>
+        <arquillian-bom.version>1.7.0.Alpha13</arquillian-bom.version>
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
 
         <!-- Glassfish server -->
         <glassfish.version>7.0.0-M9</glassfish.version>
         <arquillian-glassfish-jakarta.version>9a3d1129</arquillian-glassfish-jakarta.version>
-        <jersey.version>3.1.0-M8</jersey.version>
+        <jersey.version>3.1.0</jersey.version>
 
         <!-- by default skip tests -->
         <skip.unit.tests>false</skip.unit.tests>
@@ -147,7 +147,7 @@
             </plugin>
         </plugins>
     </build>
-   
+
     <pluginRepositories>
         <pluginRepository>
             <id>sonatype-snapshots</id>
