@@ -780,13 +780,19 @@ When it is done, there is war package is ready in the path *target/jpa-examples.
 3. Copy the above war package to *Glassfish_install/glassfish/domains/domain1/autodeploy* folder.
 4. Open *GlassFish_install/glassfish/domains/domain1/logs/server.log*, and wait the deployment is completed.
 5. Open another terminal window, execute `curl http://localhost:8080/jpa-examples/rest/persons`. You will the following response in the console.
+
+   ```bash
    [{"age":18,"birthDate":"2004-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"d8552d71-ff7f-4650-b5a0-ce1c5fb3fe0b","name":"Rose","salary":12345.678,"yearsWorked":2},{"age":20,"birthDate":"2002-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"cdf94cdc-21b3-492c-b1b5-06bc8cae9947","name":"Jack","salary":12345.678,"yearsWorked":2}]
+   ```
+
 6. To stop GlassFish and Derby, run `asadmin stop-database` and `asadmin stop-domain domain1`
 
 #### WildFly Preview 27
 
 1. Download the latest [WildFly Preview](https://wildfly.org), extract files to a location, eg. D:\wildfly-preview-27.0.0.Beta1, mark as *WildFly_install*.
-2. Open a terminal, enter *WildFly_install/bin*, run `standalone` to start WildFly with default standalone profile configuration.
+2. Open a terminal, enter *WildFly_install/bin*, run `standalone` to start WildFly with the default standalone profile configuration.
 3. Copy the built war to *WildFly_install/standalone/deployments*.
-4. Wait the deployment progress is done, you can use the curl in Glassfish section to verify the application.
-5. Send a `CTLR+C` in the WildFly startup console to stop WildFly.
+4. Wait the deployment progress is done, you can use the curl in GlassFish section to verify the application.
+5. Send a `CTLR+C` keys combination in the original WildFly startup console to stop WildFly.
+
+### Deploying Application via Maven Plugin

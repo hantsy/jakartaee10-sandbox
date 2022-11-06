@@ -36,10 +36,9 @@ public class TodoResources {
 
     @POST
     public CompletionStage<Response> createTodo(Todo todo) throws Exception {
+        var uriBuilder = uriInfo.getBaseUriBuilder();
         return todoService.createAsync(todo)
-                .thenApply(saved ->
-                        Response.created(uriInfo.getBaseUriBuilder().path("todos/{id}").build(saved.getId())).build()
-                );
+                .thenApply(saved -> Response.created(uriBuilder.path("todos/{id}").build(saved.getId())).build());
     }
 
     @Path("{id}")
