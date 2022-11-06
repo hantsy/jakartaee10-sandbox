@@ -116,6 +116,63 @@ under the License.
             </build>
         </profile>
         <profile>
+            <id>wildfly</id>
+            <properties>
+                <!-- Wildfly server -->
+                <wildfly.artifactId>wildfly-preview-dist</wildfly.artifactId>
+                <jboss-as.home>${project.build.directory}/wildfly-preview-${wildfly.version}</jboss-as.home>
+            </properties>
+            <build>
+                <plugins>
+
+                    <!-- unpack a copy of WildFly-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>${maven-dependency-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>${wildfly.artifactId}</artifactId>
+                                            <version>${wildfly.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- The WildFly plugin deploys your war to a local running WildFly container -->
+                    <!-- To use, run: mvn package wildfly:deploy -->
+                    <!-- For Jakarta EE 9, use `wildfly-preview-dist` as artifactId instead to start and deploy applications-->
+                    <!-- Run: mvn clean wildfly:run -PWildfly -Dwildfly.artifactId=wildfly-preview-dist -Dwildfly.version=22.0.0.Alpha1 -->
+                    <!-- or set the `jboss-as.home` to run: mvn clean wildfly:run -PWildfly -Djboss-as.home=D:\appsvr\wildfly-preview-22.0.0.Alpha1-->
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${wildfly-maven-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+            <repositories>
+                <repository>
+                    <id>opensaml</id>
+                    <url>https://build.shibboleth.net/nexus/content/repositories/releases/</url>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
             <id>arq-glassfish-managed</id>
             <properties>
                 <skip.unit.tests>true</skip.unit.tests>

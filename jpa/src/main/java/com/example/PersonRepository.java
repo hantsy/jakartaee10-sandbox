@@ -12,7 +12,7 @@ public class PersonRepository {
     @PersistenceContext
     EntityManager entityManager;
 
-    List<Person> getAllPersons() {
+    public List<Person> getAllPersons() {
         return entityManager.createQuery("select p from Person p", Person.class)
                 .getResultList();
     }
