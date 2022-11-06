@@ -688,3 +688,105 @@ The configuration is a little different from the one we introduced in the Hibern
 * In a container environment, we would like choose `JTA` as transaction-type.
 * We do not setup database connection info, instead we configure a built-in DataSource. The `java:comp/DefaultDataSource` is the default DataSource for all Jakarta EE compatible products.
 
+### Sample Application
+
+To interact with our backend database, we will create a simple complete JAXRS application, including:
+
+* A EJB `@Stateless` bean to read data from database
+* And expose data via a simple JAXRS resource
+
+OK, let's create class `PersonRepository` which is annotated with `@Stateless`. In this class, inject a `EntityManager` bean with an annotation `@PersistenceContext`, and add a new method `getAllResource` to execute a JPQL query to retrieve all persons.
+
+```java
+@Stateless
+public class PersonRepository {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    public List<Person> getAllPersons() {
+        return entityManager.createQuery("select p from Person p", Person.class)
+                .getResultList();
+    }
+}
+```
+
+Next, create a `PersonResource` to expose persons to client.
+
+```java
+@RequestScoped
+@Path("/persons")
+public class PersonResource {
+
+    @Inject
+    PersonRepository personRepository;
+
+    @Path("")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response allPersons() {
+        var data = personRepository.getAllPersons();
+        return Response.ok(data).build();
+    }
+}
+```
+
+The `PersonResource` is annotated with `RequestScoped`, it is a CDI bean, the `@Path` on the class define the root path of all subresources in this class. The `allPersons` will produces all persons to client in JSON format when HTTP Client request matches HTTP GET method, and URI is `/persons` and HTTP Header Accept is compatible with `application/json`.
+
+To activate JAXRS feature, create a Jaxrs `Application`.
+
+```java
+@ApplicationPath("/rest")
+public class RestActivator extends Application {
+}
+```
+
+Let's create a bean to add some sample data at the application startup.
+
+```java
+@Startup
+@Singleton
+public class DataInitializer {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    @PostConstruct
+    public void init() {
+        List
+                .of(
+                        new Person("Jack", 20),
+                        new Person("Rose", 18)
+                )
+                .forEach(entityManager::persist);
+    }
+}
+```
+
+### Deploying to Jakarta EE Containers
+
+Build and package the application into a war archive. Open a terminal, switch to the project root folder, and execute the following command.
+
+```bash
+mvn clean package -DskipTests -D"maven.test.skip=true"
+```
+
+When it is done, there is war package is ready in the path *target/jpa-examples.war*.
+
+#### GlassFish 7.0
+
+1. Download the [latest GlassFish 7.0](https://github.com/eclipse-ee4j/glassfish/releases), extract files to a location, eg. D:\glassfish7, mark as *GlassFish_install*.
+2. To start GlassFish and Derby, open a terminal, enter *GlassFish_install/bin*, run `asadmin start-database` and `asadmin start-domain domain1`.
+3. Copy the above war package to *Glassfish_install/glassfish/domains/domain1/autodeploy* folder.
+4. Open *GlassFish_install/glassfish/domains/domain1/logs/server.log*, and wait the deployment is completed.
+5. Open another terminal window, execute `curl http://localhost:8080/jpa-examples/rest/persons`. You will the following response in the console.
+   [{"age":18,"birthDate":"2004-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"d8552d71-ff7f-4650-b5a0-ce1c5fb3fe0b","name":"Rose","salary":12345.678,"yearsWorked":2},{"age":20,"birthDate":"2002-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"cdf94cdc-21b3-492c-b1b5-06bc8cae9947","name":"Jack","salary":12345.678,"yearsWorked":2}]
+6. To stop GlassFish and Derby, run `asadmin stop-database` and `asadmin stop-domain domain1`
+
+#### WildFly Preview 27
+
+1. Download the latest [WildFly Preview](https://wildfly.org), extract files to a location, eg. D:\wildfly-preview-27.0.0.Beta1, mark as *WildFly_install*.
+2. Open a terminal, enter *WildFly_install/bin*, run `standalone` to start WildFly with default standalone profile configuration.
+3. Copy the built war to *WildFly_install/standalone/deployments*.
+4. Wait the deployment progress is done, you can use the curl in Glassfish section to verify the application.
+5. Send a `CTLR+C` in the WildFly startup console to stop WildFly.
