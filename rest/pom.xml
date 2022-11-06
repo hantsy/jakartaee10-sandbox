@@ -46,12 +46,12 @@ under the License.
 
         <!-- @Inject support in Jersey -->
         <!-- see: https://github.com/eclipse-ee4j/jersey/issues/5100 -->
-        <!-- <dependency>
+         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi-rs-inject</artifactId>
             <version>${jersey.version}</version>
-            <optional>true</optional>
-        </dependency> -->
+             <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
@@ -98,6 +98,39 @@ under the License.
             </properties>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>${maven-dependency-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>copy</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                                            <artifactId>jersey-cdi-rs-inject</artifactId>
+                                            <version>${jersey.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.jersey.ext</groupId>
+                                            <artifactId>jersey-proxy-client</artifactId>
+                                            <version>${jersey.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}/cargo/installs/glassfish-${glassfish.version}/glassfish7/glassfish/modules</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven3-plugin</artifactId>
@@ -221,6 +254,13 @@ under the License.
                                         <artifactItem>
                                             <groupId>org.glassfish.jersey.ext.cdi</groupId>
                                             <artifactId>jersey-cdi-rs-inject</artifactId>
+                                            <version>${jersey.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.jersey.ext</groupId>
+                                            <artifactId>jersey-proxy-client</artifactId>
                                             <version>${jersey.version}</version>
                                             <type>jar</type>
                                             <overWrite>false</overWrite>
