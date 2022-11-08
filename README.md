@@ -13,6 +13,7 @@ Example projects for previous Java EE/Jakarta EE versions.
 
 ### News and Activities
 
+* [Jakarta Persistence 3.1 new features](http://www.mastertheboss.com/java-ee/jakarta-ee/jakarta-persistence-3-1-new-features)
 * [Jakarta EE 10 Provides First Jakarta Feature Updates](https://newsroom.eclipse.org/eclipse-newsletter/2022/october/jakarta-ee-10-provides-first-jakarta-feature-updates)
 * [The Future of EJB](https://omnifish.ee/2022/06/29/the-future-of-ejb/)
 * [Using jakartaee 10 security OIDC with wildfly 27 preview](https://blogs.nologin.es/rickyepoderi/index.php?/archives/198-Using-jakartaee-10-security-OIDC-with-wildfly-27-preview.html)
