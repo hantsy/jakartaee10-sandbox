@@ -41,7 +41,7 @@
 
         <!-- WildFly -->
         <wildfly.version>27.0.0.Beta1</wildfly.version>
-        <wildfly-maven-plugin.version>4.0.0.Beta4</wildfly-maven-plugin.version>
+        <wildfly-maven-plugin.version>4.0.0.Final</wildfly-maven-plugin.version>
 
         <!-- by default skip tests -->
         <skip.unit.tests>false</skip.unit.tests>
