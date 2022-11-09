@@ -781,9 +781,9 @@ When it is done, there is war package is ready in the path *target/jpa-examples.
 4. Open *GlassFish_install/glassfish/domains/domain1/logs/server.log*, and wait the deployment is completed.
 5. Open another terminal window, execute `curl http://localhost:8080/jpa-examples/rest/persons`. You will the following response in the console.
 
-   ```bash
-   [{"age":18,"birthDate":"2004-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"d8552d71-ff7f-4650-b5a0-ce1c5fb3fe0b","name":"Rose","salary":12345.678,"yearsWorked":2},{"age":20,"birthDate":"2002-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"cdf94cdc-21b3-492c-b1b5-06bc8cae9947","name":"Jack","salary":12345.678,"yearsWorked":2}]
-   ```
+    ```bash
+    [{"age":18,"birthDate":"2004-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"d8552d71-ff7f-4650-b5a0-ce1c5fb3fe0b","name":"Rose","salary":12345.678,"yearsWorked":2},{"age":20,"birthDate":"2002-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"cdf94cdc-21b3-492c-b1b5-06bc8cae9947","name":"Jack","salary":12345.678,"yearsWorked":2}]
+    ```
 
 6. To stop GlassFish and Derby, run `asadmin stop-database` and `asadmin stop-domain domain1`
 
@@ -796,3 +796,79 @@ When it is done, there is war package is ready in the path *target/jpa-examples.
 5. Send a `CTLR+C` keys combination in the original WildFly startup console to stop WildFly.
 
 ### Deploying Application via Maven Plugin
+
+#### Deploying to GlassFish via Cargo Plugin
+
+The GlassFish project does not include an official Maven plugin to manage GlassFish server.
+There is a Maven plugin named `cargo-maven3-plugin` which can be used to manage all popular Jakarta EE application servers and web servers.
+
+Add the following `profile` section to use cargo plugin to manage the lifecycle of GlassFish server.
+
+```xml
+<profile>
+    <id>glassfish</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <properties>
+        <cargo.zipUrlInstaller.downloadDir>${project.basedir}/../installs</cargo.zipUrlInstaller.downloadDir>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven3-plugin</artifactId>
+                <configuration>
+                    <container>
+                        <containerId>glassfish7x</containerId>
+                        <!-- <artifactInstaller>
+                            <groupId>org.glassfish.main.distributions</groupId>
+                            <artifactId>glassfish</artifactId>
+                            <version>${glassfish.version}</version>
+                        </artifactInstaller> -->
+                        <zipUrlInstaller>
+                            <url>https://github.com/eclipse-ee4j/glassfish/releases/download/${glassfish.version}/glassfish-${glassfish.version}.zip</url>
+                            <downloadDir>${cargo.zipUrlInstaller.downloadDir}</downloadDir>
+                        </zipUrlInstaller>
+                    </container>
+                    <configuration>
+                        <!-- the configuration used to deploy -->
+                        <home>${project.build.directory}/glassfish7x-home</home>
+                        <properties>
+                            <cargo.remote.password></cargo.remote.password>
+                            <cargo.glassfish.removeDefaultDatasource>true</cargo.glassfish.removeDefaultDatasource>
+                        </properties>
+                        <datasources>
+                            <datasource>
+                                <driverClass>org.apache.derby.jdbc.EmbeddedDriver</driverClass>
+                                <url>jdbc:derby:derbyDB;create=true</url>
+                                <jndiName>jdbc/__default</jndiName>
+                                <username>APP</username>
+                                <password>nonemptypassword</password>
+                            </datasource>
+                        </datasources>
+                    </configuration>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</profile>
+```
+
+Unlike the approach in NetBeans IDE or Eclipse IDE with GlassFish Pack, where starting GlassFish it will start the built-in Derby at the same time. Cargo does not start the built-in Derby as expected, to use the default DataSource in our project, clear the default DataSource and add a new default DataSource based on the embedded Derby.
+
+Run the following command. It will compile the project source codes and package the application into a war archive, then start the managed GlassFish server(with a new `cargo-domain`), and then deploy the package into this running server.
+
+```bash
+mvn clean package cargo:run -DskipTests -Dmaven.test.skip=true
+```
+
+Note, when you run this command at the first time, it will spend some time to download a copy of  the GlassFish redistribution, and extract the files into the build folder.
+
+In another terminal window, execute `curl http://localhost:8080/jpa-examples/rest/persons` to verify the endpoint.
+
+To stop the server, just send a `CTRL+C` in the original GlassFish running console.
+
+#### Deploying to WildFly via WildFly Plugin
+
+Cargo maven plugin also supports WildFly, but WildFly project itself provides a configurable WildFly Maven plugin.
