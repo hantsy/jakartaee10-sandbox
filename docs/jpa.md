@@ -688,7 +688,7 @@ The configuration is a little different from the one we introduced in the Hibern
 * In a container environment, we would like choose `JTA` as transaction-type.
 * We do not setup database connection info, instead we configure a built-in DataSource. The `java:comp/DefaultDataSource` is the default DataSource for all Jakarta EE compatible products.
 
-### Sample Application
+### Creating Jakarta EE Sample Application
 
 To interact with our backend database, we will create a simple complete JAXRS application, including:
 
@@ -733,7 +733,7 @@ public class PersonResource {
 
 The `PersonResource` is annotated with `RequestScoped`, it is a CDI bean, the `@Path` on the class define the root path of all subresources in this class. The `allPersons` will produces all persons to client in JSON format when HTTP Client request matches HTTP GET method, and URI is `/persons` and HTTP Header Accept is compatible with `application/json`.
 
-To activate JAXRS feature, create a Jaxrs `Application`.
+To activate JAXRS feature, create a class to extend the JAXRS `Application`, add `@ApplicationPath` to specify the root context path of all JAXRS resources.
 
 ```java
 @ApplicationPath("/rest")
@@ -871,4 +871,255 @@ To stop the server, just send a `CTRL+C` in the original GlassFish running conso
 
 #### Deploying to WildFly via WildFly Plugin
 
-Cargo maven plugin also supports WildFly, but WildFly project itself provides a configurable WildFly Maven plugin.
+The WildFly project itself provides an official WildFly Maven plugin, we will configure it in a new Maven profile.
+
+> Cargo maven plugin also supports WildFly, check [Cargo WildFly docs](https://codehaus-cargo.github.io/cargo/WildFly+27.x.html).
+
+```xml
+<profile>
+    <id>wildfly</id>
+    <properties>
+        <!-- Wildfly server -->
+        <wildfly.artifactId>wildfly-preview-dist</wildfly.artifactId>
+        <jboss-as.home>${project.build.directory}/wildfly-preview-${wildfly.version}</jboss-as.home>
+    </properties>
+    <build>
+        <plugins>
+
+            <!-- unpack a copy of WildFly-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wildfly</groupId>
+                                    <artifactId>${wildfly.artifactId}</artifactId>
+                                    <version>${wildfly.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- The WildFly plugin deploys your war to a local running WildFly container -->
+            <!-- To use, run: mvn package wildfly:deploy -->
+            <!-- For Jakarta EE 9, use `wildfly-preview-dist` as artifactId instead to start and deploy applications-->
+            <!-- Run: mvn clean wildfly:run -PWildfly -Dwildfly.artifactId=wildfly-preview-dist -Dwildfly.version=22.0.0.Alpha1 -->
+            <!-- or set the `jboss-as.home` to run: mvn clean wildfly:run -PWildfly -Djboss-as.home=D:\appsvr\wildfly-preview-22.0.0.Alpha1-->
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>${wildfly-maven-plugin.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>opensaml</id>
+            <url>https://build.shibboleth.net/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+</profile>
+```
+
+With the WildFly plugin, we can deploy applications into an embedded WildFly, a managed WildFly server or a remote running WildFly server.
+
+```bash
+mvn clean wildfly:run -Pwildfly -DskipTests -Dmaven.test.skip=true
+```
+
+By default, if we do not setup a `jboss-as.home` or remote host connection info, it will bootstrap an embedded WildFly and run the application with the embedded server.
+
+Here we configure Maven dependency plugin to download a copy of WildFly, extract the files to the project build directory, and setup a `jboss-as.home` property, the value is the WildFly location. The WildFly plugin will manage the whole WildFly lifecycle - start the WildFly server, deploy applications into the running server, (use `CTRL+C` hotkey) stop the server.
+
+### Testing JPA Features
+
+Here I assume you are familiar with [JUnit](https://www.junit.org) and [Arquillian](https://arquillian.org) before.
+
+> For the developers new to Arqullian framework, please read the official [Arquillian Guides](https://arquillian.org/guides) to start your first step. Note, these tutorials are available in several languages, including Simplified Chinese.
+
+> Go to my [Jakarta EE 8 starter boilerplate project](https://github.com/hantsy/jakartaee8-starter-boilerplate) and [Jakarta EE 9 starter boilerplate project](https://github.com/hantsy/jakartaee9-starter-boilerplate) to update your Arquilian knowledge.
+
+Since Jakarta EE 9, it uses the new `jakarta` namespace, Arquillian 1.7.0.x starts to support these changes.
+
+In the next steps, we will configure a managed GlassFish Arquillian Adapter to run the testing codes.
+
+```xml
+<profile>
+    <id>arq-glassfish-managed</id>
+    <properties>
+        <skip.unit.tests>true</skip.unit.tests>
+        <skip.integration.tests>false</skip.integration.tests>
+    </properties>
+    <dependencies>
+        <!-- Jersey -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-sse</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-binding</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hantsy.arquillian-container-glassfish-jakarta</groupId>
+            <artifactId>arquillian-glassfish-managed-jakarta</artifactId>
+            <version>${arquillian-glassfish-jakarta.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/arq-glassfish-managed</directory>
+            </testResource>
+        </testResources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>glassfish</artifactId>
+                                    <version>${glassfish.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <configuration>
+                    <environmentVariables>
+                        <GLASSFISH_HOME>${project.build.directory}/glassfish7</GLASSFISH_HOME>
+                    </environmentVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</profile>
+```
+
+In the above configuration, we add `com.github.hantsy.arquillian-container-glassfish-jakarta:arquillian-glassfish-managed-jakarta`, which is my [fork](https://github.com/hantsy/arquillian-container-glassfish-jakarta) of the official [Arquillian Container GlassFish project](https://github.com/arquillian/arquillian-container-glassfish6).
+
+We preapre a copy of the latest GlassFish 7.0 in the `pre-integration-test` phase. The Arquillian tests will be exectued in the `integretion-test` phase.
+
+Let's create a simple Arquillian tests to verify the UUID basic type feature in JPA 3.1.
+
+```java
+@ExtendWith(ArquillianExtension.class)
+public class UUIDStrategyTest {
+
+    private final static Logger LOGGER = Logger.getLogger(UUIDStrategyTest.class.getName());
+
+    @Deployment
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                .addClasses(Person.class, Gender.class)
+                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Inject
+    UserTransaction ux;
+
+    @BeforeEach
+    public void before() throws Exception {
+        startTx();
+    }
+
+    private void startTx() throws Exception {
+        ux.begin();
+        em.joinTransaction();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        endTx();
+    }
+
+    private void endTx() throws Exception {
+        try {
+            if( ux.getStatus() == Status.STATUS_ACTIVE ) {
+                ux.commit();
+            }
+        } catch (Exception e) {
+            ux.rollback();
+        }
+    }
+
+    @Test
+    public void testPersistingPersons() throws Exception {
+        final Person person = new Person();
+        person.setName("Hantsy Bai");
+        em.persist(person);
+        endTx();
+
+        startTx();
+        final Person foundPerson = em.find(Person.class, person.getId());
+        assertNotNull(foundPerson.getId());
+        LOGGER.log(Level.INFO, "Found person: {0}", foundPerson);
+    }
+}
+```
+
+The `@ExtendWith(ArquillianExtension.class)` annotation on a test class to support Arquillian test lifecycle.
+
+The `@Deployment` annotated static method defines the resources that will be packaged into the test archive and deployed into the manged GlassFish server. It is easy to use shrinkwrap to create a fine-grined deploymen unit.
+
+You can inject `EntityManager` and `UserTransaction` beans in an Arquillian test like what you do in a simple CDI bean.
+
+In this test class, we setup `@BeforeEach` and `@AfterEach` hooks to start a transacation and end the transaction.
+
+The test method `testPersistingPersons` looks no difference from a plain JUnit test. Firstly we persist a person entity, and commit the transaction to ensure it will be flushed into the database as expected. Then exectuing a simple JPA query to verify the persisted data.
