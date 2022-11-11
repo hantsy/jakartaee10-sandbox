@@ -1446,6 +1446,6 @@ public class JPQLCriteriaBuilderTest {
 }
 ```
 
-But unfortunately, a new issue introduced in the GlassFish 7.0.0-M9 will fail the test `JPQLFunctionsTest`, more details please check issue [GlassFish #24120](https://github.com/eclipse-ee4j/glassfish/issues/24120).
+But unfortunately, there is a bug in the GlassFish 7.0.0-M9 will fail the test `JPQLFunctionsTest`, more details please check Github issues [GlassFish #24120](https://github.com/eclipse-ee4j/glassfish/issues/24120).
 
 Check the sample codes of [Hibernate](https://github.com/hantsy/jakartaee10-sandbox/tree/master/hibernate) and [Jakarta Persistence](https://github.com/hantsy/jakartaee10-sandbox/tree/master/jpa) from my github.
