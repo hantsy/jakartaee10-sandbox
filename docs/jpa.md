@@ -1123,3 +1123,329 @@ You can inject `EntityManager` and `UserTransaction` beans in an Arquillian test
 In this test class, we setup `@BeforeEach` and `@AfterEach` hooks to start a transacation and end the transaction.
 
 The test method `testPersistingPersons` looks no difference from a plain JUnit test. Firstly we persist a person entity, and commit the transaction to ensure it will be flushed into the database as expected. Then exectuing a simple JPA query to verify the persisted data.
+
+Execute the following command to run the tests.
+
+```bash
+mvn clean verify -Parq-glassfish-managed
+```
+
+Similiarly, create a test to verify the new numeric functions and datetime functions in Jakarta rumtimes.
+
+```java
+@ExtendWith(ArquillianExtension.class)
+public class JPQLFunctionsTest {
+
+    private final static Logger LOGGER = Logger.getLogger(JPQLFunctionsTest.class.getName());
+
+    @Deployment
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                .addClasses(Person.class, Gender.class)
+                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Inject
+    UserTransaction ux;
+
+    @BeforeEach
+    public void before() throws Exception {
+        clearPersons();
+        startTx();
+    }
+
+    private void clearPersons() throws Exception {
+        startTx();
+        var builder = em.getCriteriaBuilder();
+        var deletePersonQuery = builder.createCriteriaDelete(Person.class);
+        var deletedPersons = em.createQuery(deletePersonQuery).executeUpdate();
+        LOGGER.log(Level.INFO, "Deleted {0} persons", deletedPersons);
+        endTx();
+    }
+
+    private void startTx() throws Exception {
+        ux.begin();
+        em.joinTransaction();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        endTx();
+    }
+
+    private void endTx() throws Exception {
+        LOGGER.log(Level.INFO, "Transaction status: {0}", ux.getStatus());
+        try {
+            if (ux.getStatus() == Status.STATUS_ACTIVE) {
+                ux.commit();
+            }
+        } catch (Exception e) {
+            ux.rollback();
+        }
+    }
+
+    @Test
+    @DisplayName(">>> test numeric functions")
+    public void testNumericFunctions() throws Exception {
+        var person = new Person("John", 30);
+        em.persist(person);
+        var id = person.getId();
+        assertNotNull(id);
+        endTx();
+
+        startTx();
+        try {
+            var queryString = """
+                    SELECT p.name,
+                    CEILING(p.salary),
+                    FLOOR(p.salary),
+                    ROUND(p.salary, 1),
+                    EXP(p.yearsWorked),
+                    LN(p.yearsWorked),
+                    POWER(p.yearsWorked,2),
+                    SIGN(p.yearsWorked)
+                    FROM Person p
+                    WHERE p.id=:id
+                    """;
+            var query = em.createQuery(queryString);
+
+            query.setParameter("id", id);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List<Map<String, Object>> resultList = query.getResultList();
+            LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+            resultList.forEach(data -> {
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
+            });
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+
+    @Test
+    @DisplayName(">>> test nen datetime functions")
+    public void testDateTimeFunctions() throws Exception {
+        var person = new Person("John", 30);
+        em.persist(person);
+        assertNotNull(person.getId());
+        endTx();
+
+        startTx();
+        try {
+            var queryString = """
+                    SELECT p.name as name,
+                    LOCAL TIME as localTime,
+                    LOCAL DATETIME as localDateTime,
+                    LOCAL DATE as localDate
+                    FROM Person p
+                    """;
+            // for EclipseLinks
+            var query = em.createQuery(queryString);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List<Map<String, Object>> resultList = query.getResultList();
+            LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+            resultList.forEach(data -> {
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
+            });
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+
+    @Test
+    @DisplayName(">>> test `EXTRACT` functions")
+    public void testExtractFunctions() throws Exception {
+        var person = new Person("John", 30);
+        em.persist(person);
+        assertNotNull(person.getId());
+        endTx();
+
+        startTx();
+        try {
+            var queryString = """
+                    SELECT p.name as name,
+                    EXTRACT(YEAR FROM p.birthDate) as year,
+                    EXTRACT(QUARTER FROM p.birthDate) as quarter,
+                    EXTRACT(MONTH FROM p.birthDate) as month,
+                    EXTRACT(WEEK FROM p.birthDate) as week,
+                    EXTRACT(DAY FROM p.birthDate) as day,
+                    EXTRACT(HOUR FROM p.birthDate) as hour,
+                    EXTRACT(MINUTE FROM p.birthDate) as minute,
+                    EXTRACT(SECOND FROM p.birthDate) as second
+                    FROM Person p
+                    """;
+            var query = em.createQuery(queryString);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List<Map<String, Object>> resultList = query.getResultList();
+            LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+            resultList.forEach(data -> {
+                data.forEach((k, v) -> LOGGER.log(Level.INFO, "field:{0}, value: {1}", new Object[]{k, v}));
+            });
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+}
+```
+
+Alternatively, create a test to verify the Criteria APIs.
+
+```java
+@ExtendWith(ArquillianExtension.class)
+public class JPQLCriteriaBuilderTest {
+
+    private final static Logger LOGGER = Logger.getLogger(JPQLCriteriaBuilderTest.class.getName());
+
+    @Deployment
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                .addClasses(Person.class, Gender.class)
+                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Inject
+    UserTransaction ux;
+
+    @BeforeEach
+    public void before() throws Exception {
+        clearPersons();
+        startTx();
+    }
+
+    private void clearPersons() throws Exception {
+        startTx();
+        var builder = em.getCriteriaBuilder();
+        var deletePersonQuery = builder.createCriteriaDelete(Person.class);
+        var deletedPersons = em.createQuery(deletePersonQuery).executeUpdate();
+        LOGGER.log(Level.INFO, "Deleted {0} persons", deletedPersons);
+        endTx();
+    }
+
+    private void startTx() throws Exception {
+        ux.begin();
+        em.joinTransaction();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        endTx();
+    }
+
+    private void endTx() throws Exception {
+        LOGGER.log(Level.INFO, "Transaction status: {0}", ux.getStatus());
+        try {
+            if (ux.getStatus() == Status.STATUS_ACTIVE) {
+                ux.commit();
+            }
+        } catch (Exception e) {
+            ux.rollback();
+        }
+    }
+
+    @Test
+    @DisplayName(">>> test numeric functions")
+    public void testNumericFunctions() throws Exception {
+        var person = new Person("John", 30);
+        em.persist(person);
+        var id = person.getId();
+        assertNotNull(id);
+        endTx();
+
+        startTx();
+        try {
+            var cb = em.getCriteriaBuilder();
+            var query = cb.createTupleQuery();
+            var root = query.from(Person.class);
+
+            query.multiselect(root.get("name"),
+                    cb.ceiling(root.get("salary")),
+                    cb.floor(root.get("salary")),
+                    cb.round(root.get("salary"), 1),
+                    cb.exp(root.get("yearsWorked")),
+                    cb.ln(root.get("yearsWorked")),
+                    cb.power(root.get("yearsWorked"), 2),
+                    cb.sign(root.get("yearsWorked"))
+            );
+            query.where(cb.equal(root.get("id"), id));
+
+            var resultList = em.createQuery(query).getResultList();
+            LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+            resultList.forEach(result ->
+                    LOGGER.log(
+                            Level.INFO,
+                            // see: https://github.com/eclipse-ee4j/eclipselink/issues/1593
+                            // John,12,345,12,345,12,345,7.389,0.693,4,1
+                            "tuple data :{0},{1},{2},{3},{4},{5},{6},{7}",
+                            new Object[]{
+                                    result.get(0, String.class),
+                                    result.get(1, BigDecimal.class), // it should return BigDecimal
+                                    result.get(2, BigDecimal.class),
+                                    result.get(3, BigDecimal.class),
+                                    result.get(4, Double.class),
+                                    result.get(5, Double.class),
+                                    result.get(6, Double.class),
+                                    result.get(7, Integer.class)
+                            }
+                    )
+            );
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+
+    @Test
+    @DisplayName(">>> test nen datetime functions")
+    public void testDateTimeFunctions() throws Exception {
+        var person = new Person("John", 30);
+        em.persist(person);
+        var id = person.getId();
+        assertNotNull(id);
+        endTx();
+
+        startTx();
+        try {
+            var cb = em.getCriteriaBuilder();
+            var query = cb.createTupleQuery();
+            var root = query.from(Person.class);
+
+            query.multiselect(root.get("name"),
+                    cb.localTime(),
+                    cb.localDateTime(),
+                    cb.localDate()
+            );
+            query.where(cb.equal(root.get("id"), id));
+
+            var resultList = em.createQuery(query).getResultList();
+            LOGGER.log(Level.INFO, "result size:{0}", resultList.size());
+            resultList.forEach(data ->
+                    LOGGER.log(
+                            Level.INFO,
+                            "tuple data :{0},{1},{2},{3}",
+                            new Object[]{
+                                    data.get(0, String.class),
+                                    data.get(1, java.time.LocalTime.class),
+                                    data.get(2, java.time.LocalDateTime.class),
+                                    data.get(3, java.time.LocalDate.class)
+                            }
+                    )
+            );
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+}
+```
+
+But unfortunately, a new issue introduced in the GlassFish 7.0.0-M9 will fail the test `JPQLFunctionsTest`, more details please check issue [GlassFish #24120](https://github.com/eclipse-ee4j/glassfish/issues/24120).
+
+Check the sample codes of [Hibernate](https://github.com/hantsy/jakartaee10-sandbox/tree/master/hibernate) and [Jakarta Persistence](https://github.com/hantsy/jakartaee10-sandbox/tree/master/jpa) from my github.
