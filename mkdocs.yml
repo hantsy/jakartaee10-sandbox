@@ -3,14 +3,14 @@ site_name: Migrating to Jakarta EE 10
 repo_url: https://github.com/hantsy/jakartaee10-sandbox
 repo_name: hantsy/jakartaee10-sandbox
 theme:
-  palette: 
+  palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline 
+        icon: material/toggle-switch-off-outline
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
-      scheme: slate 
+      scheme: slate
       primary: pink
       accent: pink
       toggle:
@@ -23,33 +23,37 @@ theme:
     - navigation.indexes
     # - toc.integrate
   icon:
-    repo: fontawesome/brands/git-alt 
+    repo: fontawesome/brands/git-alt
 
-copyright: Copyright &copy;2022 Hantsy  
+copyright: Copyright &copy;2022 Hantsy
 extra:
   social:
     - icon: fontawesome/brands/twitter
-      link: https://twitter.com/hantsy  
+      link: https://twitter.com/hantsy
     - icon: fontawesome/brands/linkedin
-      link: https://linkedin.com/in/hantsy  
+      link: https://linkedin.com/in/hantsy
     - icon: fontawesome/brands/medium
-      link: https://medium.com/@hantsy   
+      link: https://medium.com/@hantsy
     - icon: fontawesome/brands/github
-      link: https://github.com/hantsy   
+      link: https://github.com/hantsy
 
 markdown_extensions:
   - meta
   - toc:
       toc_depth: 3
-      permalink: true      
+      permalink: true
 plugins:
   - search
-  - git-revision-date    
-  
+  - git-revision-date
+
 nav:
   - Preface: index.md
-  - JPA: jpa.md  
-  - REST: rest.md  
+  - Persistence:
+      - jpa/index.md
+      - "What's New in Jakarta Persistence 3.1": jpa/new.md
+      - "Example: Hibernate 6.1": jpa/hibernate.md
+      - "Example: JPA and Jakarta EE Runtimes": jpa/jakartaee.md
+  - REST: rest.md
   - Concurrency: concurrency.md
   - Security: security.md
   - Faces: faces.md
