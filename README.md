@@ -5,6 +5,10 @@ Example projects for previous Java EE/Jakarta EE versions.
 * [Java EE 7 sandbox](https://github.com/hantsy/ee7-sandbox)
 * [Java EE 8/Jakarta EE 8 sandbox](https://github.com/hantsy/ee8-sandbox)
 
+## Guides
+
+Read the online support doc [Migrating to Jakarta EE 10](https://hantsy.github.io/jakartaee10-sandbox).
+
 ## Resources
 
 ### Books
