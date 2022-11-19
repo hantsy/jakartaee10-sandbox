@@ -41,7 +41,7 @@ SQL standards defines a collection of math functions, in JPA 3.1, several functi
 
 ### Java 8 DateTime Functions
 
-The existing `CURRENT_TIME`, `CURRENT_DATE`, `CURRENT_TIMPSTAMP` functions are mapped the old `java.util.Date` or `java.sql.Date`. To align with Java 8 DateTime APIs, new functions `LOCAL_DATE`, `LOCAL_TIME` and `LOCAL_DATETIME` are added in JPA 3.1 which return `LocalDate`, `LocalTime` and `LocalDateTime` from the `java.time` package.
+The existing `CURRENT_TIME`, `CURRENT_DATE`, `CURRENT_TIMPSTAMP` functions are mapped the old `java.util.Date` or `java.sql.Date`. To align with Java 8 DateTime APIs, new functions `LOCAL DATE`, `LOCAL TIME` and `LOCAL DATETIME` are added in JPA 3.1 which return `LocalDate`, `LocalTime` and `LocalDateTime` from the `java.time` package.
 
 | JPQL Function  | CriteriaBuilder Method | Description                                                            |
 | -------------- | ---------------------- | ---------------------------------------------------------------------- |
