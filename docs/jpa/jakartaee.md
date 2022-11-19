@@ -1,4 +1,4 @@
-# JakartaEE Runtime
+# Jakarta EE Runtime Environment
 
 Next let's go to the Jakarta EE 10 compatible products to experience the new features of JPA 3.1.
 
@@ -285,7 +285,7 @@ In another terminal window, execute `curl http://localhost:8080/jpa-examples/res
 
 To stop the server, just send a `CTRL+C` in the original GlassFish running console.
 
-### WildFly
+### WildFly Preview 27
 
 The WildFly project itself provides an official WildFly Maven plugin, we will configure it in a new Maven profile.
 
@@ -536,13 +536,13 @@ public class UUIDStrategyTest {
 
 The `@ExtendWith(ArquillianExtension.class)` annotation on a test class to support Arquillian test lifecycle.
 
-The `@Deployment` annotated static method defines the resources that will be packaged into the test archive and deployed into the manged GlassFish server. It is easy to use shrinkwrap to create a fine-grined deploymen unit.
+The `@Deployment` annotated static method defines the resources that will be packaged into the test archive and deployed into the manged GlassFish server. It is easy to use shrinkwrap to create a fine-grained deployment unit.
 
 You can inject `EntityManager` and `UserTransaction` beans in an Arquillian test like what you do in a simple CDI bean.
 
-In this test class, we setup `@BeforeEach` and `@AfterEach` hooks to start a transacation and end the transaction.
+In this test class, we setup `@BeforeEach` and `@AfterEach` hooks to start a transaction and end the transaction.
 
-The test method `testPersistingPersons` looks no difference from a plain JUnit test. Firstly we persist a person entity, and commit the transaction to ensure it will be flushed into the database as expected. Then exectuing a simple JPA query to verify the persisted data.
+The test method `testPersistingPersons` looks no difference from a plain JUnit test. Firstly we persist a person entity, and commit the transaction to ensure it will be flushed into the database as expected. Then executing a simple JPA query to verify the persisted data.
 
 Execute the following command to run the tests.
 
