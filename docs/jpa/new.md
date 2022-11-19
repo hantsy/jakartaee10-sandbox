@@ -1,4 +1,4 @@
-# What's New in JPA 3.1
+# What's New in Jakarta Persistence 3.1
 
 Compare to JPA 3.0, JPA 3.1 just brings several small enhancements.
 
