@@ -216,9 +216,9 @@ When it is done, there is war package is ready in the path *target/jpa-examples.
 ### GlassFish 7.0
 
 The GlassFish project does not include an official Maven plugin to manage GlassFish server.
-There is a Maven plugin named `cargo-maven3-plugin` which can be used to manage all popular Jakarta EE application servers and web servers.
+But there is a community-based `cargo-maven3-plugin` which can be used to manage almost all popular Jakarta EE application servers and web servers.
 
-Add the following `profile` section to use cargo plugin to manage the lifecycle of GlassFish server.
+Add the following `profile` section to use cargo Maven plugin to manage the lifecycle of GlassFish server.
 
 ```xml
 <profile>
@@ -271,15 +271,17 @@ Add the following `profile` section to use cargo plugin to manage the lifecycle 
 </profile>
 ```
 
-Unlike the approach in NetBeans IDE or Eclipse IDE with GlassFish Pack, where starting GlassFish it will start the built-in Derby at the same time. Cargo does not start the built-in Derby as expected, to use the default DataSource in our project, clear the default DataSource and add a new default DataSource based on the embedded Derby.
+Unlike the approach in NetBeans IDE or Eclipse IDE with GlassFish Pack, where starting GlassFish it will start the built-in Derby at the same time. Cargo maven plugin does not start the built-in Derby as expected, to use the default DataSource in our project, we have to clear the default DataSource and add a new default DataSource using the embedded Derby which is shipped by GlassFish distributions.
 
-Run the following command. It will compile the project source codes and package the application into a war archive, then start the managed GlassFish server(with a new `cargo-domain`), and then deploy the package into this running server.
+Run the following command.
 
 ```bash
 mvn clean package cargo:run -DskipTests -Dmaven.test.skip=true
 ```
 
-Note, when you run this command at the first time, it will spend some time to download a copy of  the GlassFish redistribution, and extract the files into the build folder.
+It will compile the project source codes and package the compiled resources into a war archive, then start the managed GlassFish server(with a new `cargo-domain`), and then deploy the package into the running server.
+
+>Note, when you run this command at the first time, it will spend some time to download a copy of the GlassFish distribution, and extract the files into the project build folder.
 
 In another terminal window, execute `curl http://localhost:8080/jpa-examples/rest/persons` to verify the endpoint.
 
@@ -289,7 +291,7 @@ To stop the server, just send a `CTRL+C` in the original GlassFish running conso
 
 The WildFly project itself provides an official WildFly Maven plugin, we will configure it in a new Maven profile.
 
-> Cargo maven plugin also supports WildFly, check [Cargo WildFly docs](https://codehaus-cargo.github.io/cargo/WildFly+27.x.html).
+> Cargo maven plugin also supports WildFly, check [Cargo WildFly support docs](https://codehaus-cargo.github.io/cargo/WildFly+27.x.html).
 
 ```xml
 <profile>
@@ -351,25 +353,25 @@ The WildFly project itself provides an official WildFly Maven plugin, we will co
 </profile>
 ```
 
-With the WildFly plugin, we can deploy applications into an embedded WildFly, a managed WildFly server or a remote running WildFly server.
+Utilize this WildFly plugin, we can deploy applications into an embedded WildFly, a managed WildFly server or a remote running WildFly server.
 
 ```bash
 mvn clean wildfly:run -Pwildfly -DskipTests -Dmaven.test.skip=true
 ```
 
-By default, if we do not setup a `jboss-as.home` or remote host connection info, it will bootstrap an embedded WildFly and run the application with the embedded server.
+By default, if we do not setup a `jboss-as.home` or remote host connection info, it will bootstrap an embedded WildFly and run the application on the embedded server.
 
 Here we configure Maven dependency plugin to download a copy of WildFly, extract the files to the project build directory, and setup a `jboss-as.home` property, the value is the WildFly location. The WildFly plugin will manage the whole WildFly lifecycle - start the WildFly server, deploy applications into the running server, (use `CTRL+C` hotkey) stop the server.
 
 ## Testing JPA Components
 
-Here I assume you are familiar with [JUnit](https://www.junit.org) and [Arquillian](https://arquillian.org) before.
+Here I assume you are familiar with [JUnit](https://www.junit.org) and [Arquillian](https://arquillian.org).
 
-> For the developers new to Arqullian framework, please read the official [Arquillian Guides](https://arquillian.org/guides) to start your first step. Note, these tutorials are available in several languages, including Simplified Chinese.
+> For the developers those are new to Arqullian framework, please read the official [Arquillian Guides](https://arquillian.org/guides) to start your first step. Note, these tutorials are available in several languages, including Simplified Chinese.
 
 > Go to my [Jakarta EE 8 starter boilerplate project](https://github.com/hantsy/jakartaee8-starter-boilerplate) and [Jakarta EE 9 starter boilerplate project](https://github.com/hantsy/jakartaee9-starter-boilerplate) to update your Arquilian knowledge.
 
-Since Jakarta EE 9, it uses the new `jakarta` namespace, Arquillian 1.7.0.x starts to support these changes.
+Since Jakarta EE 9, it begins to use the new `jakarta` namespace in all specifications. Arquillian 1.7.0.x starts to support these changes.
 
 ### Configuring GlassFish Managed Adapter
 
@@ -472,7 +474,7 @@ We prepare a copy of the latest GlassFish 7.0 in the `pre-integration-test` phas
 
 ### Creating Arquillian Tests
 
-Let's create a simple Arquillian tests to verify the UUID basic type feature in JPA 3.1.
+Let's create a simple Arquillian test to verify the UUID basic type feature in JPA 3.1.
 
 ```java
 @ExtendWith(ArquillianExtension.class)
