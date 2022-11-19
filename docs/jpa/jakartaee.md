@@ -195,13 +195,14 @@ When it is done, there is war package is ready in the path *target/jpa-examples.
 2. To start GlassFish and Derby, open a terminal, enter *GlassFish_install/bin*, run `asadmin start-database` and `asadmin start-domain domain1`.
 3. Copy the above war package to *Glassfish_install/glassfish/domains/domain1/autodeploy* folder.
 4. Open *GlassFish_install/glassfish/domains/domain1/logs/server.log*, and wait the deployment is completed.
-5. Open another terminal window, execute `curl http://localhost:8080/jpa-examples/rest/persons`. You will the following response in the console.
+5. Open another terminal window, execute `curl http://localhost:8080/jpa-examples/rest/persons`. You will see the following result in the console.
 
-    ```bash
+    ```json
     [{"age":18,"birthDate":"2004-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"d8552d71-ff7f-4650-b5a0-ce1c5fb3fe0b","name":"Rose","salary":12345.678,"yearsWorked":2},{"age":20,"birthDate":"2002-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"cdf94cdc-21b3-492c-b1b5-06bc8cae9947","name":"Jack","salary":12345.678,"yearsWorked":2}]
     ```
 
 6. To stop GlassFish and Derby, run `asadmin stop-database` and `asadmin stop-domain domain1`
+respectively.
 
 ### WildFly Preview 27
 
@@ -369,7 +370,7 @@ Here I assume you are familiar with [JUnit](https://www.junit.org) and [Arquilli
 
 > For the developers those are new to Arqullian framework, please read the official [Arquillian Guides](https://arquillian.org/guides) to start your first step. Note, these tutorials are available in several languages, including Simplified Chinese.
 
-> Go to my [Jakarta EE 8 starter boilerplate project](https://github.com/hantsy/jakartaee8-starter-boilerplate) and [Jakarta EE 9 starter boilerplate project](https://github.com/hantsy/jakartaee9-starter-boilerplate) to update your Arquilian knowledge.
+> If you have some basic knowledge of Arquillian, go to my [Jakarta EE 8 starter boilerplate project](https://github.com/hantsy/jakartaee8-starter-boilerplate) and [Jakarta EE 9 starter boilerplate project](https://github.com/hantsy/jakartaee9-starter-boilerplate) to update yourself.
 
 Since Jakarta EE 9, it begins to use the new `jakarta` namespace in all specifications. Arquillian 1.7.0.x starts to support these changes.
 
@@ -470,7 +471,7 @@ In the next steps, we will configure a managed GlassFish Arquillian Adapter to r
 
 In the above configuration, we add `com.github.hantsy.arquillian-container-glassfish-jakarta:arquillian-glassfish-managed-jakarta`, which is my [fork](https://github.com/hantsy/arquillian-container-glassfish-jakarta) of the official [Arquillian Container GlassFish project](https://github.com/arquillian/arquillian-container-glassfish6).
 
-We prepare a copy of the latest GlassFish 7.0 in the `pre-integration-test` phase. The Arquillian tests will be executed in the `integretion-test` phase.
+Then we prepare a copy of the latest GlassFish 7.0 in the `pre-integration-test` phase. The Arquillian tests will be executed in the `integretion-test` phase.
 
 ### Creating Arquillian Tests
 
