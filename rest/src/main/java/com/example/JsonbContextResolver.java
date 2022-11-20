@@ -14,9 +14,8 @@ public class JsonbContextResolver implements ContextResolver<Jsonb> {
     public Jsonb getContext(Class<?> type) {
         JsonbConfig config = new JsonbConfig()
                 .withPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE)
+                .withFormatting(true)
                 .withNullValues(false);
-        return JsonbBuilder.newBuilder().
-                withConfig(config).
-                build();
+        return JsonbBuilder.newBuilder().withConfig(config).build();
     }
 }

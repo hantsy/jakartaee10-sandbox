@@ -6,6 +6,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
@@ -13,14 +14,12 @@ import jakarta.ws.rs.core.UriInfo;
 @RequestScoped
 public class TodoResources {
 
-    @Inject
-    //@Any
-    //@Context
+    // @Inject
+    @Context
     ResourceContext resourceContext;
 
-    @Inject
-    // @Any // or  @JaxRsContext
-    //@Context
+    //@Inject
+    @Context
     UriInfo uriInfo;
 
     @Inject
