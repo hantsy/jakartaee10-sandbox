@@ -66,12 +66,12 @@ under the License.
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.4.4</version>
+            <version>1.4.5</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.4</version>
+            <version>1.4.5</version>
         </dependency>
         <!-- tests -->
         <dependency>
