@@ -39,8 +39,9 @@ under the License.
 
     <dependencies>
         <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
 
         <!-- Lombok -->
@@ -85,18 +86,6 @@ under the License.
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-bom</artifactId>
-                <version>${resteasy.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -163,17 +152,14 @@ under the License.
                 <dependency>
                     <groupId>org.glassfish.jersey.core</groupId>
                     <artifactId>jersey-server</artifactId>
-                    <version>${jersey.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.jersey.containers</groupId>
                     <artifactId>jersey-container-jdk-http</artifactId>
-                    <version>${jersey.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.jersey.inject</groupId>
                     <artifactId>jersey-cdi2-se</artifactId>
-                    <version>${jersey.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -184,21 +170,6 @@ under the License.
                 <jboss-logmanager.version>2.1.19.Final</jboss-logmanager.version>
             </properties>
             <dependencies>
-                <dependency>
-                    <groupId>jakarta.ws.rs</groupId>
-                    <artifactId>jakarta.ws.rs-api</artifactId>
-                    <version>3.1.0</version>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.inject</groupId>
-                    <artifactId>jakarta.inject-api</artifactId>
-                    <version>2.0.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>jakarta.servlet</groupId>
-                    <artifactId>jakarta.servlet-api</artifactId>
-                    <version>5.0.0</version>
-                </dependency>
                 <dependency>
                     <groupId>org.jboss.logmanager</groupId>
                     <artifactId>jboss-logmanager</artifactId>
