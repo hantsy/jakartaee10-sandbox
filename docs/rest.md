@@ -11,11 +11,11 @@ Let's explore the features by examples.
 
 Like the CDI Bootstrap API to host a CDI container in Java SE environment, Jakarta REST Bootstrap API provides similar API to serve a Jaxrs application on embedded servers.
 
-Let's create a simple Java SE application to experience it.
+### Creating Java SE Project
 
-Follow the steps in the [Jakarta Persistence - Example: Hibernate 6.1](./jpa/hibernate.md) to setup a Java SE project.
+Follow the steps in the [Jakarta Persistence - Example: Hibernate 6.1](./jpa/hibernate.md) to create a simple Java SE project.
 
-We use sl4j/logback as logging framework, and also Lombok annotations to simplify the source codes.
+We will use sl4j/logback as logging framework, and also use Lombok annotations to simplify the Java codes.
 
 Add the following dependencies in the project *pom.xml*.
 
@@ -51,20 +51,7 @@ Add the following dependencies in the project *pom.xml*.
 </dependency>
 ```
 
-Add the Jakarta REST API into the dependencies.
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>jakarta.ws.rs</groupId>
-        <artifactId>jakarta.ws.rs-api</artifactId>
-        <version>3.1.0</version>
-    </dependency>
-    //...
-</dependencies>
-```
-
-Create *src/main/resources/logback.xml*.
+Create *src/main/resources/logback.xml* to set up Logback.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -115,6 +102,19 @@ Create *src/main/resources/logback.xml*.
 </configuration>
 ```
 
+Add the Jakarta REST API into the dependencies.
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>jakarta.ws.rs</groupId>
+        <artifactId>jakarta.ws.rs-api</artifactId>
+        <version>3.1.0</version>
+    </dependency>
+    //...
+</dependencies>
+```
+
 Create a *main* class as the application entry.
 
 ```java
@@ -149,15 +149,15 @@ public class Main {
 }
 ```
 
-The `@Slf4j` is from Lombok, which will add a `org.slf4j.Logger` declaration at compile time.
+The `@Slf4j` is from Lombok, which will add a `org.slf4j.Logger` declaration to `Main` class at compile time.
 
-To customize the bootstrap parameters, you can use `SeBootstrap.Configuration.builder()` to setup the embedded server properties.
+To customize `SeBootstrap`, you can use `SeBootstrap.Configuration.builder()` to produces a `SeBootstrap.Configuration` which can be used to start `SeBootstrap` instance.
 
-The `SeBootstrap.start` accepts a Rest `Application` entry class and configuration, in `thenAccept` block, a Bootstrap server instance is available to consume. The `instance.stopOnShutdown` is used to setup a shutdown hook, then print the application startup information.
+The `SeBootstrap.start` accepts a Rest `Application` entry class and an optional `SeBootstrap.Configuration`, in `thenAccept` block, a Bootstrap server instance is available to consume. The `instance.stopOnShutdown` is used to setup a shutdown hook, then print the application startup information.
 
-The `.toCompletableFuture().join()` will wait async execution is completed.
+The `.toCompletableFuture().join()` will wait async execution to be completed.
 
-Let's have a look at `RestConfig`.
+Let's have a look at `RestConfig` - which is the REST Application entry class.
 
 ```java
 @ApplicationPath("/api")
@@ -169,7 +169,7 @@ public class RestConfig extends Application {
 }
 ```
 
-Create a simple Jaxrs Resource - `GreetingResource`.
+Add a simple Jaxrs Resource - `GreetingResource`.
 
 ```java
 @Path("greeting")
@@ -183,7 +183,7 @@ public class GreetingResource {
 }
 ```
 
-You have to create an empty CDI *bean.xml*, put it into *src/main/resources/META-INFO*.
+Although CDI *beans.xml* is optional in Jakarta EE environment. To run start SeBootstrap instance in a Java SE environment, you have to create an empty CDI *beans.xml*, put it into *src/main/resources/META-INFO*.
 
 ```xml
 <beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
@@ -193,11 +193,11 @@ You have to create an empty CDI *bean.xml*, put it into *src/main/resources/META
 </beans>
 ```
 
-To run the application, we should the runtime embedded server. Both Jersey and Resteasy provides several options.
+To run this application, it requires a runtime embedded server. Both Jersey and Resteasy provides several options.
 
 ### Jersey
 
-Add the following dependencies into the project *pom.xml*, we use a standard Maven profile to category them.
+Add Jersey container related dependencies into the project *pom.xml*, create a standard Maven profiles.
 
 ```xml
 <profiles>
@@ -224,9 +224,9 @@ Add the following dependencies into the project *pom.xml*, we use a standard Mav
     //...
 ```
 
-There are [several Jersey containers](https://repo1.maven.org/maven2/org/glassfish/jersey/containers/) provided in the latest Jersey. Here we used the simplest one which is based on the JDK HttpServer.
+There are [several Jersey containers](https://repo1.maven.org/maven2/org/glassfish/jersey/containers/) provided in the latest Jersey. Here we used the simplest one which is based on the JDK built-in HttpServer.
 
-Now you can run `Main` in IDE directly by click the run button.
+Now you can run `Main` in your IDEs directly by click the run button.
 
 You will see the following info in the console window.
 
@@ -243,7 +243,7 @@ WARNING: JAX-B API not found . WADL feature is disabled.
 2022-11-22 22:42:48,006 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.Main: Send SIGKILL to shutdown.
 ```
 
-Now open a terminal from system, and use `curl` command to verify your resource endpoint.
+Now open another terminal window, and use `curl` command to test the endpoint `/api/greeting`.
 
 ```bash
 curl http://localhost:8080/api/greeting?name=Hantsy
@@ -251,7 +251,7 @@ curl http://localhost:8080/api/greeting?name=Hantsy
 Say 'Hello' to Hantsy at 2022-11-22T22:45:41.129167100
 ```
 
-Utilize the maven-assemble-plugin, we can package the application with all dependencies into one archive.
+Utilize with maven-assemble-plugin, we can package the application classes with all dependencies into one archive.
 
 ```xml
  <!-- Maven Assembly Plugin -->
@@ -284,7 +284,7 @@ Utilize the maven-assemble-plugin, we can package the application with all depen
 </plugin>
 ```
 
-Open a terminal, and switch to the project root, and run the following command to build and run the application Jersey embedded container.
+Open a terminal, and switch to the project root, and run the following command to build and run the application in Jersey embedded container.
 
 ```xml
 >mvn clean package -DskipTests -D"maven.test.skip=true"
@@ -306,7 +306,7 @@ Transactional observers will be invoked synchronously.
 
 Let's switch to use Redhat [Resteasy](https://resteasy.dev/) as runtime.
 
-Create a new Maven profile to use Resteasy.
+Create a new Maven profile for Resteasy.
 
 ```xml
 <profile>
@@ -340,9 +340,9 @@ Create a new Maven profile to use Resteasy.
 </profile>
 ```
 
-There are [several Embedded containers](https://docs.jboss.org/resteasy/docs/6.2.1.Final/userguide/html_single/index.html#RESTEasy_Embedded_Container) existed in Resteasy to serve a Rest Application. Here we select the server based on Redhat Undertow with CDI support.
+There are [several Embedded containers](https://docs.jboss.org/resteasy/docs/6.2.1.Final/userguide/html_single/index.html#RESTEasy_Embedded_Container) existed in Resteasy to serve a Rest Application. Here we choose the one that based on Redhat Undertow with CDI support.
 
-Open a terminal, switch to the project root, and run the following command to start the application on the Resteasy embedded server.
+Open a terminal, switch to the project root, and run the following command to start the application in this Resteasy embedded server.
 
 ```bash
 >mvn clean package -Presteasy  -DskipTests -D"maven.test.skip=true"
@@ -439,7 +439,7 @@ public class SeBootstrapTest {
 
 Here we use Java 11 built-in HttClient to shake hands with the `/api/greeting` endpoint.
 
-Run the following command to execute tests.
+Execute the following command to run tests.
 
 ```bash
 >mvn clean test
