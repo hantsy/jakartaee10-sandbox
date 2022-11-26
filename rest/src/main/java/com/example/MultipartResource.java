@@ -73,7 +73,7 @@ public class MultipartResource {
                 part -> {
                     LOGGER.log(
                             Level.INFO,
-                            "{0},{1},{2},{3}",
+                            "uploading multifiles: {0},{1},{2},{3}",
                             new Object[]{
                                     part.getMediaType(),
                                     part.getName(),

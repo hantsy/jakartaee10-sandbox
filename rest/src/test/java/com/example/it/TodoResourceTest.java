@@ -101,6 +101,4 @@ public class TodoResourceTest {
         String jsonString = r.readEntity(String.class);
         LOGGER.log(Level.INFO, "Get /todos result string: {0}", jsonString);
     }
-
-
 }

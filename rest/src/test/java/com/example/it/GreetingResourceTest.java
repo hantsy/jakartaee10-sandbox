@@ -19,8 +19,8 @@ under the License.
 package com.example.it;
 
 import com.example.JsonbContextResolver;
-import com.example.Person;
-import com.example.PersonResource;
+import com.example.GreetingRecord;
+import com.example.GreetingResource;
 import com.example.RestConfig;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -50,9 +50,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(ArquillianExtension.class)
-public class PersonResourceTest {
+public class GreetingResourceTest {
 
-    private final static Logger LOGGER = Logger.getLogger(PersonResourceTest.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(GreetingResourceTest.class.getName());
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
@@ -65,7 +65,7 @@ public class PersonResourceTest {
                 .asFile();
         var war = ShrinkWrap.create(WebArchive.class)
                 .addAsLibraries(extraJars)
-                .addClasses(PersonResource.class, Person.class, JsonbContextResolver.class, RestConfig.class)
+                .addClasses(GreetingResource.class, GreetingRecord.class, JsonbContextResolver.class, RestConfig.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
         LOGGER.log(Level.INFO, "war deployment: {0}", new Object[]{war.toString(true)});
         return war;
@@ -91,12 +91,12 @@ public class PersonResourceTest {
     @Test
     @RunAsClient
     public void testGetPerson() throws Exception {
-        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/person"));
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/greeting"));
         Response r = target.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
-        LOGGER.log(Level.INFO, "Get person response status: {0}", r.getStatus());
+        LOGGER.log(Level.INFO, "Get greeting response status: {0}", r.getStatus());
         assertEquals(200, r.getStatus());
         String jsonString = r.readEntity(String.class);
-        LOGGER.log(Level.INFO, "Get person result string: {0}", jsonString);
+        LOGGER.log(Level.INFO, "Get greeting result string: {0}", jsonString);
         assertThat(jsonString).doesNotContain("email");
         assertThat(jsonString).contains("Name");
     }

@@ -7,14 +7,16 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("person")
+import java.time.LocalDateTime;
+
+@Path("greeting")
 @RequestScoped
-public class PersonResource {
+public class GreetingResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPerson() {
-        var person = new Person("Hantsy", 40);
+    public Response sayHello() {
+        var person = new GreetingRecord("Hantsy", LocalDateTime.now());
         return Response.ok(person).build();
     }
 }
