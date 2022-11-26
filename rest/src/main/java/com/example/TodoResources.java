@@ -14,12 +14,12 @@ import jakarta.ws.rs.core.UriInfo;
 @RequestScoped
 public class TodoResources {
 
-    // @Inject
-    @Context
+     @Inject
+    //@Context
     ResourceContext resourceContext;
 
-    //@Inject
-    @Context
+    @Inject
+    // @Context
     UriInfo uriInfo;
 
     @Inject
