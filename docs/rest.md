@@ -224,6 +224,8 @@ Add the following dependencies into the project *pom.xml*, we use a standard Mav
     //...
 ```
 
+There are [several Jersey containers](https://repo1.maven.org/maven2/org/glassfish/jersey/containers/) provided in the latest Jersey. Here we used the simplest one which is based on the JDK HttpServer.
+
 Now you can run `Main` in IDE directly by click the run button.
 
 You will see the following info in the console window.
@@ -247,4 +249,216 @@ Now open a terminal from system, and use `curl` command to verify your resource 
 curl http://localhost:8080/api/greeting?name=Hantsy
 
 Say 'Hello' to Hantsy at 2022-11-22T22:45:41.129167100
+```
+
+Utilize the maven-assemble-plugin, we can package the application with all dependencies into one archive.
+
+```xml
+ <!-- Maven Assembly Plugin -->
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <version>3.4.2</version>
+    <configuration>
+        <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+        <!-- MainClass in mainfest make a executable jar -->
+        <archive>
+            <manifest>
+                <addClasspath>true</addClasspath>
+                <mainClass>com.example.Main</mainClass>
+            </manifest>
+        </archive>
+
+    </configuration>
+    <executions>
+        <execution>
+            <id>make-assembly</id>
+            <phase>package</phase> <!-- bind to the packaging phase -->
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+Open a terminal, and switch to the project root, and run the following command to build and run the application Jersey embedded container.
+
+```xml
+>mvn clean package -DskipTests -D"maven.test.skip=true"
+...
+[INFO]
+[INFO] --- maven-assembly-plugin:3.4.2:single (make-assembly) @ rest-se-bootstrap-examples ---
+[INFO] Building jar: D:\hantsylabs\jakartaee10-sandbox\rest-se-bootstrap\target\rest-se-bootstrap-examples-jar-with-dependencies.jar
+...
+>java -jar .\target\rest-se-bootstrap-examples-jar-with-dependencies.jar
+...
+WELD-000101: Transactional services not available. Injection of @Inject UserTransaction not available.
+Transactional observers will be invoked synchronously.
+2022-11-26 13:50:45,132 INFO  [ForkJoinPool.commonPool-worker-1] org.jboss.weld.environment.se.WeldContainer: WELD-ENV-002003: Weld SE container 4744564b-922c-4612-a88f-8095c4d7293b initialized
+2022-11-26 13:50:45,257 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.Main: Instance org.glassfish.jersey.server.internal.RuntimeDelegateImpl$1@2fa5468d running at http://localhost:8080/ [Native handle: org.glassfish.jersey.jdkhttp.JdkHttpServer@78879a1c].%n
+2022-11-26 13:50:45,257 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.Main: Send SIGKILL to shutdown.
+```
+
+### Resteasy
+
+Let's switch to use Redhat [Resteasy](https://resteasy.dev/) as runtime.
+
+Create a new Maven profile to use Resteasy.
+
+```xml
+<profile>
+    <id>resteasy</id>
+    <properties>
+        <jboss-logmanager.version>2.1.19.Final</jboss-logmanager.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.logmanager</groupId>
+            <artifactId>jboss-logmanager</artifactId>
+            <version>${jboss-logmanager.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-undertow-cdi</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</profile>
+```
+
+There are [several Embedded containers](https://docs.jboss.org/resteasy/docs/6.2.1.Final/userguide/html_single/index.html#RESTEasy_Embedded_Container) existed in Resteasy to serve a Rest Application. Here we select the server based on Redhat Undertow with CDI support.
+
+Open a terminal, switch to the project root, and run the following command to start the application on the Resteasy embedded server.
+
+```bash
+>mvn clean package -Presteasy  -DskipTests -D"maven.test.skip=true"
+...
+[INFO] --- maven-assembly-plugin:3.4.2:single (make-assembly) @ rest-se-bootstrap-examples ---
+[INFO] Building jar: D:\hantsylabs\jakartaee10-sandbox\rest-se-bootstrap\target\rest-se-bootstrap-examples-jar-with-dependencies.jar
+...
+>java -jar .\target\rest-se-bootstrap-examples-jar-with-dependencies.jar
+
+...
+org.jboss.weld.environment.undertow.UndertowContainer: WELD-ENV-001302: Undertow detected, CDI injection will be available in Servlets, Filters and Listeners.
+2022-11-26 13:44:37,430 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.Main: Instance org.jboss.resteasy.core.se.ResteasySeInstance@56cb9a0d running at http://localhost:8080/ [Native handle: dev.resteasy.embedded.server.UndertowCdiEmbeddedServer@80a8d12].%n
+2022-11-26 13:44:37,431 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.Main: Send SIGKILL to shutdown.
+```
+
+### Testing REST Endpoint
+
+With Bootstrap API, it is easy to start and stop the application in JUnit lifecycle hooks.
+
+```java
+@Slf4j
+public class SeBootstrapTest {
+    SeBootstrap.Instance instance;
+
+    @SneakyThrows
+    @BeforeEach
+    public void setup() {
+        var latch = new CountDownLatch(1);
+        SeBootstrap.start(RestConfig.class)
+                .thenAccept(it -> {
+                    instance = it;
+                    latch.countDown();
+                })
+                .toCompletableFuture().join();
+
+        latch.await(1000, java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
+
+    @AfterEach
+    public void teardown() {
+        instance.stop()
+                .thenAccept(
+                        stopResult -> log.debug(
+                                "Stop result: {} [Native stop result: {}]",
+                                stopResult,
+                                stopResult.unwrap(Object.class)
+                        )
+                ).toCompletableFuture().join();
+
+    }
+
+// tests
+}
+```
+
+Add a test to verify the functionality of `GreetingResource`.
+
+```java
+@Slf4j
+public class SeBootstrapTest {
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .executor(executorService)
+            .version(HttpClient.Version.HTTP_2)
+            .build();
+
+    // @BeforeEach and @AfterEach...
+
+    @Test
+    public void testGreetingEndpoints() {
+        var greetingUri = instance.configuration().baseUriBuilder().path("/api/greeting").queryParam("name", "Hantsy").build();
+        log.debug("greetingUri: {}", greetingUri);
+        this.httpClient
+                .sendAsync(
+                        HttpRequest.newBuilder()
+                                .GET()
+                                .uri(greetingUri)
+                                .header("Accept", "application/json")
+                                .build()
+                        ,
+                        HttpResponse.BodyHandlers.ofString()
+                )
+                .thenApply(HttpResponse::body)
+                .thenAccept(body -> {
+                    log.debug("Greeting: {}", body);
+                    assertThat(body).contains("Say 'Hello' to Hantsy at");
+                })
+                .join();
+    }
+}
+```
+
+Here we use Java 11 built-in HttClient to shake hands with the `/api/greeting` endpoint.
+
+Run the following command to execute tests.
+
+```bash
+>mvn clean test
+...
+2022-11-26 16:45:57,721 DEBUG [main] com.example.SeBootstrapTest: greetingUri: http://localhost:8080/api/greeting?name=Hantsy
+2022-11-26 16:45:58,103 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.SeBootstrapTest: Greeting: Say 'Hello' to Hantsy at 2022-11-26T16:45:58.022505600
+2022-11-26 16:45:58,211 INFO  [ForkJoinPool.commonPool-worker-1] org.jboss.weld.environment.se.WeldContainer: WELD-ENV-002001: Weld SE
+container e388f80d-f026-41cb-999d-6f2ed757a1b5 shut down
+2022-11-26 16:45:58,213 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.SeBootstrapTest: Stop result: org.glassfish.jersey.server.internal.RuntimeDelegateImpl$1$1@2df99c23 [Native stop result: null]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.694 s - in com.example.SeBootstrapTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.225 s
+[INFO] Finished at: 2022-11-26T16:45:58+08:00
+[INFO] ------------------------------------------------------------------------
 ```
