@@ -65,7 +65,7 @@ public class MultipartResourceTest {
                 .addAsLibraries(extraJars)
                 .addClasses(MultipartResource.class, RestConfig.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-        LOGGER.log(Level.INFO, "war deployment: {0}", new Object[]{war.toString(true)});
+        LOGGER.log(Level.INFO, "war deployment: {0}", new Object[] { war.toString(true) });
         return war;
     }
 
@@ -76,7 +76,7 @@ public class MultipartResourceTest {
 
     @BeforeEach
     public void before() throws Exception {
-        LOGGER.log(Level.INFO, "baseURL: {0}", new Object[]{baseUrl.toExternalForm()});
+        LOGGER.log(Level.INFO, "baseURL: {0}", new Object[] { baseUrl.toExternalForm() });
         client = ClientBuilder.newClient();
         client.register(MultiPartFeature.class);
     }
@@ -94,8 +94,9 @@ public class MultipartResourceTest {
                 .content(this.getClass().getResourceAsStream("/test.txt"))
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
                 .build();
-        var name = EntityPart.withName( "name").content("test").build();
-        var genericEntity = new GenericEntity<List<EntityPart>>(List.of(name, part)) {};
+        var name = EntityPart.withName("name").content("test").build();
+        var genericEntity = new GenericEntity<List<EntityPart>>(List.of(name, part)) {
+        };
         var entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA);
         Response r = target.request(MediaType.MULTIPART_FORM_DATA).post(entity);
         LOGGER.log(Level.INFO, "response status: {0}", r.getStatus());
@@ -114,9 +115,9 @@ public class MultipartResourceTest {
                 EntityPart.withName("imageFile").fileName("test.svg")
                         .content(this.getClass().getResourceAsStream("/test.svg"))
                         .mediaType(MediaType.APPLICATION_SVG_XML_TYPE)
-                        .build()
-        );
-        var genericEntity = new GenericEntity<List<EntityPart>>(parts) {};
+                        .build());
+        var genericEntity = new GenericEntity<List<EntityPart>>(parts) {
+        };
         var entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA);
         Response r = target.request().post(entity);
         assertEquals(200, r.getStatus());
@@ -131,16 +132,16 @@ public class MultipartResourceTest {
 
         assertEquals(200, response.getStatus());
         LOGGER.log(Level.INFO, "GetFiles response status: {0}", response.getStatus());
-        List<EntityPart> parts = response.readEntity(new GenericType<List<EntityPart>>() {});
+        List<EntityPart> parts = response.readEntity(new GenericType<List<EntityPart>>() {
+        });
         parts.forEach(part -> LOGGER.log(
                 Level.INFO,
                 "Get file: {0},{1},{2},{3}",
-                new Object[]{
+                new Object[] {
                         part.getMediaType(),
                         part.getName(),
                         part.getFileName(),
                         part.getHeaders()
-                }
-        ));
+                }));
     }
 }

@@ -28,35 +28,38 @@ public class MultipartResource {
     @PostConstruct
     public void init() {
         try {
-            uploadedPath = Files.createTempDirectory(Paths.get("/temp"), "uploads_");
+            uploadedPath = Paths.get("/temp/uploads");
+            if (!Files.exists(uploadedPath)) {
+                Files.createDirectory(uploadedPath);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
     @Path("simple")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@FormParam("name") String name,
-                               @FormParam("part") EntityPart part) {
+            @FormParam("part") EntityPart part) {
         LOGGER.log(Level.INFO, "name: {0} ", name);
         LOGGER.log(
                 Level.INFO,
                 "uploading file: {0},{1},{2},{3}",
-                new Object[]{
+                new Object[] {
                         part.getMediaType(),
                         part.getName(),
                         part.getFileName(),
                         part.getHeaders()
-                }
-        );
+                });
         try {
             Files.copy(
                     part.getContent(),
-                    Paths.get(uploadedPath.toString(), part.getFileName().orElse(generateFileName(UUID.randomUUID().toString(), mediaTypeToFileExtension(part.getMediaType())))),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
+                    Paths.get(uploadedPath.toString(),
+                            part.getFileName()
+                                    .orElse(generateFileName(UUID.randomUUID().toString(),
+                                            mediaTypeToFileExtension(part.getMediaType())))),
+                    StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -74,24 +77,24 @@ public class MultipartResource {
                     LOGGER.log(
                             Level.INFO,
                             "uploading multifiles: {0},{1},{2},{3}",
-                            new Object[]{
+                            new Object[] {
                                     part.getMediaType(),
                                     part.getName(),
                                     part.getFileName(),
                                     part.getHeaders()
-                            }
-                    );
+                            });
                     try {
                         Files.copy(
                                 part.getContent(),
-                                Paths.get(uploadedPath.toString(), part.getFileName().orElse(generateFileName(UUID.randomUUID().toString(), mediaTypeToFileExtension(part.getMediaType())))),
-                                StandardCopyOption.REPLACE_EXISTING
-                        );
+                                Paths.get(uploadedPath.toString(),
+                                        part.getFileName()
+                                                .orElse(generateFileName(UUID.randomUUID().toString(),
+                                                        mediaTypeToFileExtension(part.getMediaType())))),
+                                StandardCopyOption.REPLACE_EXISTING);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                }
-        );
+                });
 
         return Response.ok().build();
     }
@@ -102,23 +105,22 @@ public class MultipartResource {
         parts.add(EntityPart.withName("abd")
                 .fileName("abc.text").content("this is a text content")
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
-                .build()
-        );
+                .build());
         try (var files = Files.list(uploadedPath)) {
             var partsInUploaded = files
                     .map(path -> {
-                                var file = path.toFile();
-                                LOGGER.log(Level.INFO, "found uploaded file: {0}", file.getName());
-                                try {
-                                    return EntityPart.withName(file.getName())
-                                            .fileName(file.getName())
-                                            .content(new FileInputStream(file))
-                                            .mediaType(fileExtensionToMediaType(getFileExt(file.getName())))
-                                            .build();
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
+                        var file = path.toFile();
+                        LOGGER.log(Level.INFO, "found uploaded file: {0}", file.getName());
+                        try {
+                            return EntityPart.withName(file.getName())
+                                    .fileName(file.getName())
+                                    .content(new FileInputStream(file))
+                                    .mediaType(fileExtensionToMediaType(getFileExt(file.getName())))
+                                    .build();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
 
                     )
                     .toList();
