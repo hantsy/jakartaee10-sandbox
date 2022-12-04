@@ -872,3 +872,512 @@ Sat Dec 03 21:21:33 CST 2022 : Apache Derby Network Server - 10.15.2.0 - (187358
 [INFO] Finished at: 2022-12-03T21:21:34+08:00
 [INFO] ------------------------------------------------------------------------
 ```
+
+## Customizing Jsonb
+
+In Jaxrs 3.1, you can customize Jsonb if it uses Jsonb to serialize and deserialize the HTTP messages.
+
+```java
+@Provider
+public class JsonbContextResolver implements ContextResolver<Jsonb> {
+    @Override
+    public Jsonb getContext(Class<?> type) {
+        JsonbConfig config = new JsonbConfig()
+                .withPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE)
+                .withFormatting(true)
+                .withNullValues(false);
+        return JsonbBuilder.newBuilder().withConfig(config).build();
+    }
+}
+```
+
+In the config, we apply `UPPER_CAMEL_CASE` strategy on the property name, and format the output result, and filter out the null nodes in JSON.
+
+Create a simple resource class for test purpose.
+
+```java
+@Path("greeting")
+@RequestScoped
+public class GreetingResource {
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sayHello() {
+        var person = new GreetingRecord("Hantsy", LocalDateTime.now());
+        return Response.ok(person).build();
+    }
+}
+
+// GreetingRecord
+public record GreetingRecord(String name, LocalDateTime sentAt){}
+```
+
+Build and run the application, and use `curl` to access the `/greeting` endpoint.
+
+```bash
+curl http://localhost:8080/rest-examples/api/greeting
+{
+    "Name": "Hantsy",
+    "SentAt": "2022-12-04T15:06:10.2230204"
+}
+```
+
+Let's create an Arquillian test to verify it.
+
+```java
+@ExtendWith(ArquillianExtension.class)
+public class GreetingResourceTest {
+
+    private final static Logger LOGGER = Logger.getLogger(GreetingResourceTest.class.getName());
+
+    @Deployment(testable = false)
+    public static WebArchive createDeployment() {
+        File[] extraJars = Maven
+                .resolver()
+                .loadPomFromFile("pom.xml")
+                .importCompileAndRuntimeDependencies()
+                .resolve("org.assertj:assertj-core")
+                .withTransitivity()
+                .asFile();
+        var war = ShrinkWrap.create(WebArchive.class)
+                .addAsLibraries(extraJars)
+                .addClasses(GreetingResource.class, GreetingRecord.class, JsonbContextResolver.class, RestConfig.class)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+        LOGGER.log(Level.INFO, "war deployment: {0}", new Object[]{war.toString(true)});
+        return war;
+    }
+
+    @ArquillianResource
+    private URL baseUrl;
+
+    Client client;
+
+    @BeforeEach
+    public void before() throws Exception {
+        LOGGER.log(Level.INFO, "baseURL: {0}", new Object[]{baseUrl.toExternalForm()});
+        client = ClientBuilder.newClient();
+        //client.register(JsonbContextResolver.class);
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        client.close();
+    }
+
+    @Test
+    @RunAsClient
+    public void testGetPerson() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/greeting"));
+        Response r = target.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
+        LOGGER.log(Level.INFO, "Get greeting response status: {0}", r.getStatus());
+        assertEquals(200, r.getStatus());
+        String jsonString = r.readEntity(String.class);
+        LOGGER.log(Level.INFO, "Get greeting result string: {0}", jsonString);
+        assertThat(jsonString).doesNotContain("email");
+        assertThat(jsonString).contains("Name");
+    }
+
+}
+```
+
+Run the test against the previous GlassFish managed adapter.
+
+```bash
+> mvn clean verify -Parq-glassfish-managed -D"it.test=GreetingResourceTest"
+...
+[INFO] --- maven-failsafe-plugin:3.0.0-M7:integration-test (integration-test) @ rest-examples ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.it.GreetingResourceTest
+Starting database using command: [java, -jar, D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\modules\admin-cli.jar, start-database, -t]
+Starting database in the background.
+Log redirected to D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\databases\derby.log.
+Starting container using command: [java, -jar, D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\modules\admin-cli.jar, start-domain, -t]
+Attempting to start domain1.... Please look at the server log for more details.....
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Dec 04, 2022 3:12:58 PM com.example.it.GreetingResourceTest createDeployment
+INFO: war deployment: d8b12d32-3bac-4092-b30b-612bb887509f.war:
+/WEB-INF/
+/WEB-INF/lib/
+/WEB-INF/lib/assertj-core-3.23.1.jar
+/WEB-INF/lib/byte-buddy-1.12.10.jar
+/WEB-INF/classes/
+/WEB-INF/classes/com/
+/WEB-INF/classes/com/example/
+/WEB-INF/classes/com/example/GreetingResource.class
+/WEB-INF/classes/com/example/GreetingRecord.class
+/WEB-INF/classes/com/example/JsonbContextResolver.class
+/WEB-INF/classes/com/example/RestConfig.class
+/WEB-INF/beans.xml
+Dec 04, 2022 3:13:08 PM com.example.it.GreetingResourceTest before
+INFO: baseURL: http://localhost:8080/d8b12d32-3bac-4092-b30b-612bb887509f/
+Dec 04, 2022 3:13:08 PM com.example.it.GreetingResourceTest testGetPerson
+INFO: Get greeting response status: 200
+Dec 04, 2022 3:13:08 PM com.example.it.GreetingResourceTest testGetPerson
+INFO: Get greeting result string: {
+    "Name": "Hantsy",
+    "SentAt": "2022-12-04T15:13:08.4011684"
+}
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 66.233 s - in com.example.it.GreetingResourceTest
+Stopping container using command: [java, -jar, D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\modules\admin-cli.jar, stop-domain, --kill, -t]
+Stopping database using command: [java, -jar, D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\modules\admin-cli.jar, stop-database, -t]
+Sun Dec 04 15:13:13 CST 2022 : Connection obtained for host: 0.0.0.0, port number 1527.
+Sun Dec 04 15:13:14 CST 2022 : Apache Derby Network Server - 10.15.2.0 - (1873585) shutdown
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- maven-failsafe-plugin:3.0.0-M7:verify (integration-test) @ rest-examples ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:37 min
+[INFO] Finished at: 2022-12-04T15:13:14+08:00
+[INFO] ------------------------------------------------------------------------
+```
+
+## CDI as Injection Provider
+
+In the initial Jaxrs 3.1 proposal, it planned to use CDI as default injection provider to replace the existing one, that means you can use `Inject` to replace Jaxrs specific `Context` to inject a Jaxrs resource. But this is not included in the final version.
+
+Jersey itself provides an extra module to implement this feature.
+
+Let's create a simple TODO application to expose resources at the `/todos` endpoint.
+
+Firstly create a JPA entity - `Todo`.
+
+```java
+@Entity
+@Table(name = "todos")
+public class Todo implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    UUID id;
+
+    String title;
+    boolean completed = false;
+
+    // setters and getters, hashCode and equals
+}
+```
+
+Create a simple EJB `@Stateless` bean to create a Todo and retrieve todos.
+
+```java
+@Stateless
+public class TodoService {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+   @Transactional
+    public Todo create(Todo data) {
+        entityManager.persist(data);
+        return data;
+    }
+
+    public Todo findById(UUID id) {
+        return entityManager.find(Todo.class, id);
+    }
+
+    public List<Todo> findAll() {
+        return entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
+    }
+}
+```
+
+Create a EJB `@Singleton` bean to initialize some datas.
+
+```java
+@Singleton
+@Startup
+public class TodoSamples {
+    private static final Logger LOGGER = Logger.getLogger(TodoSamples.class.getName());
+    @Inject
+    TodoService todoService;
+
+    @PostConstruct
+    public void init() {
+        var todos = Stream.of("What's new in JPA 3.1?", "What's new in Jaxrs 3.1", "Learn new features in Faces 4.0")
+                .map(Todo::new)
+                .map(it -> todoService.create(it))
+                .toList();
+        LOGGER.log(Level.INFO, "initialized todo samples: {0}", todos);
+    }
+}
+```
+
+Now create Jaxrs resource to expose `/todos` endpoints.
+
+```java
+@Path("todos")
+@RequestScoped
+public class TodoResources {
+
+     @Inject
+    //@Context
+    ResourceContext resourceContext;
+
+    @Inject
+    // @Context
+    UriInfo uriInfo;
+
+    @Inject
+    TodoService todoService;
+
+    @GET
+    public Response getAllTodos() {
+        var todos = todoService.findAll();
+        return Response.ok(todos).build();
+    }
+
+    @POST
+    public Response createTodo(Todo todo) throws Exception {
+        var saved = todoService.create(todo);
+        return Response.created(uriInfo.getBaseUriBuilder().path("todos/{id}").build(saved.getId())).build();
+    }
+
+    @GET
+    @Path("{id}")
+    public TodoResource subResource() {
+        return resourceContext.getResource(TodoResource.class);
+    }
+}
+
+
+// TodoResource for single resource.
+@RequestScoped
+public class TodoResource {
+
+    @Inject
+    TodoService todoService;
+
+    @PathParam("id")
+    UUID id;
+
+    @GET
+    public Response getById() {
+        var todos = todoService.findById(id);
+        return Response.ok(todos).build();
+    }
+
+}
+```
+
+To make sure it works with Jersey and GlassFish, we have to copy `jersey-cdi-rs-inject` to the GlassFish *GlassFish_installdir/glassfish/modules* folder.
+
+Simply add the following to `glassfish` profile and utilize `maven-dependency-plugin` to download a copy of `jersey-cdi-rs-inject` to the cargo managed GlassFish location.
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <version>${maven-dependency-plugin.version}</version>
+    <executions>
+        <execution>
+            <id>copy</id>
+            <phase>process-classes</phase>
+            <goals>
+                <goal>copy</goal>
+            </goals>
+            <configuration>
+                <artifactItems>
+                    <artifactItem>
+                        <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                        <artifactId>jersey-cdi-rs-inject</artifactId>
+                        <version>${jersey.version}</version>
+                        <type>jar</type>
+                        <overWrite>false</overWrite>
+                    </artifactItem>
+                </artifactItems>
+                <outputDirectory>${project.build.directory}/cargo/installs/glassfish-${glassfish.version}/glassfish7/glassfish/modules</outputDirectory>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+
+Build and run the application, and use `curl` to test our endpoint `/todos`.
+
+```bash
+> curl http://localhost:8080/rest-examples/api/todos
+[
+    {
+        "Completed": false,
+        "Id": "7db8cb74-6ec6-4b3b-8930-e6a29a9c363a",
+        "Title": "Learn new features in Faces 4.0"
+    },
+    {
+        "Completed": false,
+        "Id": "0dba2afd-943f-42a2-b1bd-2cd9fea3a140",
+        "Title": "What's new in JPA 3.1?"
+    },
+    {
+        "Completed": false,
+        "Id": "ff7ac837-fe68-4d47-b79d-f11fd87fd43a",
+        "Title": "What's new in Jaxrs 3.1"
+    }
+]
+```
+
+Create an Arquillian test for verify.
+
+```java
+@ExtendWith(ArquillianExtension.class)
+public class TodoResourceTest {
+
+    private final static Logger LOGGER = Logger.getLogger(TodoResourceTest.class.getName());
+
+    @Deployment(testable = false)
+    public static WebArchive createDeployment() {
+        File[] extraJars = Maven
+                .resolver()
+                .loadPomFromFile("pom.xml")
+                .importCompileAndRuntimeDependencies()
+                .resolve("org.assertj:assertj-core")
+                .withTransitivity()
+                .asFile();
+        var war = ShrinkWrap.create(WebArchive.class)
+                .addAsLibraries(extraJars)
+                .addClasses(
+                        TodoResource.class,
+                        TodoResources.class,
+                        TodoService.class,
+                        Todo.class,
+                        TodoSamples.class,
+                        RestConfig.class
+                )
+                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+        LOGGER.log(Level.INFO, "war deployment: {0}", new Object[]{war.toString(true)});
+        return war;
+    }
+
+    @ArquillianResource
+    private URL baseUrl;
+
+    Client client;
+
+    @BeforeEach
+    public void before() throws Exception {
+        LOGGER.log(Level.INFO, "baseURL: {0}", new Object[]{baseUrl.toExternalForm()});
+        client = ClientBuilder.newClient();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        client.close();
+    }
+
+    @Test
+    @RunAsClient
+    public void testGetTodos() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos"));
+        Response r = target.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
+        LOGGER.log(Level.INFO, "Get /todos response status: {0}", r.getStatus());
+        assertEquals(200, r.getStatus());
+        String jsonString = r.readEntity(String.class);
+        LOGGER.log(Level.INFO, "Get /todos result string: {0}", jsonString);
+    }
+}
+```
+
+To make test this test can be run successfully on GlassFish, copy `maven-dependency-plugin` to the target GlassFish server.
+
+Add the following to the end of `configuration` section of `dependency-maven-plugin` in the `arq-glassfish-managed` profile.
+
+```xml
+<execution>
+    <id>copy</id>
+    <phase>pre-integration-test</phase>
+    <goals>
+        <goal>copy</goal>
+    </goals>
+    <configuration>
+        <artifactItems>
+            <artifactItem>
+                <groupId>org.glassfish.jersey.ext.cdi</groupId>
+                <artifactId>jersey-cdi-rs-inject</artifactId>
+                <version>${jersey.version}</version>
+                <type>jar</type>
+                <overWrite>false</overWrite>
+            </artifactItem>
+        </artifactItems>
+        <outputDirectory>${project.build.directory}/glassfish7/glassfish/modules</outputDirectory>
+    </configuration>
+</execution>
+```
+
+Run the following to execute this test.
+
+```bash
+> mvn clean verify -Parq-glassfish-managed -D"it.test=TodoResourceTest"
+...
+[INFO] --- maven-failsafe-plugin:3.0.0-M7:integration-test (integration-test) @ rest-examples ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.it.TodoResourceTest
+Starting database using command: [java, -jar, D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\modules\admin-cli.jar, start-database, -t]
+Starting database in the background.
+Log redirected to D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\databases\derby.log.
+Starting container using command: [java, -jar, D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\modules\admin-cli.jar, start-domain, -t]
+Attempting to start domain1.... Please look at the server log for more details.....
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Dec 04, 2022 5:09:02 PM com.example.it.TodoResourceTest createDeployment
+INFO: war deployment: 4a77aebc-2b83-44e6-9ab0-f93e656e1b2c.war:
+/WEB-INF/
+/WEB-INF/lib/
+/WEB-INF/lib/assertj-core-3.23.1.jar
+/WEB-INF/lib/byte-buddy-1.12.10.jar
+/WEB-INF/classes/
+/WEB-INF/classes/com/
+/WEB-INF/classes/com/example/
+/WEB-INF/classes/com/example/TodoResource.class
+/WEB-INF/classes/com/example/TodoResources.class
+/WEB-INF/classes/com/example/TodoService.class
+/WEB-INF/classes/com/example/Todo.class
+/WEB-INF/classes/com/example/TodoSamples.class
+/WEB-INF/classes/com/example/RestConfig.class
+/WEB-INF/classes/META-INF/
+/WEB-INF/classes/META-INF/persistence.xml
+/WEB-INF/beans.xml
+Dec 04, 2022 5:09:15 PM com.example.it.TodoResourceTest before
+INFO: baseURL: http://localhost:8080/4a77aebc-2b83-44e6-9ab0-f93e656e1b2c/
+Dec 04, 2022 5:09:16 PM com.example.it.TodoResourceTest testGetTodos
+INFO: Get /todos response status: 200
+Dec 04, 2022 5:09:16 PM com.example.it.TodoResourceTest testGetTodos
+INFO: Get /todos result string: [{"completed":false,"id":"6686c811-71cb-40aa-a38a-24d775c679ba","title":"Learn new features in Faces 4.0"},{"completed":false,"id":"8efb7123-0c43-46aa-aabc-0777494be620","title":"What's new in JPA 3.1?"},{"completed":false,"id":"0478a20e-b8c1-4577-91e4-cc0362ab14d5","title":"What's new in Jaxrs 3.1"}]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 78.438 s - in com.example.it.TodoResourceTest
+Stopping container using command: [java, -jar, D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\modules\admin-cli.jar, stop-domain, --kill, -t]
+Stopping database using command: [java, -jar, D:\hantsylabs\jakartaee10-sandbox\rest\target\glassfish7\glassfish\modules\admin-cli.jar, stop-database, -t]
+Sun Dec 04 17:09:20 CST 2022 : Connection obtained for host: 0.0.0.0, port number 1527.
+Sun Dec 04 17:09:20 CST 2022 : Apache Derby Network Server - 10.15.2.0 - (1873585) shutdown
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- maven-failsafe-plugin:3.0.0-M7:verify (integration-test) @ rest-examples ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:45 min
+[INFO] Finished at: 2022-12-04T17:09:21+08:00
+[INFO] ------------------------------------------------------------------------
+```
+
+Get the [sample codes](https://github.com/hantsy/jakartaee10-sandbox/blob/master/rest/) from my Github account.
