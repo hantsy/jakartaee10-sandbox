@@ -151,11 +151,11 @@ public class Main {
 
 The `@Slf4j` is from Lombok, which will add a `org.slf4j.Logger` declaration to `Main` class at compile time.
 
-To customize `SeBootstrap`, you can use `SeBootstrap.Configuration.builder()` to produces a `SeBootstrap.Configuration` which can be used to start `SeBootstrap` instance.
+To customize `SeBootstrap`, use `SeBootstrap.Configuration.builder()` to produces a `SeBootstrap.Configuration` which can be used as a parameter to start `SeBootstrap` instance.
 
-The `SeBootstrap.start` accepts a Rest `Application` entry class and an optional `SeBootstrap.Configuration`, in `thenAccept` block, a Bootstrap server instance is available to consume. The `instance.stopOnShutdown` is used to setup a shutdown hook, then print the application startup information.
+The `SeBootstrap.start` accepts the REST `Application` entry class and an optional `SeBootstrap.Configuration`, in `thenAccept` block, a Bootstrap server instance is available to consume. The `instance.stopOnShutdown` is used to setup a shutdown hook, then print the application startup information.
 
-The `.toCompletableFuture().join()` will wait asynchronous execution to be completed.
+The `.toCompletableFuture().join()` will wait the asynchronous execution to be completed.
 
 Let's have a look at `RestConfig` - which is the REST Application entry class.
 
@@ -183,7 +183,9 @@ public class GreetingResource {
 }
 ```
 
-Although CDI *beans.xml* is optional in Jakarta EE environment. To start a SeBootstrap instance in a Java SE environment, you have to create an empty CDI *beans.xml*, put it into *src/main/resources/META-INFO*.
+Although CDI *beans.xml* is optional in Jakarta EE environment, it is a must when using SeBootstrap API in a Java SE environment.
+
+Create an empty CDI *beans.xml*, put it into the project folder *src/main/resources/META-INFO*.
 
 ```xml
 <beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
@@ -193,11 +195,11 @@ Although CDI *beans.xml* is optional in Jakarta EE environment. To start a SeBoo
 </beans>
 ```
 
-To run this application, it requires a runtime embedded server. Both Jersey and Resteasy provides several options.
+To run this application, it requires a HTTP embedded server at runtime. Both Jersey and Resteasy provides several options.
 
 ### Jersey
 
-Add Jersey container related dependencies into the project *pom.xml*, create a standard Maven profiles.
+Create a standard Maven profile for Jersey, add the following dependencies.
 
 ```xml
 <profiles>
@@ -226,7 +228,7 @@ Add Jersey container related dependencies into the project *pom.xml*, create a s
 
 There are [several Jersey containers](https://repo1.maven.org/maven2/org/glassfish/jersey/containers/) provided in the latest Jersey. Here we used the simplest one which is based on the JDK built-in HttpServer.
 
-Now you can run `Main` in your IDEs directly by click the run button.
+Now run the `Main` class in your IDEs directly by click the run button.
 
 You will see the following info in the console window.
 
@@ -243,7 +245,7 @@ WARNING: JAX-B API not found . WADL feature is disabled.
 2022-11-22 22:42:48,006 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.Main: Send SIGKILL to shutdown.
 ```
 
-Now open another terminal window, and use `curl` command to test the endpoint `/api/greeting`.
+Open another terminal window, and use `curl` command to test the `/api/greeting` endpoint.
 
 ```bash
 curl http://localhost:8080/api/greeting?name=Hantsy
@@ -251,7 +253,7 @@ curl http://localhost:8080/api/greeting?name=Hantsy
 Say 'Hello' to Hantsy at 2022-11-22T22:45:41.129167100
 ```
 
-Utilize with maven-assemble-plugin, we can package the application classes with all dependencies into one archive.
+Utilize with maven-assemble-plugin, it will package the application classes with all dependencies into one archive.
 
 ```xml
  <!-- Maven Assembly Plugin -->
@@ -348,7 +350,7 @@ Create a new Maven profile for Resteasy.
 </profile>
 ```
 
-There are [several Embedded containers](https://docs.jboss.org/resteasy/docs/6.2.1.Final/userguide/html_single/index.html#RESTEasy_Embedded_Container) existed in the latest Resteasy. Here we choose the one that based on Redhat Undertow with CDI support.
+There are [several Embedded containers](https://docs.jboss.org/resteasy/docs/6.2.1.Final/userguide/html_single/index.html#RESTEasy_Embedded_Container) existed in the latest Resteasy. Here we choose `resteasy-undertow-cdi` that based on Redhat Undertow with CDI support.
 
 Open a terminal, switch to the project root, and run the following command to start the application in this Resteasy embedded server.
 
@@ -477,7 +479,7 @@ Both Jersey and Resteasy have their own Multipart implementations. In Jakarta RE
 
 Follow the steps in [Jakarta Persistence - Jakarta EE](./jpa/jakartaee.md) and create a simple Jakarta EE project.
 
-Firstly we create a simple Jaxrs resource to consume Multipart request and produce Multipart response.
+Firstly let's a simple Jaxrs resource to consume Multipart request and produce Multipart response.
 
 ```java
 @Path("multiparts")
@@ -616,9 +618,9 @@ public class MultipartResource {
 }
 ```
 
-To handle a `multipart/form-data` request, add `@Consumes(MediaType.MULTIPART_FORM_DATA)` on the Jaxrs resource. A Jaxrs resource can consume a single `EntityPart` or a collection of `EntityPart` .
+To handle a `multipart/form-data` request, add `@Consumes(MediaType.MULTIPART_FORM_DATA)` on the Jaxrs resource methods. A Jaxrs resource can consume a single `EntityPart` or a collection of `EntityPart` .
 
-In the above example codes, the `uploadFile` method demonstrates how to handle a regular form post which includes a simple form value and a `EntityPart`, and `uploadMultiFiles` method is used to process a list of `EntityPart`. The `getFiles` method is used to produce Multipart entities to the client.
+In the above example codes, the `uploadFile` method demonstrates how to handle a regular form post which includes a simple form value and a `EntityPart`, and `uploadMultiFiles` method is used to process a list of `EntityPart`. The `getFiles` method is used to produce a collection of Multipart entities to the client.
 
 Create a REST `Application` to activate Jakarta REST.
 
@@ -628,7 +630,7 @@ public class RestConfig extends Application {
 }
 ```
 
-Run the following command, it will build the project and package it into a war archive, and then start a GlassFish server and deploy the war archive to GlassFish.
+Run the following command, it will build the project and package it into a war archive, and then start a GlassFish instance and deploy the war archive to GlassFish.
 
 ```bash
 > mvn clean package cargo:run
@@ -640,7 +642,7 @@ Alternatively, run the following command to deploy to WildFly if you prefer Wild
 > mvn clean wildfly:run
 ```
 
-Open another terminal, and let's test our endpoints with `curl` command.
+When the deployment work is done, open another terminal, and let's test our endpoints with `curl` command.
 
 ```bash
 > curl -i -X POST  http://localhost:8080/rest-examples/api/multiparts/simple -F "name=Hantsy" -F "part=@D:\temp\test.txt" -H "Content-Type: multipart/form-data"
@@ -666,7 +668,7 @@ HTTP/1.1 200 OK
 Server: Eclipse GlassFish  7.0.0
 ```
 
-In the GlassFish server.log file, we see the following new log.
+In the GlassFish server.log file, the following new log is newly added.
 
 ```bash
 [2022-12-03T20:58:54.140995+08:00] [GlassFish 7.0] [INFO] [] [com.example.MultipartResource] [tid: _ThreadID=65 _ThreadName=http-listener-1(5)] [levelValue: 800] [[
@@ -706,7 +708,7 @@ this is a text content
 --Boundary_1_1941664842_1670072479638--
 ```
 
-Jaxrs also includes Client API to shake hands with the Multipart endpoints, you can use it to upload or download the Multipart entities.
+Jaxrs also includes Client API to shake hands with the Multipart endpoints. With the Client API, it is easy to upload or download the Multipart entities.
 
 Let's create an Arquillian test and use Jaxrs Client API to verify the above endpoints.
 
@@ -810,7 +812,7 @@ public class MultipartResourceTest {
 }
 ```
 
-In this test, we have 3 methods to verify the functionality of uploading a single file, uploading a collection of files, and reading the files from server side.
+In this test, there are three methods to verify the functionality of uploading a single file, uploading a collection of files, and reading the files from server side.
 
 Run the following command to execute the test.
 
@@ -883,7 +885,7 @@ Sat Dec 03 21:21:33 CST 2022 : Apache Derby Network Server - 10.15.2.0 - (187358
 
 ## Customizing Jsonb
 
-In Jaxrs 3.1, you can customize Jsonb to tune the serialization and deserialization of the HTTP messages.
+In Jaxrs 3.1, it is possible to customize Jsonb to tune the serialization and deserialization of the HTTP messages.
 
 ```java
 @Provider
@@ -1054,9 +1056,9 @@ As you see, it works as expected.
 
 ## CDI as Injection Provider
 
-In the initial Jaxrs 3.1 proposal, an exciting feature is using CDI as default injection provider to replace the existing one in Jaxrs, that means you can use `Inject` to replace Jaxrs specific `Context` to inject Jaxrs specific resources. But this feature is delayed to the next version, and not included in the final 3.1 version. 
+In the initial Jaxrs 3.1 proposal, an exciting feature is using CDI as default injection provider to replace the existing one in Jaxrs, that means you can use `Inject` to replace Jaxrs `Context` to inject Jaxrs specific resources. Unfortunately this feature is delayed to the next version, and not included in the final 3.1 version. 
 
-Jersey itself provides an extra module to implement this feature.
+But Jersey itself provides an extra module to implement this feature.
 
 Let's create a simple TODO Jaxrs application to expose resources at the `/todos` endpoint.
 
@@ -1181,9 +1183,9 @@ public class TodoResource {
 }
 ```
 
-To make sure it works on GlassFish, we have to copy `jersey-cdi-rs-inject` to the GlassFish *GlassFish_installdir/glassfish/modules* folder.
+To make sure it works on GlassFish, copy `jersey-cdi-rs-inject` to the GlassFish *GlassFish_installdir/glassfish/modules* folder.
 
-Simply add the following to `glassfish` profile and utilize `maven-dependency-plugin` to download a copy of `jersey-cdi-rs-inject` to the cargo managed GlassFish.
+Simply add the following fragment to the `glassfish` profile, and use `maven-dependency-plugin` to download a copy of `jersey-cdi-rs-inject` to the cargo managed GlassFish instance.
 
 ```xml
 <plugin>
@@ -1299,9 +1301,9 @@ public class TodoResourceTest {
 }
 ```
 
-To make the test be run successfully on GlassFish, similarly you have to copy `jersey-cdi-rs-inject` to the target GlassFish server.
+To make the test be run successfully on GlassFish, similarly copy `jersey-cdi-rs-inject` to the target GlassFish server.
 
-Add the following to the end of `configuration` section of `dependency-maven-plugin` in the `arq-glassfish-managed` profile.
+In the `arq-glassfish-managed` Maven profile, find the `dependency-maven-plugin` config, add the following content at the end of `configuration` section.
 
 ```xml
 <execution>
