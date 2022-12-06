@@ -628,19 +628,19 @@ public class RestConfig extends Application {
 }
 ```
 
-Run the following to build the project and deploy to GlassFish.
+Run the following command, it will build the project and package it into a war archive, and then start a GlassFish server and deploy the war archive to GlassFish.
 
 ```bash
 > mvn clean package cargo:run
 ```
 
-Or deploy to WildFly if you prefer WildFly.
+Alternatively, run the following command to deploy to WildFly if you prefer WildFly.
 
 ```bash
 > mvn clean wildfly:run
 ```
 
-Open a terminal, and let's test our endpoints with `curl` command.
+Open another terminal, and let's test our endpoints with `curl` command.
 
 ```bash
 > curl -i -X POST  http://localhost:8080/rest-examples/api/multiparts/simple -F "name=Hantsy" -F "part=@D:\temp\test.txt" -H "Content-Type: multipart/form-data"
@@ -648,7 +648,7 @@ HTTP/1.1 200 OK
 Server: Eclipse GlassFish  7.0.0
 ```
 
-In the GlassFish server.log, it appends the following new info.
+Open the GlassFish server.log file, it appends the following new info.
 
 ```bash
 [2022-12-03T20:52:36.002626+08:00] [GlassFish 7.0] [INFO] [] [com.example.MultipartResource] [tid: _ThreadID=61 _ThreadName=http-listener-1(1)] [levelValue: 800] [[
@@ -658,7 +658,7 @@ In the GlassFish server.log, it appends the following new info.
   uploading file: text/plain,part,Optional[test.txt],{Content-Disposition=[form-data; name="part"; filename="test.txt"], Content-Type=[text/plain]}]]
 ```
 
-Let's try to upload multi files at the same time using `/list` endpoints.
+Let's try to upload multiple files using `/list` endpoints.
 
 ```bash
 > curl -i -X POST  http://localhost:8080/rest-examples/api/multiparts/list -F "test=@D:\temp\test.txt" -F "test2=@D:\temp\test2.txt" -H "Content-Type: multipart/form-data"
@@ -666,7 +666,7 @@ HTTP/1.1 200 OK
 Server: Eclipse GlassFish  7.0.0
 ```
 
-In the GlassFish server.log file, we got the following new log.
+In the GlassFish server.log file, we see the following new log.
 
 ```bash
 [2022-12-03T20:58:54.140995+08:00] [GlassFish 7.0] [INFO] [] [com.example.MultipartResource] [tid: _ThreadID=65 _ThreadName=http-listener-1(5)] [levelValue: 800] [[
@@ -706,9 +706,9 @@ this is a text content
 --Boundary_1_1941664842_1670072479638--
 ```
 
-Jaxrs Client also includes API to build Multipart and read Multipart entities.
+Jaxrs also includes Client API to shake hands with the Multipart endpoints, you can use it to upload or download the Multipart entities.
 
-Let's create an Arquillian test to verify the above endpoints.
+Let's create an Arquillian test and use Jaxrs Client API to verify the above endpoints.
 
 ```java
 @ExtendWith(ArquillianExtension.class)
@@ -883,7 +883,7 @@ Sat Dec 03 21:21:33 CST 2022 : Apache Derby Network Server - 10.15.2.0 - (187358
 
 ## Customizing Jsonb
 
-In Jaxrs 3.1, you can customize Jsonb if it uses Jsonb to serialize and deserialize the HTTP messages.
+In Jaxrs 3.1, you can customize Jsonb to tune the serialization and deserialization of the HTTP messages.
 
 ```java
 @Provider
@@ -899,9 +899,9 @@ public class JsonbContextResolver implements ContextResolver<Jsonb> {
 }
 ```
 
-In the config, we apply `UPPER_CAMEL_CASE` strategy on the property name, and format the output result, and filter out the null nodes in JSON.
+In the config, we apply `UPPER_CAMEL_CASE` strategy on the property name, and format the output result to make it move readable, and filter out the null nodes in JSON.
 
-Create a simple resource class for test purpose.
+Let's create a simple Jaxrs resource for test purpose.
 
 ```java
 @Path("greeting")
@@ -920,7 +920,7 @@ public class GreetingResource {
 public record GreetingRecord(String name, LocalDateTime sentAt){}
 ```
 
-Build and run the application, and use `curl` to access the `/greeting` endpoint.
+Build and run the application on GlassFish or WildFly, and use `curl` to access the `/greeting` endpoint.
 
 ```bash
 curl http://localhost:8080/rest-examples/api/greeting
@@ -930,7 +930,7 @@ curl http://localhost:8080/rest-examples/api/greeting
 }
 ```
 
-Let's create an Arquillian test to verify it.
+Let's create a simple Arquillian test to verify this functionality.
 
 ```java
 @ExtendWith(ArquillianExtension.class)
@@ -988,7 +988,7 @@ public class GreetingResourceTest {
 }
 ```
 
-Run the test against the previous GlassFish managed adapter.
+Run the test against the previous GlassFish managed adapter that defined in the `arq-glassfish-managed` Maven profile.
 
 ```bash
 > mvn clean verify -Parq-glassfish-managed -D"it.test=GreetingResourceTest"
@@ -1050,14 +1050,15 @@ Sun Dec 04 15:13:14 CST 2022 : Apache Derby Network Server - 10.15.2.0 - (187358
 [INFO] Finished at: 2022-12-04T15:13:14+08:00
 [INFO] ------------------------------------------------------------------------
 ```
+As you see, it works as expected.
 
 ## CDI as Injection Provider
 
-In the initial Jaxrs 3.1 proposal, it planned to use CDI as default injection provider to replace the existing one, that means you can use `Inject` to replace Jaxrs specific `Context` to inject a Jaxrs resource. But this is not included in the final version.
+In the initial Jaxrs 3.1 proposal, an exciting feature is using CDI as default injection provider to replace the existing one in Jaxrs, that means you can use `Inject` to replace Jaxrs specific `Context` to inject Jaxrs specific resources. But this feature is delayed to the next version, and not included in the final 3.1 version. 
 
 Jersey itself provides an extra module to implement this feature.
 
-Let's create a simple TODO application to expose resources at the `/todos` endpoint.
+Let's create a simple TODO Jaxrs application to expose resources at the `/todos` endpoint.
 
 Firstly create a JPA entity - `Todo`.
 
@@ -1102,7 +1103,7 @@ public class TodoService {
 }
 ```
 
-Create a EJB `@Singleton` bean to initialize some datas.
+Create a EJB `@Singleton` bean to initialize some sample data.
 
 ```java
 @Singleton
@@ -1123,7 +1124,7 @@ public class TodoSamples {
 }
 ```
 
-Now create Jaxrs resource to expose `/todos` endpoints.
+Now create a Jaxrs resource to expose `/todos` endpoint.
 
 ```java
 @Path("todos")
@@ -1180,9 +1181,9 @@ public class TodoResource {
 }
 ```
 
-To make sure it works with Jersey and GlassFish, we have to copy `jersey-cdi-rs-inject` to the GlassFish *GlassFish_installdir/glassfish/modules* folder.
+To make sure it works on GlassFish, we have to copy `jersey-cdi-rs-inject` to the GlassFish *GlassFish_installdir/glassfish/modules* folder.
 
-Simply add the following to `glassfish` profile and utilize `maven-dependency-plugin` to download a copy of `jersey-cdi-rs-inject` to the cargo managed GlassFish location.
+Simply add the following to `glassfish` profile and utilize `maven-dependency-plugin` to download a copy of `jersey-cdi-rs-inject` to the cargo managed GlassFish.
 
 ```xml
 <plugin>
@@ -1236,7 +1237,7 @@ Build and run the application, and use `curl` to test our endpoint `/todos`.
 ]
 ```
 
-Create an Arquillian test for verify.
+Create a simple Arquillian test to verify the functionality.
 
 ```java
 @ExtendWith(ArquillianExtension.class)
@@ -1298,7 +1299,7 @@ public class TodoResourceTest {
 }
 ```
 
-To make test this test can be run successfully on GlassFish, copy `maven-dependency-plugin` to the target GlassFish server.
+To make the test be run successfully on GlassFish, similarly you have to copy `jersey-cdi-rs-inject` to the target GlassFish server.
 
 Add the following to the end of `configuration` section of `dependency-maven-plugin` in the `arq-glassfish-managed` profile.
 
@@ -1324,7 +1325,7 @@ Add the following to the end of `configuration` section of `dependency-maven-plu
 </execution>
 ```
 
-Run the following to execute this test.
+Then run `TodoResourceTest` test.
 
 ```bash
 > mvn clean verify -Parq-glassfish-managed -D"it.test=TodoResourceTest"
