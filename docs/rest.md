@@ -284,7 +284,8 @@ Utilize with maven-assemble-plugin, we can package the application classes with 
 </plugin>
 ```
 
-Open a terminal, and switch to the project root, and run the following command to build and run the application in Jersey embedded container.
+Open a terminal, and switch to the project root, and run the following command to build the application into a jar archive.
+
 
 ```xml
 >mvn clean package -DskipTests -D"maven.test.skip=true"
@@ -293,6 +294,11 @@ Open a terminal, and switch to the project root, and run the following command t
 [INFO] --- maven-assembly-plugin:3.4.2:single (make-assembly) @ rest-se-bootstrap-examples ---
 [INFO] Building jar: D:\hantsylabs\jakartaee10-sandbox\rest-se-bootstrap\target\rest-se-bootstrap-examples-jar-with-dependencies.jar
 ...
+```
+
+Then run the application using the following command.
+
+```xml
 >java -jar .\target\rest-se-bootstrap-examples-jar-with-dependencies.jar
 ...
 WELD-000101: Transactional services not available. Injection of @Inject UserTransaction not available.
@@ -301,6 +307,8 @@ Transactional observers will be invoked synchronously.
 2022-11-26 13:50:45,257 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.Main: Instance org.glassfish.jersey.server.internal.RuntimeDelegateImpl$1@2fa5468d running at http://localhost:8080/ [Native handle: org.glassfish.jersey.jdkhttp.JdkHttpServer@78879a1c].%n
 2022-11-26 13:50:45,257 DEBUG [ForkJoinPool.commonPool-worker-1] com.example.Main: Send SIGKILL to shutdown.
 ```
+
+Similarly you can use the above `curl` command to verify the `/greeting` endpoint.
 
 ### Resteasy
 
