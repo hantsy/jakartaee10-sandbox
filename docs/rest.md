@@ -5,11 +5,11 @@ Jakarta REST includes a dozen of small improvements, and also introduces two maj
 * Java SE Bootstrap API
 * The long-awaited standard Multipart API
 
-Let's explore the features by examples.
+Let's explore these features by examples.
 
 ## Bootstrap API
 
-Like the CDI Bootstrap API to host a CDI container in Java SE environment, Jakarta REST Bootstrap API provides similar API to serve a Jaxrs application on embedded servers.
+Like the CDI Bootstrap API to host a CDI container in Java SE environment, Jakarta REST Bootstrap API provides similar API to serve a Jaxrs application in embedded servers.
 
 ### Creating Java SE Project
 
@@ -155,7 +155,7 @@ To customize `SeBootstrap`, you can use `SeBootstrap.Configuration.builder()` to
 
 The `SeBootstrap.start` accepts a Rest `Application` entry class and an optional `SeBootstrap.Configuration`, in `thenAccept` block, a Bootstrap server instance is available to consume. The `instance.stopOnShutdown` is used to setup a shutdown hook, then print the application startup information.
 
-The `.toCompletableFuture().join()` will wait async execution to be completed.
+The `.toCompletableFuture().join()` will wait asynchronous execution to be completed.
 
 Let's have a look at `RestConfig` - which is the REST Application entry class.
 
@@ -183,7 +183,7 @@ public class GreetingResource {
 }
 ```
 
-Although CDI *beans.xml* is optional in Jakarta EE environment. To run start SeBootstrap instance in a Java SE environment, you have to create an empty CDI *beans.xml*, put it into *src/main/resources/META-INFO*.
+Although CDI *beans.xml* is optional in Jakarta EE environment. To start a SeBootstrap instance in a Java SE environment, you have to create an empty CDI *beans.xml*, put it into *src/main/resources/META-INFO*.
 
 ```xml
 <beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
@@ -340,7 +340,7 @@ Create a new Maven profile for Resteasy.
 </profile>
 ```
 
-There are [several Embedded containers](https://docs.jboss.org/resteasy/docs/6.2.1.Final/userguide/html_single/index.html#RESTEasy_Embedded_Container) existed in Resteasy to serve a Rest Application. Here we choose the one that based on Redhat Undertow with CDI support.
+There are [several Embedded containers](https://docs.jboss.org/resteasy/docs/6.2.1.Final/userguide/html_single/index.html#RESTEasy_Embedded_Container) existed in the latest Resteasy. Here we choose the one that based on Redhat Undertow with CDI support.
 
 Open a terminal, switch to the project root, and run the following command to start the application in this Resteasy embedded server.
 
@@ -465,7 +465,7 @@ container e388f80d-f026-41cb-999d-6f2ed757a1b5 shut down
 
 ## Multipart APIs
 
-Both Jersey and Resteasy have their own Multipart implementations, in Jakarta REST 3.1, it brings the official Multipart APIs support.
+Both Jersey and Resteasy have their own Multipart implementations. In Jakarta REST 3.1, it finally brings the standardized Multipart APIs support.
 
 Follow the steps in [Jakarta Persistence - Jakarta EE](./jpa/jakartaee.md) and create a simple Jakarta EE project.
 
@@ -610,7 +610,7 @@ public class MultipartResource {
 
 To handle a `multipart/form-data` request, add `@Consumes(MediaType.MULTIPART_FORM_DATA)` on the Jaxrs resource. A Jaxrs resource can consume a single `EntityPart` or a collection of `EntityPart` .
 
-In the above example codes, the `uploadFile` method demonstrates how to handle a generic form post which includes a simple form value and a `EntityPart`, and `uploadMultiFiles` method is used to process a list of `EntityPart`. The `getFiles` method is used to produce Multipart entities to the client.
+In the above example codes, the `uploadFile` method demonstrates how to handle a regular form post which includes a simple form value and a `EntityPart`, and `uploadMultiFiles` method is used to process a list of `EntityPart`. The `getFiles` method is used to produce Multipart entities to the client.
 
 Create a REST `Application` to activate Jakarta REST.
 
