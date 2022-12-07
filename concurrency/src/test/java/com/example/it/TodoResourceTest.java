@@ -26,7 +26,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -51,6 +50,7 @@ public class TodoResourceTest {
                         TodoResource.class,
                         Todo.class,
                         TodoService.class,
+                        EjbTodoService.class,
                         TodoSamples.class,
                         RestConfig.class
                 )
@@ -101,8 +101,8 @@ public class TodoResourceTest {
 
     @Test
     @RunAsClient
-    public void testGetTodosAndAsync() throws Exception {
-        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos/async1"));
+    public void testGetAllTodosEjbFuture() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos/getAllTodosEjbFuture"));
         CompletionStage<Response> responseCompletionStage = target
                 .request()
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -111,10 +111,79 @@ public class TodoResourceTest {
         responseCompletionStage
                 .thenAccept(
                         r -> {
-                            LOGGER.log(Level.INFO, "Get /todos/async1 response status: {0}", r.getStatus());
+                            LOGGER.log(Level.INFO, "Get /todos/getAllTodosEjbFuture response status: {0}", r.getStatus());
                             assertEquals(200, r.getStatus());
                             String jsonString = r.readEntity(String.class);
-                            LOGGER.log(Level.INFO, "Get /todos/async1 result string: {0}", jsonString);
+                            LOGGER.log(Level.INFO, "Get todos result string: {0}", jsonString);
+                        }
+                )
+                .toCompletableFuture()
+                .join();
+
+    }
+
+    @Test
+    @RunAsClient
+    public void testGetAllTodosAsync() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos/getAllTodosAsync"));
+        CompletionStage<Response> responseCompletionStage = target
+                .request()
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .rx().get();
+
+        responseCompletionStage
+                .thenAccept(
+                        r -> {
+                            LOGGER.log(Level.INFO, "Get /todos/getAllTodosAsync response status: {0}", r.getStatus());
+                            assertEquals(200, r.getStatus());
+                            String jsonString = r.readEntity(String.class);
+                            LOGGER.log(Level.INFO, "Get todos result string: {0}", jsonString);
+                        }
+                )
+                .toCompletableFuture()
+                .join();
+
+    }
+
+    @Test
+    @RunAsClient
+    public void testGetAllTodosAndAsync() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos/getAllTodosAndAsync"));
+        CompletionStage<Response> responseCompletionStage = target
+                .request()
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .rx().get();
+
+        responseCompletionStage
+                .thenAccept(
+                        r -> {
+                            LOGGER.log(Level.INFO, "Get /todos/getAllTodosAndAsync response status: {0}", r.getStatus());
+                            assertEquals(200, r.getStatus());
+                            String jsonString = r.readEntity(String.class);
+                            LOGGER.log(Level.INFO, "Get todos result string: {0}", jsonString);
+                        }
+                )
+                .toCompletableFuture()
+                .join();
+
+    }
+
+    @Test
+    @RunAsClient
+    public void testGetAllTodosAndConcurrencyAsync() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos/getAllTodosAndConcurrencyAsync"));
+        CompletionStage<Response> responseCompletionStage = target
+                .request()
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .rx().get();
+
+        responseCompletionStage
+                .thenAccept(
+                        r -> {
+                            LOGGER.log(Level.INFO, "Get /todos/getAllTodosAndConcurrencyAsync response status: {0}", r.getStatus());
+                            assertEquals(200, r.getStatus());
+                            String jsonString = r.readEntity(String.class);
+                            LOGGER.log(Level.INFO, "Get todos result string: {0}", jsonString);
                         }
                 )
                 .toCompletableFuture()
@@ -146,5 +215,28 @@ public class TodoResourceTest {
 
     }
 
+    @Test
+    @RunAsClient
+    public void testCreateTodoAsync() throws Exception {
+        var target = client.target(URI.create(baseUrl.toExternalForm() + "api/todos/async"));
+        CompletionStage<Response> responseCompletionStage = target
+                .request()
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .rx().post(Entity.json(Todo.of("test")));
+
+        responseCompletionStage
+                .thenAccept(
+                        r -> {
+                            LOGGER.log(Level.INFO, "Post /todos/async response status: {0}", r.getStatus());
+                            assertEquals(201, r.getStatus());
+                            var location = r.getHeaderString("Location");
+                            LOGGER.log(Level.INFO, "Create todo response header Location: {0}", location);
+                            assertNotNull(location);
+                        }
+                )
+                .toCompletableFuture()
+                .join();
+
+    }
 
 }

@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Supplier;
 
 import static jakarta.enterprise.concurrent.ContextServiceDefinition.*;
 
@@ -35,20 +36,20 @@ public class TodoService {
     EntityManager entityManager;
 
     @Asynchronous
-    CompletableFuture<List<Todo>> getAllTodosAsync() {
-        return CompletableFuture
-                .supplyAsync(
-                        () -> entityManager.createQuery("select t from Todo t", Todo.class).getResultList(),
-                        executorService
-                );
+    public CompletableFuture<List<Todo>> getAllTodosAsync() {
+        Supplier<List<Todo>> todos = () -> entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
+        return executorService.supplyAsync(todos);
+
+//        var todos = entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
+//        return Asynchronous.Result.complete(todos);
     }
 
-    List<Todo> getAllTodos() {
+    public List<Todo> getAllTodos() {
         return entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
     }
 
     @Transactional
-    Todo create(Todo todo) {
+    public Todo create(Todo todo) {
         entityManager.persist(todo);
         return todo;
     }
@@ -56,8 +57,8 @@ public class TodoService {
     // when using @Transactional with @Asynchronous, only `REQUIRES_NEW` and `NOT_SUPPORTED` are supported.
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     @Asynchronous
-    CompletionStage<Todo> createAsync(Todo todo) {
+    public CompletionStage<Todo> createAsync(Todo todo) {
         entityManager.persist(todo);
-        return CompletableFuture.supplyAsync(() -> todo);
+        return executorService.supplyAsync(() -> todo);
     }
 }

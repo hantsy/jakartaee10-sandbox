@@ -1,5 +1,8 @@
 package com.example;
 
+import jakarta.annotation.Resource;
+import jakarta.enterprise.concurrent.Asynchronous;
+import jakarta.enterprise.concurrent.ManagedExecutorService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -34,44 +37,44 @@ public class TodoResources {
     @Inject
     EjbTodoService ejbTodoService;
 
+    @Resource(lookup = "java:module/concurrent/MyExecutor")
+    ManagedExecutorService executorService;
+
     @GET
-    @Path("ejbFuture")
+    @Path("getAllTodosEjbFuture")
     public Future<List<Todo>> getAllTodosEjbFuture() {
         return ejbTodoService.getAllTodosEjbAsync();
     }
 
     @GET
-    @Path("ejbAsync")
-    public CompletableFuture<Response> getAllTodosEjbAsync() {
-        return fromFuture(ejbTodoService.getAllTodosEjbAsync()).thenApply(todos -> Response.ok(todos).build());
-    }
-
-    private static <T> CompletableFuture<T> fromFuture(Future<T> future) {
-        CompletableFuture<T> cf = new CompletableFuture<>();
-        T result;
-        try {
-            result = future.get();
-        } catch (Throwable ex) {
-            cf.completeExceptionally(ex);
-            return cf;
-        }
-        cf.complete(result);
-        return cf;
-    }
-
-    @GET
-    @Path("concurrencyAsync")
-    public CompletableFuture<Response> getAllTodos() {
+    @Path("getAllTodosAsync")
+    public CompletableFuture<Response> getAllTodosAsync() {
         return todoService.getAllTodosAsync().thenApply(todos -> Response.ok(todos).build());
     }
 
     @GET
-    @Path("async")
+    @Path("getAllTodosAndAsync")
     public CompletableFuture<Response> getAllTodosAndAsync() {
         var todos = todoService.getAllTodos();
         return CompletableFuture.supplyAsync(() -> todos).thenApply(data -> Response.ok(data).build());
     }
 
+    @GET
+    @Path("getAllTodosAndConcurrencyAsync")
+    @Asynchronous
+    public CompletableFuture<Response> getAllTodosAndConcurrencyAsync() {
+        var todos = todoService.getAllTodos();
+        return executorService.supplyAsync(() -> todos).thenApply(data -> Response.ok(data).build());
+    }
+
+    @GET
+    @Path("")
+    public Response getAllTodos() {
+        var todos = todoService.getAllTodos();
+        return Response.ok(todos).build();
+    }
+
+    // create todos
     @POST
     @Path("async")
     public CompletionStage<Response> createTodoAsync(Todo todo) throws Exception {
