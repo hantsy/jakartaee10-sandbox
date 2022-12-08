@@ -1,7 +1,6 @@
 package com.example;
 
 import jakarta.annotation.Resource;
-import jakarta.ejb.Asynchronous;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.concurrent.ManagedExecutorService;
 import jakarta.persistence.EntityManager;
@@ -19,7 +18,7 @@ public class EjbTodoService {
     @Resource
     ManagedExecutorService executorService;
 
-    @Asynchronous//ejb async
+    @jakarta.ejb.Asynchronous
     public Future<List<Todo>> getAllTodosEjbAsync() {
         Callable<List<Todo>> callable = () -> entityManager.createQuery("select t from Todo t", Todo.class).getResultList();
         return executorService.submit(callable);
