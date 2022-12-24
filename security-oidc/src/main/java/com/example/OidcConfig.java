@@ -11,9 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @OpenIdAuthenticationMechanismDefinition(
-        providerURI = "${openIdConfig.issuerUri}",
-        clientId = "${openIdConfig.clientId}",
-        clientSecret = "${openIdConfig.clientSecret}",
+        providerURI = "${oidcConfig.issuerUri}",
+        clientId = "${oidcConfig.clientId}",
+        clientSecret = "${oidcConfig.clientSecret}",
         redirectURI = "${baseURL}/callback",
         // redirectToOriginalResource = true
 //        providerMetadata = @OpenIdProviderMetadata(
@@ -23,9 +23,9 @@ import java.util.logging.Logger;
         jwksReadTimeout = 5000
 )
 @ApplicationScoped
-@Named("openIdConfig")
-public class OpenIdConfig {
-    private static final Logger LOGGER = Logger.getLogger(OpenIdConfig.class.getName());
+@Named("oidcConfig")
+public class OidcConfig {
+    private static final Logger LOGGER = Logger.getLogger(OidcConfig.class.getName());
 
     private String domain;
     private String clientId;
@@ -37,7 +37,7 @@ public class OpenIdConfig {
         LOGGER.config("OpenIdConfig.init()");
         try {
             var properties = new Properties();
-            properties.load(getClass().getResourceAsStream("/openid.properties"));
+            properties.load(getClass().getResourceAsStream("/oidc.properties"));
             domain = properties.getProperty("domain");
             clientId = properties.getProperty("clientId");
             clientSecret = properties.getProperty("clientSecret");
@@ -57,7 +57,7 @@ public class OpenIdConfig {
                             issuerUri
                     });
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to load openid.properties", e);
+            LOGGER.log(Level.SEVERE, "Failed to load oidc.properties from classpath", e);
         }
     }
 

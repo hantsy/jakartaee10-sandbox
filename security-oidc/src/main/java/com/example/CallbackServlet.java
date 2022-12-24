@@ -16,15 +16,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CallbackServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(CallbackServlet.class.getName());
 
-    // @Inject
-    // private OpenIdContext context;
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         LOGGER.log(Level.FINEST, "Enter callback servlet");
-        // response.getWriter().println(context.getAccessToken());
-        
+
         String referer = (String) request.getSession().getAttribute("Referer");
         String redirectTo = referer != null ? referer : request.getContextPath() + "/protected";
         LOGGER.log(Level.FINEST, "In /callback, redirect to: {0}", redirectTo);

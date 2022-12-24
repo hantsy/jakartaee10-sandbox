@@ -1,4 +1,4 @@
-# Rename this file to openid.properties
+# Rename this file to oidc.properties
 # Configure the following properties.
 # NOTE: Either domain or issuerUri is required. 
 issuerUri=

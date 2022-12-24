@@ -24,10 +24,16 @@ public class UserNameServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //String name = request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "";
+        String nameInRequest = request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "";
         var principal = securityContext.getCallerPrincipal();
         LOGGER.log(Level.INFO, "Principal: {0}", principal);
         var name = principal.getName();
-        response.getWriter().print(name);
+
+        response.setContentType("text/html");
+        response.getWriter().println("<h1>UserName Servlet</h1>");
+        response.getWriter().println("<p>principal name in request userPrincipal:" + nameInRequest + "</p>");
+        response.getWriter().println("<p>principal name:" + name + "</p>");
+        response.getWriter().println("<p>isCallerInRole('foo')" + securityContext.isCallerInRole("foo") + "</p>");
+        response.getWriter().println("<p>isCallerInRole('bar')" + securityContext.isCallerInRole("bar") + "</p>");
     }
 }
