@@ -34,7 +34,7 @@ public class OidcConfig {
 
     @PostConstruct
     void init() {
-        LOGGER.config("OpenIdConfig.init()");
+        LOGGER.config("OidcConfig.init()");
         try {
             var properties = new Properties();
             properties.load(getClass().getResourceAsStream("/oidc.properties"));

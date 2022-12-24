@@ -33,7 +33,7 @@ public class UserNameServlet extends HttpServlet {
         response.getWriter().println("<h1>UserName Servlet</h1>");
         response.getWriter().println("<p>principal name in request userPrincipal:" + nameInRequest + "</p>");
         response.getWriter().println("<p>principal name:" + name + "</p>");
-        response.getWriter().println("<p>isCallerInRole('foo')" + securityContext.isCallerInRole("foo") + "</p>");
-        response.getWriter().println("<p>isCallerInRole('bar')" + securityContext.isCallerInRole("bar") + "</p>");
+        response.getWriter().println("<p>isCallerInRole('foo'):" + securityContext.isCallerInRole("foo") + "</p>");
+        response.getWriter().println("<p>isCallerInRole('bar'):" + securityContext.isCallerInRole("bar") + "</p>");
     }
 }
