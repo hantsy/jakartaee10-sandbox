@@ -8,7 +8,7 @@ Here we list some highlights in JPA 3.1
 
 Firstly UUID is now treated a basic type. Some JPA providers, such as Hibernate and EclipseLink have supported UUID for a long time, and now it finally becomes part of the standard specification.
 
-For the database that has built-in UUID data type, such as PostgreSQL, an UUID field or property is stored in an UUID data type column in database directly. For those databases do not support UUID, the JPA provider could provide a solution to map an UUID value to a varchar type or an equivalent type in the database.
+For the database that has built-in UUID data type, such as PostgreSQL, an UUID field or property is stored as an UUID data type in database directly. For those databases do not support UUID, the JPA provider could provide a solution to map an UUID value to a varchar type or an equivalent data type in the database.
 
 UUID is usually used as ID of an entity. In JPA 3.0 or the earlier versions, Hibernate and EclipseLink provides their specific generators for UUID. JPA 3.1 introduces a new standard ID generation strategy for UUID type - `UUID`.
 

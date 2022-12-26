@@ -2,9 +2,9 @@
 
 Both Jersey and Resteasy have their own Multipart implementations. In Jakarta REST 3.1, it finally brings the standardized Multipart APIs support.
 
-Follow the steps in [Jakarta Persistence - Jakarta EE](./jpa/jakartaee.md) and create a simple Jakarta EE project.
+Follow the steps in [Jakarta Persistence - Jakarta EE](../jpa/jakartaee.md) and create a simple Jakarta EE project.
 
-Firstly let's a simple Jaxrs resource to consume Multipart request and produce Multipart response.
+Firstly let's a simple Jakarta REST resource to consume Multipart request and produce Multipart response.
 
 ```java
 @Path("multiparts")
