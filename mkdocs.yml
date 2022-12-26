@@ -53,7 +53,13 @@ nav:
       - "What's New in Jakarta Persistence 3.1": jpa/new.md
       - "Example: Hibernate 6.1": jpa/hibernate.md
       - "Example: JPA and Jakarta EE Runtimes": jpa/jakartaee.md
-  - REST: rest.md
+  - REST:
+      - rest/index.md
+      - "What's New in Jakarta REST 3.1": rest/new.md
+      - "Java SE Bootstrap API": rest/se-bootstrap.md
+      - "Support for MultiPart media type": rest/multipart.md
+      - "Better alignment with JSONB": rest/jsonb.md
+      - "Better alignment with CDI": rest/cdi-inject.md
   - Concurrency: concurrency.md
   - Security: security.md
   - Faces: faces.md
