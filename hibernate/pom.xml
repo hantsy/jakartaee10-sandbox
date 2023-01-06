@@ -26,7 +26,7 @@
 
         <!-- test deps -->
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
-        <assertj-core.version>3.23.1</assertj-core.version>
+        <assertj-core.version>3.24.0</assertj-core.version>
 
         <slf4j.version>2.0.6</slf4j.version>
         <logback.version>1.4.5</logback.version>
