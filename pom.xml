@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
@@ -36,7 +37,7 @@
 
         <!-- Glassfish server -->
         <glassfish.version>7.0.0</glassfish.version>
-        <arquillian-glassfish-jakarta.version>9a3d1129</arquillian-glassfish-jakarta.version>
+        <arquillian-glassfish-jakarta.version>7.0.0</arquillian-glassfish-jakarta.version>
         <jersey.version>3.1.0</jersey.version>
 
         <!-- WildFly -->
