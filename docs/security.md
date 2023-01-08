@@ -273,10 +273,24 @@ After logged in, you will see the following screen.
 
 ![keycloak-master-page](./kc-master-page.png)
 
-Click the admin menu, select *Clients*, in the clients page, click the *Create Client* button.
+Click the main menu, select *Clients*, in the clients page, click the *Create Client* button.
 
 ![keycloak-clients-page](./kc-clients-page.png)
 
 In the *Create Client* page, fill the client info like the following screen.
 
 ![Keycloak-new-client-page](./kc-new-client-page.png)
+
+In the *Capability Config* page, make sure *Client authentication* is checked.
+
+![Keycloak-new-client-page2](./kc-new-client-page2.png)
+
+When it is done, it redirect to the client details page, click the *Credentials* tab, there is *Client Secrets* which will be used to connect to this authentication server from our Jakarta EE application.
+
+![Keycloak-client-secret-page](./kc-client-secret-page.png)
+
+Next let's create a sample user used to login our Jakarta EE application.
+
+Click and expand the main menu, and select *Users*, click *Create User* to create a new user.
+
+![Keycloak-create-new-new-user](./kc-new-kc-create-user-page.png)
