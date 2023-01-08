@@ -16,11 +16,9 @@ import java.util.logging.Logger;
         clientSecret = "${oidcConfig.clientSecret}",
         redirectURI = "${baseURL}/callback",
         // redirectToOriginalResource = true
-//        providerMetadata = @OpenIdProviderMetadata(
-//                //issuer = "${openIdConfig.issuerUri}",
-//                jwksURI = "https://${openIdConfig.domain}/.well-known/jwks.json"
-//        ),
-        jwksReadTimeout = 5000
+        jwksReadTimeout = 5000,
+        jwksConnectTimeout = 5000
+        //extraParameters = {"audience=https://hantsy.github.com/api"}
 )
 @ApplicationScoped
 @Named("oidcConfig")
@@ -50,7 +48,7 @@ public class OidcConfig {
             LOGGER.log(
                     Level.INFO,
                     "domain: {0}, clientId: {1}, clientSecret:{2}, issuerUri: {3}",
-                    new Object[] {
+                    new Object[]{
                             domain,
                             clientId,
                             clientSecret,
