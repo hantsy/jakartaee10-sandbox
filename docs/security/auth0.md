@@ -56,19 +56,18 @@ After it is running successfully, open a browser, and navigate to [localhost:808
 
 Ideally, after logged in, it should redirect the original request URL [localhost:8080/security-oidc-examples/protected](http://localhost:8080/security-oidc-examples/protected).
 
-But I always encountered an exception when returning back to our Jakarta EE application.
+But I always encounter an exception when redirecting to our Jakarta EE application.
 
 ```bash
-15:13:34,809 ERROR [io.undertow.request] (default task-1) UT005023: Exception handling request to /security-oidc-examples/callback: java.lang.NullPointerException: Cannot invoke "com.n
-imbusds.jwt.JWTClaimsSet.getClaims()" because "jwtClaimsSet" is null
+15:13:34,809 ERROR [io.undertow.request] (default task-1) UT005023: Exception handling request to /security-oidc-examples/callback: java.lang.NullPointerException: Cannot invoke "com.nimbusds.jwt.JWTClaimsSet.getClaims()" because "jwtClaimsSet" is null
         at org.glassfish.soteria@3.0.0//org.glassfish.soteria.mechanisms.openid.domain.AccessTokenImpl.<init>(AccessTokenImpl.java:64)
         ...
 ```
 
-Unfortunately, I can not get any helpful information from the whole exception stack, see [my original post on stackoverflow](https://stackoverflow.com/questions/73752379/jakartaee-10-openidauthenticationmechanism-failed-with-auth0).
+Unfortunately, I can not get any helpful information from the whole exception stack, see [my original question posted on stackoverflow](https://stackoverflow.com/questions/73752379/jakartaee-10-openidauthenticationmechanism-failed-with-auth0).
 
-After doing some search, and print the exception stack in the Security implementation - soteria, I found there is a reading JWKS timeout exception. Of course, it is possibly an Auth0 connection issue from my side.
+After doing some search on the Security implementation - soteria, and adding print exception stack clause in [AccessTokenImpl](https://github.com/eclipse-ee4j/soteria/blob/master/impl/src/main/java/org/glassfish/soteria/mechanisms/openid/domain/AccessTokenImpl.java#L65), then replace the WildFly built-in one. I found there is a reading JWKS timeout exception. Beside this, sometime I also encountered a network connection issue when logging in, so it is possibly a network firewall issue from my side.
 
-After customizing the attribute `jwksReadTimeout` and `jwksConnectTimeout` of the `@OpenIdAuthenticationMechanismDefinition` annotation, increase the value from the default 500 to 5000, sometime I got it works successfully.
+After customizing the attribute `jwksReadTimeout` and `jwksConnectTimeout` of the `@OpenIdAuthenticationMechanismDefinition` annotation, eg. increasing the value from the default 500 to 5000, finally I got it works successfully.
 
 ![Auth0-protected-page](./auth0-protected-page.png)
