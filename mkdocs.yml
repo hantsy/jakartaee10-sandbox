@@ -61,5 +61,12 @@ nav:
       - "Better alignment with JSONB": rest/jsonb.md
       - "Better alignment with CDI": rest/cdi-inject.md
   - Concurrency: concurrency.md
-  - Security: security.md
+  - Security: 
+      - security/index.md
+      - "What's New in Jakarta Security 3.1": security/new.md
+      - "Example Project": security/example.md
+      - "OIDC with Keycloak": security/kc.md
+      - "OIDC with Auth0": security/auth0.md
+      - "OIDC with Okta": security/okta.md
+      - "Summary": security/summary.md
   - Faces: faces.md

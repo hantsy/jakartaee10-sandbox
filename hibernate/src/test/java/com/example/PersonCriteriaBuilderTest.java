@@ -49,7 +49,8 @@ class PersonCriteriaBuilderTest {
 
         try {
             // see: https://hibernate.zulipchat.com/#narrow/stream/132096-hibernate-user/topic/New.20functions.20in.20JPA.203.2E1/near/289429903
-            var cb = (HibernateCriteriaBuilder) entityManager.getCriteriaBuilder();
+            // update to Hibernate 6.2 which is aligned with JPA 3.1
+            var cb = entityManager.getCriteriaBuilder();
             var query = cb.createTupleQuery();
             var root = query.from(Person.class);
 
@@ -97,7 +98,7 @@ class PersonCriteriaBuilderTest {
         assertNotNull(id);
 
         try {
-            var cb = (HibernateCriteriaBuilder) entityManager.getCriteriaBuilder();
+            var cb =  entityManager.getCriteriaBuilder();
             var query = cb.createTupleQuery();
             var root = query.from(Person.class);
 
