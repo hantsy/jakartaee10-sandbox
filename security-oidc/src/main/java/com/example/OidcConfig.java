@@ -11,14 +11,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @OpenIdAuthenticationMechanismDefinition(
-        providerURI = "${oidcConfig.issuerUri}",
-        clientId = "${oidcConfig.clientId}",
-        clientSecret = "${oidcConfig.clientSecret}",
-        redirectURI = "${baseURL}/callback",
-        // redirectToOriginalResource = true
-        jwksReadTimeout = 5000,
-        jwksConnectTimeout = 5000
-        //extraParameters = {"audience=https://hantsy.github.com/api"}
+	providerURI = "${oidcConfig.issuerUri}", 
+	clientId = "${oidcConfig.clientId}", 
+	clientSecret = "${oidcConfig.clientSecret}", 
+	redirectURI = "${baseURL}/callback",
+	// redirectToOriginalResource = true,
+	jwksReadTimeout = 5000, jwksConnectTimeout = 5000
+	// extraParameters = {"audience=https://hantsy.github.com/api"}
 )
 @ApplicationScoped
 @Named("oidcConfig")
@@ -48,7 +47,7 @@ public class OidcConfig {
             LOGGER.log(
                     Level.INFO,
                     "domain: {0}, clientId: {1}, clientSecret:{2}, issuerUri: {3}",
-                    new Object[]{
+                    new Object[] {
                             domain,
                             clientId,
                             clientSecret,

@@ -20,7 +20,7 @@ public class AuthorizationIdentityStore implements IdentityStore {
     private final Map<String, Set<String>> authorization = Map.of(
             "user", Set.of("foo", "bar"),
             "auth0|63249de53e292439f31c6be6", Set.of("foo", "bar"),
-            "user@example.com",  Set.of("foo", "bar"));// user in okta.
+            "user@example.com", Set.of("foo", "bar")); // user in okta.
 
     @Override
     public Set<ValidationType> validationTypes() {
