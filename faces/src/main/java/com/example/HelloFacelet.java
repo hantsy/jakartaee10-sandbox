@@ -45,6 +45,10 @@ public class HelloFacelet extends Facelet {
         HtmlBody body = components.create(HtmlBody.COMPONENT_TYPE);
         rootChildren.add(body);
 
+        var title = new UIOutput();
+        title.setValue("<h1>Facelets View written in Java</h1>");
+        body.getChildren().add(title);
+
         HtmlForm form = components.create(HtmlForm.COMPONENT_TYPE);
         form.setId("form");
         form.setPrependId(false);
