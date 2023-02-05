@@ -4,7 +4,7 @@ Jakarta Faces, formerly Jakarta Server Faces and JavaServer Faces (JSF) is a Jav
 
 Jakarta Faces 4.0 includes a lot of small improvements and better alignment with CDI and other specifications.
 
-BalusC's [What's new in Faces 4.0](https://balusc.omnifaces.org/2021/11/whats-new-in-faces-40.html) provides a comprehensive guide if you want to get know the detailed changes since Faces 3.0.
+BalusC's [What's new in Faces 4.0](https://balusc.omnifaces.org/2021/11/whats-new-in-faces-40.html) provides a comprehensive guide for those want to get know the detailed changes since Faces 3.0.
 
 ## Cleaning up Deprecated Stuff
 
@@ -66,9 +66,11 @@ Some long-existed deprecated APIs are removed in Faces 4.0, including:
 * `StateManager` was removed.
 * `ResourceResolver` was removed and replaced with `ResourceHandler`
 
-## New Features
+## New Features and Improvements
 
-### Extensionless mapping
+Next let's explore the changes in Faces 4.0.
+
+### Extensionless Mapping
 
 In the previous versions, `FacesServlet` is registered to handle mapping of *&lt;conext path>/myFacelets.xhtml*, *&lt;context path>/faces/myFacelets*, *&lt;context path>/myFacelets.faces*.
 
@@ -183,4 +185,4 @@ Open a web browser and navigate to <http://localhost:8080/faces-examples/hello>.
 
 ![Faces hello](./faces-hello.png)
 
-Input "Hantsy" and click the **Say Hello** button. You will see the greeting message below.
+Input anything in the text input field and click the **Say Hello** button. You will see a greeting message displayed as the above image.
