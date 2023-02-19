@@ -45,9 +45,11 @@ The specification name is also updated to **Jakarta Faces** in Faces 4.0 which w
 
 ### Removal of JSP as View
 
-JSP is a standalone specification for building Java web applications, it mainly acts as the **view** role in the traditional MVC frameworks. Nowadays there are still a lot of applications that use it to build web UIs. JSP is a view technology in the early JSF 1.x.
+JSP is a standalone specification for building Java web applications, it mainly acts as the **view** role in the traditional MVC frameworks. Nowadays there are still a lot of applications that use it to build web UIs.
 
-Since JSF 2.0, Facelets is the default view language. In Faces 4.0, it is physically removed.
+JSP works as a view technology in the early JSF 1.x. Since JSF 2.0, Facelets becomes the default view engine.
+
+In Faces 4.0, JSP is physically removed.
 
 ### Better CDI Alignment
 
@@ -186,3 +188,5 @@ Open a web browser and navigate to <http://localhost:8080/faces-examples/hello>.
 ![Faces hello](./faces-hello.png)
 
 Input anything in the text input field and click the **Say Hello** button. You will see a greeting message displayed as the above image.
+
+### Writing Facelets in Java

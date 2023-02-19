@@ -19,7 +19,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
@@ -45,7 +46,7 @@ under the License.
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
-            <version>4.0.0</version>
+            <version>${eclipselink.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -89,7 +90,8 @@ under the License.
                                     <version>${glassfish.version}</version>
                                 </artifactInstaller> -->
                                 <zipUrlInstaller>
-                                    <url>https://github.com/eclipse-ee4j/glassfish/releases/download/${glassfish.version}/glassfish-${glassfish.version}.zip</url>
+                                    <url>
+                                        https://github.com/eclipse-ee4j/glassfish/releases/download/${glassfish.version}/glassfish-${glassfish.version}.zip</url>
                                     <downloadDir>${cargo.zipUrlInstaller.downloadDir}</downloadDir>
                                 </zipUrlInstaller>
                             </container>
@@ -155,9 +157,12 @@ under the License.
 
                     <!-- The WildFly plugin deploys your war to a local running WildFly container -->
                     <!-- To use, run: mvn package wildfly:deploy -->
-                    <!-- For Jakarta EE 9, use `wildfly-preview-dist` as artifactId instead to start and deploy applications-->
-                    <!-- Run: mvn clean wildfly:run -PWildfly -Dwildfly.artifactId=wildfly-preview-dist -Dwildfly.version=22.0.0.Alpha1 -->
-                    <!-- or set the `jboss-as.home` to run: mvn clean wildfly:run -PWildfly -Djboss-as.home=D:\appsvr\wildfly-preview-22.0.0.Alpha1-->
+                    <!-- For Jakarta EE 9, use `wildfly-preview-dist` as artifactId instead to start
+                    and deploy applications-->
+                    <!-- Run: mvn clean wildfly:run -PWildfly
+                    -Dwildfly.artifactId=wildfly-preview-dist -Dwildfly.version=22.0.0.Alpha1 -->
+                    <!-- or set the `jboss-as.home` to run: mvn clean wildfly:run -PWildfly
+                    -Djboss-as.home=D:\appsvr\wildfly-preview-22.0.0.Alpha1-->
                     <plugin>
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
@@ -243,6 +248,70 @@ under the License.
                                             <outputDirectory>${project.build.directory}</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.eclipse.persistence</groupId>
+                                            <artifactId>org.eclipse.persistence.jpa</artifactId>
+                                            <version>${eclipselink.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.eclipse.persistence</groupId>
+                                            <artifactId>org.eclipse.persistence.asm</artifactId>
+                                            <version>9.4.0</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.eclipse.persistence</groupId>
+                                            <artifactId>org.eclipse.persistence.core</artifactId>
+                                            <version>${eclipselink.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.eclipse.persistence</groupId>
+                                            <artifactId>org.eclipse.persistence.dbws</artifactId>
+                                            <version>${eclipselink.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.eclipse.persistence</groupId>
+                                            <artifactId>org.eclipse.persistence.jpa.jpql</artifactId>
+                                            <version>${eclipselink.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.eclipse.persistence</groupId>
+                                            <artifactId>
+                                                org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+                                            <version>${eclipselink.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.eclipse.persistence</groupId>
+                                            <artifactId>org.eclipse.persistence.oracle</artifactId>
+                                            <version>${eclipselink.version}</version>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <stripVersion>true</stripVersion>
+                                    <outputDirectory>
+                                        ${project.build.directory}/glassfish7/glassfish/modules</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
