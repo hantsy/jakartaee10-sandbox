@@ -17,18 +17,17 @@
         <maven.compiler.release>17</maven.compiler.release>
 
         <!-- Official Maven Plugins -->
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
         <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
 
-        <maven-surefire-plugin.version>3.0.0-M9</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M9</maven-failsafe-plugin.version>
-
-        <maven-surefire-report-plugin.version>3.0.0-M7</maven-surefire-report-plugin.version>
+        <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0</maven-failsafe-plugin.version>
+        <maven-surefire-report-plugin.version>3.0.0</maven-surefire-report-plugin.version>
 
         <!-- Cargo maven plugin -->
         <!-- Since 1.10.1, it includes Glassfish 7 support -->
-        <cargo-maven3-plugin.version>1.10.4</cargo-maven3-plugin.version>
+        <cargo-maven3-plugin.version>1.10.6</cargo-maven3-plugin.version>
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
@@ -41,20 +40,20 @@
 
         <!-- Arquillian BOM -->
         <arquillian-bom.version>1.7.0.Alpha14</arquillian-bom.version>
-        <junit-jupiter.version>5.9.1</junit-jupiter.version>
+        <junit-jupiter.version>5.9.3</junit-jupiter.version>
         <assertj.version>3.24.2</assertj.version>
         <awaitility.version>4.2.0</awaitility.version>
 
         <!-- Glassfish server -->
-        <glassfish.version>7.0.1</glassfish.version>
+        <glassfish.version>7.0.4</glassfish.version>
         <jersey.version>3.1.1</jersey.version>
-        <eclipselink.version>4.0.1-RC1</eclipselink.version>
-        <arquillian-glassfish-jakarta.version>fd71edc5</arquillian-glassfish-jakarta.version>
+        <eclipselink.version>4.0.1</eclipselink.version>
+        <arquillian-glassfish-jakarta.version>v7.0.4</arquillian-glassfish-jakarta.version>
 
         <!-- WildFly -->
         <wildfly.version>27.0.1.Final</wildfly.version>
         <wildfly-maven-plugin.version>4.0.0.Final</wildfly-maven-plugin.version>
-        <resteasy.version>6.2.2.Final</resteasy.version>
+        <resteasy.version>6.2.3.Final</resteasy.version>
 
         <!-- by default skip tests -->
         <skip.unit.tests>false</skip.unit.tests>
