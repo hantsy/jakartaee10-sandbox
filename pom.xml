@@ -32,10 +32,18 @@
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
+        <slf4j.version>2.0.6</slf4j.version>
+        <logback.version>1.4.5</logback.version>
+        <lombok.version>1.18.26</lombok.version>
+        <!-- requires 6.1.2.Final or higher -->
+        <hibernate.version>6.2.1.Final</hibernate.version>
+        <h2.version>2.1.214</h2.version>
 
         <!-- Arquillian BOM -->
         <arquillian-bom.version>1.7.0.Alpha14</arquillian-bom.version>
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
+        <assertj.version>3.24.2</assertj.version>
+        <awaitility.version>4.2.0</awaitility.version>
 
         <!-- Glassfish server -->
         <glassfish.version>7.0.1</glassfish.version>
