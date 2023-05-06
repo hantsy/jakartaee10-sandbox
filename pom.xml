@@ -31,8 +31,8 @@
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
-        <slf4j.version>2.0.6</slf4j.version>
-        <logback.version>1.4.5</logback.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <logback.version>1.4.7</logback.version>
         <lombok.version>1.18.26</lombok.version>
         <!-- requires 6.1.2.Final or higher -->
         <hibernate.version>6.2.1.Final</hibernate.version>
