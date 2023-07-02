@@ -41,3 +41,5 @@ Read the online support doc [Migrating to Jakarta EE 10](https://hantsy.github.i
 * [Moving Jakarta Forward – Jakarta NoSQL Approved as an EE4J Project](https://jakartaee-ambassadors.io/2019/07/17/moving-jakarta-forward-jakarta-nosql-approved-as-an-ee4j-project/)
 * [Jakarta EE 10 and Enterprise Beans: Options for the Future](https://newsroom.eclipse.org/eclipse-newsletter/2021/may/jakarta-ee-10-and-enterprise-beans-options-future)
 * [Ideas for Evolving the Jakarta EE Servlet Specification](https://newsroom.eclipse.org/eclipse-newsletter/2021/may/ideas-evolving-jakarta-ee-servlet-specification)
+* [Upgrading to Jakarta EE 10](https://omnifish.ee/series/upgrading-to-ee-10/)
+  
