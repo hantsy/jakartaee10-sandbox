@@ -167,7 +167,7 @@ under the License.
         <profile>
             <id>resteasy</id>
             <properties>
-                <jboss-logmanager.version>2.1.19.Final</jboss-logmanager.version>
+                <jboss-logmanager.version>3.0.0.Final</jboss-logmanager.version>
             </properties>
             <dependencies>
                 <dependency>
