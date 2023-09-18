@@ -36,7 +36,7 @@
         <lombok.version>1.18.28</lombok.version>
         <!-- requires 6.1.2.Final or higher -->
         <hibernate.version>6.3.0.Final</hibernate.version>
-        <h2.version>2.2.222</h2.version>
+        <h2.version>2.2.224</h2.version>
 
         <!-- Arquillian BOM -->
         <arquillian-bom.version>1.7.1.Final</arquillian-bom.version>
