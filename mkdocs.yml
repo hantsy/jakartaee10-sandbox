@@ -69,4 +69,8 @@ nav:
       - "OIDC with Auth0": security/auth0.md
       - "OIDC with Okta": security/okta.md
       - "Summary": security/summary.md
-  - Faces: faces.md
+  - Faces: 
+      - faces/index.md
+      - "What's new in Faces 4.0": faces/new.md
+      - "Clean Up Deprecated Staff": faces/cleanup.md
+      - "New Features and Improvements": faces/faces.md
