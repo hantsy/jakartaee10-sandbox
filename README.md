@@ -42,4 +42,6 @@ Read the online support doc [Migrating to Jakarta EE 10](https://hantsy.github.i
 * [Jakarta EE 10 and Enterprise Beans: Options for the Future](https://newsroom.eclipse.org/eclipse-newsletter/2021/may/jakarta-ee-10-and-enterprise-beans-options-future)
 * [Ideas for Evolving the Jakarta EE Servlet Specification](https://newsroom.eclipse.org/eclipse-newsletter/2021/may/ideas-evolving-jakarta-ee-servlet-specification)
 * [Upgrading to Jakarta EE 10](https://omnifish.ee/series/upgrading-to-ee-10/)
+* [A Quick Look At Faces (JSF) 4.0 In Jakarta EE 10](https://blog.payara.fish/a-quick-look-at-faces-jsf-4.0-in-jakarta-ee-10)
+* [Getting started with JSF 4.0 on WildFly 27](https://www.mastertheboss.com/java-ee/jsf/getting-started-with-jsf-4-0-on-wildfly-27/)
   
