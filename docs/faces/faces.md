@@ -12,7 +12,7 @@ In the previous versions, `FacesServlet` is registered to handle mapping of *&lt
 
 In Faces 4.0, it allows to map a URI without extension, eg. *&lt;conext path>/myFacelets*.
 
-[Create a Jakarta EE web project](./jpa/jakartaee.md), add the following configuration in the *src/webapp/web.xml* file.
+[Create a Jakarta EE web project](../jpa/jakartaee.md), add the following configuration in the *src/webapp/web.xml* file.
 
 ```xml
 <context-param>
@@ -124,3 +124,103 @@ Open a web browser and navigate to <http://localhost:8080/faces-examples/hello>.
 Input anything in the text input field and click the **Say Hello** button. You will see a greeting message displayed as the above image.
 
 ## Writing Facelets in Java
+
+In the previous version, Facelets view is a standard XHTML file. Since Faces 4.0, it is easy to compose a Faceslets view in pure Java codes.
+
+The following is an example of writing Facelets view in Java.
+
+```java
+@View("/hello-facelet")
+@ApplicationScoped
+public class HelloFacelet extends Facelet {
+    private static final Logger LOGGER = Logger.getLogger(HelloFacelet.class.getName());
+
+    @Inject
+    Hello hello;
+
+    @Override
+    public void apply(FacesContext facesContext, UIComponent root) throws IOException {
+        if (!facesContext.getAttributes().containsKey(IS_BUILDING_INITIAL_STATE)) {
+            return;
+        }
+
+        ELContext elContext = facesContext.getELContext();
+        ExpressionFactory expressionFactory = facesContext.getApplication().getExpressionFactory();
+
+        ComponentBuilder components = new ComponentBuilder(facesContext);
+        List<UIComponent> rootChildren = root.getChildren();
+
+        UIOutput output = new UIOutput();
+        output.setValue("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+        rootChildren.add(output);
+
+        HtmlBody body = components.create(HtmlBody.COMPONENT_TYPE);
+        rootChildren.add(body);
+
+        var title = new UIOutput();
+        title.setValue("<h1>Facelets View written in Java</h1>");
+        body.getChildren().add(title);
+
+        HtmlForm form = components.create(HtmlForm.COMPONENT_TYPE);
+        form.setId("form");
+        form.setPrependId(false);
+        body.getChildren().add(form);
+
+        HtmlOutputText message = components.create(HtmlOutputText.COMPONENT_TYPE);
+        message.setId("message");
+        form.getChildren().add(message);
+
+        HtmlInputText input = components.create(HtmlInputText.COMPONENT_TYPE);
+        input.setRendered(true);
+        input.setLabel("Name");
+        input.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{hello.name}", String.class));
+        form.getChildren().add(input);
+
+        HtmlCommandButton actionButton = components.create(HtmlCommandButton.COMPONENT_TYPE);
+        actionButton.setId("button");
+        actionButton.addActionListener(e -> {
+                    LOGGER.log(Level.INFO, "local value: {0}", input.getLocalValue());
+                    LOGGER.log(Level.INFO, "input value: {0}", input.getValue());
+                    LOGGER.log(Level.INFO, "submitted value: {0}", input.getSubmittedValue());
+                    LOGGER.log(Level.INFO, "value binding: {0}", new Object[]{input.getValueExpression("value").getValue(elContext)});
+
+                    hello.createMessage();
+                    message.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{hello.message}", String.class));
+                }
+        );
+        actionButton.setValue("Say Hello");
+        form.getChildren().add(actionButton);
+
+        output = new UIOutput();
+        output.setValue("</html>");
+        rootChildren.add(output);
+    }
+
+    private static class ComponentBuilder {
+        FacesContext facesContext;
+
+        ComponentBuilder(FacesContext facesContext) {
+            this.facesContext = facesContext;
+        }
+
+        @SuppressWarnings("unchecked")
+        <T> T create(String componentType) {
+            return (T) facesContext.getApplication().createComponent(facesContext, componentType, null);
+        }
+    }
+}
+```
+
+As you see, the `HelloFacelet` extends `Facelet` and annotate with a `@View` annotation to specify the view path.
+
+In the `HelloFacelet`, it injects the backed bean `Hello`, in the button event listener, it calls `Hello.createMessage` method to update message in view.
+
+Now build and run the application.
+
+```bash
+mvn clean package cargo:run
+```
+
+Now open a browser and navigate to <http://localhost:8080/faces-examples/hello-facelet.xhtml>.
+
+![hello-facelets](./faces-hello-facelets.png)

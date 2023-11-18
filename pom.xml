@@ -27,7 +27,7 @@
 
         <!-- Cargo maven plugin -->
         <!-- Since 1.10.1, it includes Glassfish 7 support -->
-        <cargo-maven3-plugin.version>1.10.6</cargo-maven3-plugin.version>
+        <cargo-maven3-plugin.version>1.10.10</cargo-maven3-plugin.version>
 
         <!-- Jakarta EE API -->
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
@@ -39,19 +39,19 @@
         <h2.version>2.2.224</h2.version>
 
         <!-- Arquillian BOM -->
-        <arquillian-bom.version>1.7.1.Final</arquillian-bom.version>
-        <junit-jupiter.version>5.10.0</junit-jupiter.version>
+        <arquillian-bom.version>1.7.2.Final</arquillian-bom.version>
+        <junit-jupiter.version>5.10.1</junit-jupiter.version>
         <assertj.version>3.24.2</assertj.version>
         <awaitility.version>4.2.0</awaitility.version>
 
         <!-- Glassfish server -->
-        <glassfish.version>7.0.8</glassfish.version>
+        <glassfish.version>7.0.9</glassfish.version>
         <jersey.version>3.1.3</jersey.version>
         <eclipselink.version>4.0.1</eclipselink.version>
         <arquillian-glassfish-jakarta.version>7.0.9</arquillian-glassfish-jakarta.version>
 
         <!-- WildFly -->
-        <wildfly.version>27.0.1.Final</wildfly.version>
+        <wildfly.version>30.0.0.Final</wildfly.version>
         <wildfly-maven-plugin.version>4.2.1.Final</wildfly-maven-plugin.version>
         <resteasy.version>6.2.6.Final</resteasy.version>
 

@@ -9,24 +9,30 @@ import jakarta.faces.component.UIOutput;
 import jakarta.faces.component.html.*;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.facelets.Facelet;
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static jakarta.faces.application.StateManager.IS_BUILDING_INITIAL_STATE;
 
-@View("/hello-facelet.xhtml")
+@View("/hello-facelet2.xhtml")
 @ApplicationScoped
-public class HelloFacelet extends Facelet {
-    private static final Logger LOGGER = Logger.getLogger(HelloFacelet.class.getName());
+public class HelloFacelet2 extends Facelet {
+    private static final Logger LOGGER = Logger.getLogger(HelloFacelet2.class.getName());
+
+    @Inject
+    Hello hello;
 
     @Override
     public void apply(FacesContext facesContext, UIComponent root) throws IOException {
         if (!facesContext.getAttributes().containsKey(IS_BUILDING_INITIAL_STATE)) {
             return;
         }
+
+        ELContext elContext = facesContext.getELContext();
+        ExpressionFactory expressionFactory = facesContext.getApplication().getExpressionFactory();
 
         ComponentBuilder components = new ComponentBuilder(facesContext);
         List<UIComponent> rootChildren = root.getChildren();
@@ -39,7 +45,7 @@ public class HelloFacelet extends Facelet {
         rootChildren.add(body);
 
         var title = new UIOutput();
-        title.setValue("<h1>Facelets View written in Java</h1>");
+        title.setValue("<h1>Facelets View written in Java(using value/method binding)</h1>");
         body.getChildren().add(title);
 
         HtmlForm form = components.create(HtmlForm.COMPONENT_TYPE);
@@ -49,27 +55,17 @@ public class HelloFacelet extends Facelet {
 
         HtmlOutputText message = components.create(HtmlOutputText.COMPONENT_TYPE);
         message.setId("message");
-        //form.getChildren().add(message); // add to the bottom of form
-
-        HtmlOutputLabel label = components.create(HtmlOutputLabel.COMPONENT_TYPE);
-        label.setValue("Enter your name");
-        form.getChildren().add(label);
+        message.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{hello.message}", String.class));
+        //form.getChildren().add(message);
 
         HtmlInputText name = components.create(HtmlInputText.COMPONENT_TYPE);
         name.setId("name");
+        name.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{hello.name}", String.class));
         form.getChildren().add(name);
 
         HtmlCommandButton actionButton = components.create(HtmlCommandButton.COMPONENT_TYPE);
         actionButton.setId("button");
-        actionButton.addActionListener(e -> {
-                    LOGGER.log(Level.INFO, "local value: {0}", name.getLocalValue());
-                    LOGGER.log(Level.INFO, "name value: {0}", name.getValue());
-                    LOGGER.log(Level.INFO, "submitted value: {0}", name.getSubmittedValue());
-                   // LOGGER.log(Level.INFO, "value binding: {0}", new Object[]{name.getValueExpression("value").getValue(elContext)});
-                    var hello = "Hello," + name.getValue();
-                    message.setValue(hello);
-                }
-        );
+        actionButton.setActionExpression(expressionFactory.createMethodExpression(elContext, "#{hello.createMessage()}", Void.class, null));
         actionButton.setValue("Say Hello");
         form.getChildren().add(actionButton);
 

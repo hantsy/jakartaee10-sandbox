@@ -3,9 +3,13 @@ package com.example;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @Named
 @RequestScoped
 public class Hello {
+    private static final Logger LOGGER = Logger.getLogger(Hello.class.getName());
 
     private String name;
 
@@ -16,6 +20,7 @@ public class Hello {
 
     public void createMessage() {
         message = "Hello, " + name;
+        LOGGER.log(Level.INFO, "set message value:{0}", message);
     }
 
     public String getName() {
