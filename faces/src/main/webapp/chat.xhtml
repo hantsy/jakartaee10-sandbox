@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html">
+<f:view>
+    <h:head>
+        <title>Chat Box </title>
+    </h:head>
+    <h:body>
+        <h1>Faces 4.0: Chat Box</h1>
+        <h:form prependId="false">
+            <label jsf:for="newMessage" jsf:required="true">Enter your message:</label>
+            <input type="text"
+                   jsf:id="newMessage"
+                   jsf:value="#{chat.newMessage}"
+                   jsf:required="true"
+                   jsf:requiredMessage="New message is required."
+                   placeholder="Type your message here..."
+            />
+            <h:message for="newMessage"/>
+            <br/>
+            <input type="submit" jsf:id="submit" value="Send NOW" jsf:action="#{chat.send()}">
+                <f:ajax execute="@form" render="@form"/>
+            </input>
+            <br/>
+            <p id="message">
+                <ul>
+                    <ui:repeat value="#{chat.messages}" var="m">
+                       <li>
+                           #{m}
+                       </li>
+                    </ui:repeat>
+                </ul>
+            </p>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
