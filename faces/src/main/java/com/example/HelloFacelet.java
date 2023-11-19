@@ -65,7 +65,6 @@ public class HelloFacelet extends Facelet {
                     LOGGER.log(Level.INFO, "local value: {0}", name.getLocalValue());
                     LOGGER.log(Level.INFO, "name value: {0}", name.getValue());
                     LOGGER.log(Level.INFO, "submitted value: {0}", name.getSubmittedValue());
-                   // LOGGER.log(Level.INFO, "value binding: {0}", new Object[]{name.getValueExpression("value").getValue(elContext)});
                     var hello = "Hello," + name.getValue();
                     message.setValue(hello);
                 }

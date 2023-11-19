@@ -45,7 +45,7 @@ public class HelloFacelet2 extends Facelet {
         rootChildren.add(body);
 
         var title = new UIOutput();
-        title.setValue("<h1>Facelets View written in Java(using value/method binding)</h1>");
+        title.setValue("<h1>Facelets View written in Java(using EL value/method binding)</h1>");
         body.getChildren().add(title);
 
         HtmlForm form = components.create(HtmlForm.COMPONENT_TYPE);
