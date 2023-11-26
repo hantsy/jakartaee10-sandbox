@@ -112,7 +112,7 @@ Now execute the following command to run the applicaion on GlassFish.
 [INFO] Press Ctrl-C to stop the container...
 ```
 
-Open a web browser and navigate to <http://localhost:8080/faces-examples/hello>.
+Open a web browser and navigate to [http://localhost:8080/faces-examples/hello](http://localhost:8080/faces-examples/hello).
 
 > NOTE: Here we do not append any extension on the URL.
 
@@ -226,7 +226,7 @@ mvn clean package cargo:run
 [INFO] Press Ctrl-C to stop the container...
 ```
 
-Now open a browser and navigate to <http://localhost:8080/faces-examples/hello-facelet.xhtml>.
+Now open a browser and navigate to [http://localhost:8080/faces-examples/hello-facelet.xhtml](http://localhost:8080/faces-examples/hello-facelet.xhtml).
 
 ![hello-facelets](./faces-hello-facelets.png)
 
@@ -333,13 +333,13 @@ public class HelloFacelet2 extends Facelet {
 
 Here, we bind the input component value to a value expression `Hello.name`, and bind submit event listener to a method expression `hello.createMessage`. 
 
-Rerun the application, navigate to <http://localhost:8080/faces-examples/hello-facelet.xhtml> in your browser.
+Rerun the application, navigate to [http://localhost:8080/faces-examples/hello-facelet2.xhtml](http://localhost:8080/faces-examples/hello-facelet2.xhtml) in your browser.
 
 Input your name, you will see the screen similar to the following.
 
 ![hello-facelet2](./faces-hello-facelet2.png)
 
-> I try to access the Java Facelet view via the URL without an extension, it does not work, see issue: https://github.com/eclipse-ee4j/mojarra/issues/5362
+> I try to access the Java Facelet view via the URL without an extension, it does not work, see [Mojarra issue #5362]( https://github.com/eclipse-ee4j/mojarra/issues/5362).
 
 ## New Scope: ClientWindowScoped
 
@@ -460,17 +460,17 @@ Build and run the application.
 mvn clean package cargo:run
 ```
 
-Open a browser and navigate to http://localhost:8080/faces-examples/chat, you will the following screen.
+Open a browser and navigate to [http://localhost:8080/faces-examples/chat](http://localhost:8080/faces-examples/chat), you will the following screen.
 
 ![chat](./faces-clientwindowscoped.png)
 
 Try to type something in the input box and hit send button, the new message will be appended to in the existing message list.
 
-Try to open a new tab in the browser, and go to http://localhost:8080/faces-examples/chat, you will there is a new window for the chat conversation, there is no existing messages, and input some message, you will find a new `jfwid` in the URL is used for this new window.
+Open a new tab in the browser and try to access [http://localhost:8080/faces-examples/chat](http://localhost:8080/faces-examples/chat) again, you will there is a new window for the chat conversation, there is no existing messages, and input some message, you will find a new `jfwid` in the URL is used for this new window.
 
->When I enabled ajax on the submit button in the view, there is no jfwid param appended to the URL in the browser window, see issue: https://github.com/eclipse-ee4j/mojarra/issues/5366
+>When I enabled ajax on the submit button in the view, there is no jfwid param appended to the URL in the browser window, see [Mojarra issue 5366](https://github.com/eclipse-ee4j/mojarra/issues/5366)
 
->And for those Facelet views written in Java codes, all URL are appended a jfwid param, see issue: https://github.com/eclipse-ee4j/mojarra/issues/5365
+>And for those Facelet views written in Java codes, all URL are appended a jfwid param, see [Mojarra issue 5365](https://github.com/eclipse-ee4j/mojarra/issues/5365)
 
 ## Input File Component Improvement
 
@@ -578,12 +578,14 @@ Build and run the application.
 mvn clean package cargo:run
 ```
 
-Open a browser and navigate to http://localhost:8080/faces-examples/inputFiles.
+Open a browser and navigate to [http://localhost:8080/faces-examples/inputFiles](http://localhost:8080/faces-examples/inputFiles).
 
 ![InputFiles](./faces-upload1.png)
 
-Click the button *Choose Files*, it will open the system file chooser, which has already filter the files by type that set in the `accept` attribute.
+Click the button *Choose Files*, it will open the system file chooser, which has already filtered the files by type that set in the `accept` attribute.
 
 Choose some files, and press the *Upload Now* button. You wil see the following messages in the screen.
 
 ![InputFiles 2](./faces-upload2.png)
+
+Get the example project from [https://github.com/hantsy/jakartaee10-sandbox/tree/master/faces](https://github.com/hantsy/jakartaee10-sandbox/tree/master/faces) and explore it yourself.
