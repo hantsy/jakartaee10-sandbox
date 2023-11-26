@@ -1,0 +1,1703 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../new/">
+      
+      
+        <link rel="next" href="../jakartaee/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.12">
+    
+    
+      
+        <title>Example: Hibernate 6.1 - Migrating to Jakarta EE 10</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.fad675c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-hibernate-61" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Migrating to Jakarta EE 10" class="md-header__button md-logo" aria-label="Migrating to Jakarta EE 10" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Migrating to Jakarta EE 10
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Example: Hibernate 6.1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hantsy/jakartaee10-sandbox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hantsy/jakartaee10-sandbox
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Migrating to Jakarta EE 10" class="md-nav__button md-logo" aria-label="Migrating to Jakarta EE 10" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Migrating to Jakarta EE 10
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hantsy/jakartaee10-sandbox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hantsy/jakartaee10-sandbox
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Preface
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Persistence
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Persistence
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../new/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's New in Jakarta Persistence 3.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Example: Hibernate 6.1
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Example: Hibernate 6.1
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-simple-java-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a Simple Java Project
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uuid-basic-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      UUID Basic Type
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numeric Functions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datetime-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      DateTime Functions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      EXTRACT function
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jakartaee/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example: JPA and Jakarta EE Runtimes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../rest/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    REST
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            REST
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/new/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's New in Jakarta REST 3.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/se-bootstrap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Java SE Bootstrap API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/multipart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Support for MultiPart media type
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/jsonb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Better alignment with JSONB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/cdi-inject/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Better alignment with CDI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concurrency.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Concurrency
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Security
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Security
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/new/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's New in Jakarta Security 3.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example Project
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/kc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OIDC with Keycloak
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/auth0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OIDC with Auth0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/okta/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OIDC with Okta
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../faces/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Faces
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Faces
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faces/new/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's new in Faces 4.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faces/cleanup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clean Up Deprecated Staff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faces/faces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    New Features and Improvements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-simple-java-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a Simple Java Project
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uuid-basic-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      UUID Basic Type
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numeric-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numeric Functions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datetime-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      DateTime Functions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      EXTRACT function
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="example-hibernate-61">Example: Hibernate 6.1<a class="headerlink" href="#example-hibernate-61" title="Permanent link">&para;</a></h1>
+<p>In this section, we will demonstrate the new features in a simple Java SE application with Hibernate.</p>
+<h2 id="creating-a-simple-java-project">Creating a Simple Java Project<a class="headerlink" href="#creating-a-simple-java-project" title="Permanent link">&para;</a></h2>
+<p>There are a lot of approaches to prepare a simple Java project skeleton. The simplest is using your favorite IDE to generate one for you.</p>
+<p>Alternatively, you can create it using <a href="https://maven.apache.org/archetypes/maven-archetype-quickstart/">Maven Quickstart archetype</a>.</p>
+<p>Open a terminal, execute the following command.</p>
+<pre><code class="language-bash">mvn archetype:generate
+    -DarchetypeGroupId=org.apache.maven.archetypes
+    -DarchetypeArtifactId=maven-archetype-quickstart
+    -DarchetypeVersion=1.4
+</code></pre>
+<p>The interactive mode will guide you setup the project info, such as groupId, artifact, version etc.</p>
+<p>In this example project, we use <code>com.example</code> as groupId, and <code>demo</code> as artifactId. Then confirm and begin to generate the project source codes.</p>
+<p>After it is done, open the project in a Java IDE such as IntelliJ IDEA(Community Edition is free), or Eclipse Java/Java EE bundle, or NetBeans IDE, or a simple text editor, eg. VS Code.</p>
+<p>Open the project <em>pom.xml</em>, add Hibernate 6.1, and JUnit etc. into project dependencies, and setup Maven compiler plugin to use the latest LTS Java 17 to compile the source codes.</p>
+<p>The final <em>pom.xml</em> looks like the following.</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;org.example&lt;/groupId&gt;
+    &lt;artifactId&gt;hibernate6&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;com.example&lt;/groupId&gt;
+        &lt;artifactId&gt;jakartaee10-sandbox-parent&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;relativePath&gt;..&lt;/relativePath&gt;
+    &lt;/parent&gt;
+
+    &lt;name&gt;hibernate6&lt;/name&gt;
+    &lt;description&gt;Jakarta EE 10 Sandbox: Hibernate 6/JPA 3.1 example&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;maven.compiler.release&gt;17&lt;/maven.compiler.release&gt;
+
+        &lt;!-- requires 6.1.2.Final or higher --&gt;
+        &lt;hibernate.version&gt;6.1.4.Final&lt;/hibernate.version&gt;
+        &lt;h2.version&gt;2.1.214&lt;/h2.version&gt;
+
+        &lt;!-- test deps --&gt;
+        &lt;junit-jupiter.version&gt;5.9.1&lt;/junit-jupiter.version&gt;
+        &lt;assertj-core.version&gt;3.23.1&lt;/assertj-core.version&gt;
+
+        &lt;slf4j.version&gt;2.0.3&lt;/slf4j.version&gt;
+        &lt;logback.version&gt;1.4.4&lt;/logback.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate.orm&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+            &lt;version&gt;${hibernate.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;jakarta.persistence&lt;/groupId&gt;
+            &lt;artifactId&gt;jakarta.persistence-api&lt;/artifactId&gt;
+            &lt;version&gt;3.1.0&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- H2 Database --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.h2database&lt;/groupId&gt;
+            &lt;artifactId&gt;h2&lt;/artifactId&gt;
+            &lt;version&gt;${h2.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- logging with logback --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+            &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+            &lt;version&gt;${slf4j.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+            &lt;artifactId&gt;jcl-over-slf4j&lt;/artifactId&gt;
+            &lt;version&gt;${slf4j.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+            &lt;artifactId&gt;logback-core&lt;/artifactId&gt;
+            &lt;version&gt;${logback.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+            &lt;artifactId&gt;logback-classic&lt;/artifactId&gt;
+            &lt;version&gt;${logback.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- test dependencies --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+            &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
+            &lt;version&gt;${junit-jupiter.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.assertj&lt;/groupId&gt;
+            &lt;artifactId&gt;assertj-core&lt;/artifactId&gt;
+            &lt;version&gt;${assertj-core.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate.orm&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-testing&lt;/artifactId&gt;
+            &lt;version&gt;${hibernate.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;junit&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.10.1&lt;/version&gt;
+            &lt;/plugin&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.0.0-M7&lt;/version&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+<p>NOTE: To share common resources for all feature-based projects, create a parent POM to centralize the common configurations in one place, check <a href="https://github.com/hantsy/jakartaee10-sandbox/blob/master/pom.xml">the parent pom.xml file</a>.</p>
+<p>In this example project, we use H2 embedded database for test purpose. Hibernate 6.1 implements the features of Jakarta Persistence 3.1, but it includes a Jakarta Persistence 3.0 API in the transitive dependency tree.</p>
+<p>To use Jakarta Persistence 3.1 API, we have to add <code>jakarta.persistence:jakarta.persistence-api</code> 3.1 explicitly.</p>
+<p>In the <em>src/main/resources/META-INF</em>, add a new file named <em>persistence.xml</em> to activate JPA.</p>
+<pre><code class="language-xml">&lt;persistence xmlns=&quot;https://jakarta.ee/xml/ns/persistence&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_1.xsd&quot;
+             version=&quot;3.1&quot;&gt;
+
+    &lt;persistence-unit name=&quot;defaultPU&quot; transaction-type=&quot;RESOURCE_LOCAL&quot;&gt;
+
+        &lt;description&gt;Hibernate test case template Persistence Unit&lt;/description&gt;
+        &lt;provider&gt;org.hibernate.jpa.HibernatePersistenceProvider&lt;/provider&gt;
+
+        &lt;exclude-unlisted-classes&gt;false&lt;/exclude-unlisted-classes&gt;
+
+        &lt;properties&gt;
+            &lt;property name=&quot;hibernate.archive.autodetection&quot; value=&quot;class, hbm&quot;/&gt;
+
+            &lt;property name=&quot;hibernate.dialect&quot; value=&quot;org.hibernate.dialect.H2Dialect&quot;/&gt;
+            &lt;property name=&quot;hibernate.connection.driver_class&quot; value=&quot;org.h2.Driver&quot;/&gt;
+            &lt;property name=&quot;hibernate.connection.url&quot; value=&quot;jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1&quot;/&gt;
+            &lt;property name=&quot;hibernate.connection.username&quot; value=&quot;sa&quot;/&gt;
+
+            &lt;property name=&quot;hibernate.connection.pool_size&quot; value=&quot;5&quot;/&gt;
+
+            &lt;property name=&quot;hibernate.show_sql&quot; value=&quot;true&quot;/&gt;
+            &lt;property name=&quot;hibernate.format_sql&quot; value=&quot;true&quot;/&gt;
+            &lt;property name=&quot;hibernate.hbm2ddl.auto&quot; value=&quot;create-drop&quot;/&gt;
+
+            &lt;property name=&quot;hibernate.max_fetch_depth&quot; value=&quot;5&quot;/&gt;
+
+            &lt;property name=&quot;hibernate.cache.region_prefix&quot; value=&quot;hibernate.test&quot;/&gt;
+            &lt;property name=&quot;hibernate.cache.region.factory_class&quot;
+                      value=&quot;org.hibernate.testing.cache.CachingRegionFactory&quot;/&gt;
+
+            &lt;!--NOTE: hibernate.jdbc.batch_versioned_data should be set to false when testing with Oracle--&gt;
+            &lt;property name=&quot;hibernate.jdbc.batch_versioned_data&quot; value=&quot;true&quot;/&gt;
+
+            &lt;property name=&quot;jakarta.persistence.validation.mode&quot; value=&quot;NONE&quot;/&gt;
+            &lt;property name=&quot;hibernate.service.allow_crawling&quot; value=&quot;false&quot;/&gt;
+            &lt;property name=&quot;hibernate.session.events.log&quot; value=&quot;true&quot;/&gt;
+        &lt;/properties&gt;
+
+    &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+<p>We use logback as the logging framework in this project. In the <em>src/main/resources</em>, add a <em>logback.xml</em> to configure logback.</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;configuration&gt;
+
+    &lt;property name=&quot;LOGS&quot; value=&quot;./logs&quot;/&gt;
+
+    &lt;appender name=&quot;Console&quot;
+              class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+        &lt;layout class=&quot;ch.qos.logback.classic.PatternLayout&quot;&gt;
+            &lt;Pattern&gt;
+                %green(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+            &lt;/Pattern&gt;
+        &lt;/layout&gt;
+    &lt;/appender&gt;
+
+    &lt;appender name=&quot;RollingFile&quot;
+              class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+        &lt;file&gt;${LOGS}/app.log&lt;/file&gt;
+        &lt;encoder
+                class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+            &lt;Pattern&gt;%d %p %C{1.} [%t] %m%n&lt;/Pattern&gt;
+        &lt;/encoder&gt;
+
+        &lt;rollingPolicy
+                class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+            &lt;!-- rollover daily and when the file reaches 10 MegaBytes --&gt;
+            &lt;fileNamePattern&gt;${LOGS}/archived/app-%d{yyyy-MM-dd}.%i.log
+            &lt;/fileNamePattern&gt;
+            &lt;timeBasedFileNamingAndTriggeringPolicy
+                    class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;
+                &lt;maxFileSize&gt;10MB&lt;/maxFileSize&gt;
+            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;
+        &lt;/rollingPolicy&gt;
+    &lt;/appender&gt;
+
+    &lt;!-- LOG everything at INFO level --&gt;
+    &lt;root level=&quot;info&quot;&gt;
+        &lt;appender-ref ref=&quot;RollingFile&quot;/&gt;
+        &lt;appender-ref ref=&quot;Console&quot;/&gt;
+    &lt;/root&gt;
+
+    &lt;!-- Debug hibernate SQL,  see: https://thorben-janssen.com/hibernate-logging-guide/ --&gt;
+    &lt;logger name=&quot;org.hibernate.SQL&quot; level=&quot;DEBUG&quot;/&gt;
+    &lt;logger name=&quot;org.hibernate.type.descriptor.sql&quot; level=&quot;trace&quot;/&gt;
+
+    &lt;!-- Custom debug level for the application code --&gt;
+    &lt;logger name=&quot;com.example&quot; level=&quot;debug&quot; additivity=&quot;false&quot;&gt;
+        &lt;appender-ref ref=&quot;RollingFile&quot;/&gt;
+        &lt;appender-ref ref=&quot;Console&quot;/&gt;
+    &lt;/logger&gt;
+&lt;/configuration&gt;
+</code></pre>
+<p>We set <code>org.hibernate.SQL</code> logging level to <code>DEBUG</code> and <code>org.hibernate.type.descriptor.sql</code> to <code>trace</code>, it will help you to dig into the Hibernate generated SQL at runtime.</p>
+<h2 id="uuid-basic-type">UUID Basic Type<a class="headerlink" href="#uuid-basic-type" title="Permanent link">&para;</a></h2>
+<p>Create a simple <code>Entity</code>.</p>
+<pre><code class="language-java">@Entity
+public class Person {
+    @Id
+    @Column(name = &quot;id&quot;, nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private String name;
+    private int age = 30;
+
+    public Person() {
+    }
+
+    public Person(String name, int age) {
+        assert age &gt; 0;
+        this.name = name;
+        this.age = age;
+        this.birthDate = LocalDateTime.now().minusYears(this.age);
+    }
+
+    // getters and setters
+    // override equals and hashCode
+}
+</code></pre>
+<p>An entity class is annotated with an <code>@Entity</code>, optionally you can specify the entity name and add table definition with an extra <code>@Table</code> annotation.</p>
+<p>Here we defined a UUID type ID, and use the new UUID generation strategy introduced in JPA 3.1.</p>
+<p>JPA requires an Entity should includes a no-arguments constructor, if you declare another constructor with a few arguments, you should declare this no-arguments constructor explicitly.</p>
+<p>Create a simple JUnit test to verify if the UUID type working as expected.</p>
+<pre><code class="language-java">class PersonUUIDTest {
+    private static final Logger log = LoggerFactory.getLogger(PersonUUIDTest.class);
+
+    private EntityManagerFactory entityManagerFactory;
+
+    @BeforeEach
+    void setUp() {
+        entityManagerFactory = Persistence.createEntityManagerFactory(&quot;defaultPU&quot;);
+        var entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        var deleteFromPerson = entityManager.createQuery(&quot;DELETE FROM Person&quot;).executeUpdate();
+        log.debug(&quot;Deleted {} persons&quot;, deleteFromPerson);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    @Test
+    @DisplayName(&quot;insert person and verify person&quot;)
+    public void testInsertAndFindPerson() throws Exception {
+        var person = new Person(&quot;John&quot;, 30);
+        var entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.persist(person);
+        entityManager.getTransaction().commit();
+        var id = person.getId();
+        assertNotNull(id);
+
+        try {
+            var foundPerson = entityManager.find(Person.class, id);
+            assertThat(foundPerson.getId()).isNotNull();
+            assertThat(foundPerson.getName()).isEqualTo(&quot;John&quot;);
+            assertThat(foundPerson.getAge()).isEqualTo(30);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @AfterEach
+    void tearDown() {
+        entityManagerFactory.close();
+    }
+}
+</code></pre>
+<p>In the <code>@BeforeEach</code> method, we will create an <code>EntityManagerFactory</code> instance. And in the <code>@AfterEach</code> we call the <code>EntityManagerFactory.close</code> to release the resource.</p>
+<p>In the <code>@BeforeEach</code> we try to clean up the Person data.</p>
+<p>Now in the <code>testInsertAndFindPerson</code> test, we insert a new person, then utilize <code>entityManager.find</code> to find the inserted person.</p>
+<p>The person id is annotated with <code>@ID</code> and <code>@GeneratedValue</code>, when inserting a person into table, hibernate will generate an ID automatically. After it is persisted, the returned instance is filled with the generated id, it should not be a null.</p>
+<h2 id="numeric-functions">Numeric Functions<a class="headerlink" href="#numeric-functions" title="Permanent link">&para;</a></h2>
+<p>Add some extra properties in the above <code>Person</code> class.</p>
+<pre><code class="language-java">public class Person{
+    private Integer yearsWorked = 2;
+    private LocalDateTime birthDate = LocalDateTime.now().minusYears(30);
+    private BigDecimal salary = new BigDecimal(&quot;12345.678&quot;);
+    private BigDecimal hourlyRate = new BigDecimal(&quot;34.56&quot;);
+
+    // setters and getters
+}
+</code></pre>
+<p>Create a new test to verify the new numeric functions: <code>ceiling</code>, <code>floor</code>, <code>round</code>, <code>exp</code>, <code>ln</code>, <code>power</code>, <code>sign</code>.</p>
+<pre><code class="language-java">@Test
+@DisplayName(&quot;&gt;&gt;&gt; test numeric functions&quot;)
+public void testNumericFunctions() throws Exception {
+    var person = new Person(&quot;John&quot;, 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        var queryString = &quot;&quot;&quot;
+                SELECT p.name as name,
+                CEILING(p.salary) as ceiling,
+                FLOOR(p.salary) as floor,
+                ROUND(p.salary, 1) as round,
+                EXP(p.yearsWorked) as exp,
+                LN(p.yearsWorked) as ln,
+                POWER(p.yearsWorked,2) as power,
+                SIGN(p.yearsWorked) as sign
+                FROM Person p
+                WHERE p.id=:id
+                &quot;&quot;&quot;;
+        var query = entityManager.createQuery(queryString);
+        query.setParameter(&quot;id&quot;, id);
+        var resultList = query.getResultList();
+        log.debug(&quot;Result list: {}&quot;, resultList);
+        resultList.forEach(result -&gt; log.debug(&quot;result: {}&quot;, result));
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+</code></pre>
+<p>Next, let's have a look at how to use them in the Criteria APIs.</p>
+<pre><code class="language-java">@Test
+@DisplayName(&quot;&gt;&gt;&gt; test numeric functions&quot;)
+public void testNumericFunctions() throws Exception {
+    var person = new Person(&quot;John&quot;, 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        // see: https://hibernate.zulipchat.com/#narrow/stream/132096-hibernate-user/topic/New.20functions.20in.20JPA.203.2E1/near/289429903
+        var cb = (HibernateCriteriaBuilder) entityManager.getCriteriaBuilder();
+        var query = cb.createTupleQuery();
+        var root = query.from(Person.class);
+
+        query.multiselect(root.get(&quot;name&quot;),
+                cb.ceiling(root.get(&quot;salary&quot;)),
+                cb.floor(root.get(&quot;salary&quot;)),
+                cb.round(root.get(&quot;salary&quot;), 1),
+                cb.exp(root.get(&quot;yearsWorked&quot;)),
+                cb.ln(root.get(&quot;yearsWorked&quot;)),
+                // see: https://hibernate.atlassian.net/browse/HHH-15395
+                cb.power(root.get(&quot;yearsWorked&quot;), 2),
+                cb.sign(root.get(&quot;yearsWorked&quot;))
+        );
+        query.where(cb.equal(root.get(&quot;id&quot;), id));
+        var resultList = entityManager.createQuery(query).getResultList();
+        log.debug(&quot;Result list: {}&quot;, resultList);
+
+        resultList.forEach(result -&gt;
+                log.debug(
+                        &quot;result: ({},{},{},{},{},{},{},{})&quot;,
+                        result.get(0, String.class),
+                        result.get(1, BigDecimal.class),
+                        result.get(2, BigDecimal.class),
+                        result.get(3, BigDecimal.class),
+                        result.get(4, Double.class),
+                        result.get(5, Double.class),
+                        result.get(6, Double.class),
+                        result.get(7, Integer.class)
+                )
+        );
+    } catch (Exception ex) {
+        fail(ex);
+    }
+}
+</code></pre>
+<p>Note, when using Hibernate 6.1, we have to cast <code>CriteriaBuilder</code> to <code>HibernateCriteriaBuilder</code> to experience the new numeric functions. Hibernate 6.2 will align to JPA 3.1 and fix the issue.</p>
+<h2 id="datetime-functions">DateTime Functions<a class="headerlink" href="#datetime-functions" title="Permanent link">&para;</a></h2>
+<p>Add <code>LOCAL TIME</code>, <code>LOCAL DATETIME</code>, <code>LOCAL DATE</code> to the select clause, create a test to verify the query result.</p>
+<pre><code class="language-java"> @Test
+@DisplayName(&quot;&gt;&gt;&gt; test datetime functions&quot;)
+public void testDateTimeFunctions() throws Exception {
+    var person = new Person(&quot;John&quot;, 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        var queryString = &quot;&quot;&quot;
+                SELECT p.name as name,
+                LOCAL TIME as localTime,
+                LOCAL DATETIME as localDateTime,
+                LOCAL DATE as localDate
+                FROM Person p
+                &quot;&quot;&quot;;
+
+        var query = entityManager.createQuery(queryString);
+        var resultList = query.getResultList();
+        log.debug(&quot;Result list: {}&quot;, resultList);
+        resultList.forEach(result -&gt; log.debug(&quot;result: {}&quot;, result));
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+</code></pre>
+<p>Run the test, you will see <code>LOCAL TIME</code>, <code>LOCAL DATETIME</code>, <code>LOCAL DATE</code> results are treated as Java 8 <code>LocalTime</code>, <code>LocalDateTime</code>, <code>LocalDate</code> directly.</p>
+<p>Let's have a look at the usage in the CriteriaBuilder APIs.</p>
+<pre><code class="language-java">@Test
+@DisplayName(&quot;&gt;&gt;&gt; test datetime functions&quot;)
+public void testDateTimeFunctions() throws Exception {
+    var person = new Person(&quot;John&quot;, 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        var cb = (HibernateCriteriaBuilder) entityManager.getCriteriaBuilder();
+        var query = cb.createTupleQuery();
+        var root = query.from(Person.class);
+
+        query.multiselect(root.get(&quot;name&quot;),
+                cb.localTime(),
+                cb.localDateTime(),
+                cb.localDate()
+        );
+        query.where(cb.equal(root.get(&quot;id&quot;), id));
+
+        var resultList = entityManager.createQuery(query).getResultList();
+        log.debug(&quot;Result list: {}&quot;, resultList);
+        resultList.forEach(result -&gt;
+                log.debug(
+                        &quot;result: ({},{},{},{})&quot;,
+                        result.get(0, String.class),
+                        result.get(1, LocalTime.class),
+                        result.get(2, LocalDateTime.class),
+                        result.get(3, LocalDate.class)
+                )
+        );
+    } catch (Exception ex) {
+        fail(ex);
+    }
+}
+</code></pre>
+<h2 id="extract-function"><code>EXTRACT</code> function<a class="headerlink" href="#extract-function" title="Permanent link">&para;</a></h2>
+<p>Here we use the new <code>extract</code> function to read the <code>year</code>, <code>quarter</code>, <code>month</code>, <code>week</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code> values from a Java 8 DateTime type property in JPQL query.</p>
+<pre><code class="language-java">@Test
+@DisplayName(&quot;&gt;&gt;&gt; test `EXTRACT` functions&quot;)
+public void testExtractFunctions() throws Exception {
+    var person = new Person(&quot;John&quot;, 30);
+    var entityManager = entityManagerFactory.createEntityManager();
+    entityManager.getTransaction().begin();
+    entityManager.persist(person);
+    entityManager.getTransaction().commit();
+    var id = person.getId();
+    assertNotNull(id);
+
+    try {
+        var queryString = &quot;&quot;&quot;
+                SELECT p.name as name,
+                EXTRACT(YEAR FROM p.birthDate) as year,
+                EXTRACT(QUARTER FROM p.birthDate) as quarter,
+                EXTRACT(MONTH FROM p.birthDate) as month,
+                EXTRACT(WEEK FROM p.birthDate) as week,
+                EXTRACT(DAY FROM p.birthDate) as day,
+                EXTRACT(HOUR FROM p.birthDate) as hour,
+                EXTRACT(MINUTE FROM p.birthDate) as minute,
+                EXTRACT(SECOND FROM p.birthDate) as second
+                FROM Person p
+                &quot;&quot;&quot;;
+        var query = entityManager.createQuery(queryString);
+
+        var resultList = query.getResultList();
+        log.debug(&quot;Result list: {}&quot;, resultList);
+        resultList.forEach(result -&gt; log.debug(&quot;result: {}&quot;, result));
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+</code></pre>
+<p>Note, there is no mapped extract function in the CriteriaBuilder APIs, for more details, check the issue <a href="https://github.com/eclipse-ee4j/jpa-api/pull/356">jpa-api #356</a>.</p>
+<p>Get a copy of <a href="https://github.com/hantsy/jakartaee10-sandbox/tree/master/hibernate">sample codes</a> from my Github and experience yourself.</p>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      Last update:
+      2023-11-26
+    
+  </small>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy;2022 Hantsy
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/hantsy" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://linkedin.com/in/hantsy" target="_blank" rel="noopener" title="linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://medium.com/@hantsy" target="_blank" rel="noopener" title="medium.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M180.5 74.262C80.813 74.262 0 155.633 0 256s80.819 181.738 180.5 181.738S361 356.373 361 256 280.191 74.262 180.5 74.262Zm288.25 10.646c-49.845 0-90.245 76.619-90.245 171.095s40.406 171.1 90.251 171.1 90.251-76.619 90.251-171.1H559c0-94.503-40.4-171.095-90.248-171.095Zm139.506 17.821c-17.526 0-31.735 68.628-31.735 153.274s14.2 153.274 31.735 153.274S640 340.631 640 256c0-84.649-14.215-153.271-31.742-153.271Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hantsy" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "navigation.expand", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.6c14ae12.min.js"></script>
+      
+    
+  </body>
+</html>

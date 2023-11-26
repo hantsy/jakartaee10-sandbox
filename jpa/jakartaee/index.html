@@ -1,0 +1,2123 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../hibernate/">
+      
+      
+        <link rel="next" href="../../rest/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.12">
+    
+    
+      
+        <title>Example: JPA and Jakarta EE Runtimes - Migrating to Jakarta EE 10</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.fad675c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#jakarta-ee-runtime-environment" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Migrating to Jakarta EE 10" class="md-header__button md-logo" aria-label="Migrating to Jakarta EE 10" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Migrating to Jakarta EE 10
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Example: JPA and Jakarta EE Runtimes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hantsy/jakartaee10-sandbox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hantsy/jakartaee10-sandbox
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Migrating to Jakarta EE 10" class="md-nav__button md-logo" aria-label="Migrating to Jakarta EE 10" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Migrating to Jakarta EE 10
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hantsy/jakartaee10-sandbox" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hantsy/jakartaee10-sandbox
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Preface
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Persistence
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Persistence
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../new/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's New in Jakarta Persistence 3.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hibernate/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example: Hibernate 6.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Example: JPA and Jakarta EE Runtimes
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Example: JPA and Jakarta EE Runtimes
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-jakarta-ee-web-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a Jakarta EE Web Project
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-jaxrs-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating Jaxrs Resource
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-to-jakarta-ee-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying to Jakarta EE Containers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying to Jakarta EE Containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glassfish-70" class="md-nav__link">
+    <span class="md-ellipsis">
+      GlassFish 7.0
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wildfly-preview-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      WildFly Preview 27
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-application-via-maven-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying Application via Maven Plugin
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying Application via Maven Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glassfish-70_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      GlassFish 7.0
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wildfly-preview-27_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      WildFly Preview 27
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-jpa-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing JPA Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing JPA Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuring-glassfish-managed-adapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring GlassFish Managed Adapter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-arquillian-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating Arquillian Tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../rest/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    REST
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            REST
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/new/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's New in Jakarta REST 3.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/se-bootstrap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Java SE Bootstrap API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/multipart/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Support for MultiPart media type
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/jsonb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Better alignment with JSONB
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rest/cdi-inject/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Better alignment with CDI
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concurrency.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Concurrency
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Security
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Security
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/new/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's New in Jakarta Security 3.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example Project
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/kc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OIDC with Keycloak
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/auth0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OIDC with Auth0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/okta/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OIDC with Okta
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../faces/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Faces
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Faces
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faces/new/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What's new in Faces 4.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faces/cleanup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clean Up Deprecated Staff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faces/faces/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    New Features and Improvements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-jakarta-ee-web-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a Jakarta EE Web Project
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-jaxrs-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating Jaxrs Resource
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-to-jakarta-ee-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying to Jakarta EE Containers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying to Jakarta EE Containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glassfish-70" class="md-nav__link">
+    <span class="md-ellipsis">
+      GlassFish 7.0
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wildfly-preview-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      WildFly Preview 27
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-application-via-maven-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying Application via Maven Plugin
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying Application via Maven Plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glassfish-70_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      GlassFish 7.0
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wildfly-preview-27_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      WildFly Preview 27
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-jpa-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing JPA Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing JPA Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuring-glassfish-managed-adapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring GlassFish Managed Adapter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-arquillian-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating Arquillian Tests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="jakarta-ee-runtime-environment">Jakarta EE Runtime Environment<a class="headerlink" href="#jakarta-ee-runtime-environment" title="Permanent link">&para;</a></h1>
+<p>Next let's go to the Jakarta EE 10 compatible products to experience the new features of JPA 3.1.</p>
+<p>Firstly we will prepare a Jakarta EE 10 web project.</p>
+<h2 id="creating-a-jakarta-ee-web-project">Creating a Jakarta EE Web Project<a class="headerlink" href="#creating-a-jakarta-ee-web-project" title="Permanent link">&para;</a></h2>
+<p>Simply generate a web project skeleton via <a href="https://maven.apache.org/archetypes/maven-archetype-webapp/">Maven Webapp Archetype</a>.</p>
+<pre><code class="language-bash">mvn archetype:generate
+    -DarchetypeGroupId=org.apache.maven.archetypes
+    -DarchetypeArtifactId=maven-archetype-webapp
+    -DarchetypeVersion=1.4
+</code></pre>
+<p>Then add Jakarta EE 10 dependency into the project pom.xml. Let's have a look at the modified pom.xml.</p>
+<pre><code class="language-xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;artifactId&gt;jpa-examples&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;com.example&lt;/groupId&gt;
+        &lt;artifactId&gt;jakartaee10-sandbox-parent&lt;/artifactId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;relativePath&gt;..&lt;/relativePath&gt;
+    &lt;/parent&gt;
+
+    &lt;name&gt;jpa-examples&lt;/name&gt;
+    &lt;description&gt;Jakarta EE 10 Sandbox: Persistence 3.1 Examples&lt;/description&gt;
+    &lt;properties&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;jakarta.platform&lt;/groupId&gt;
+            &lt;artifactId&gt;jakarta.jakartaee-api&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.eclipse.persistence&lt;/groupId&gt;
+            &lt;artifactId&gt;org.eclipse.persistence.jpa.modelgen.processor&lt;/artifactId&gt;
+            &lt;version&gt;4.0.0&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.arquillian.junit5&lt;/groupId&gt;
+            &lt;artifactId&gt;arquillian-junit5-container&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;!-- see: https://github.com/arquillian/arquillian-core/issues/248 --&gt;
+        &lt;!-- and https://github.com/arquillian/arquillian-core/pull/246/files --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.arquillian.protocol&lt;/groupId&gt;
+            &lt;artifactId&gt;arquillian-protocol-servlet-jakarta&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;
+            &lt;artifactId&gt;junit-jupiter&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre>
+<p>In the above pom.xml, we also add JUnit 5 and <a href="https://arquillian.org">Arquillian</a> related dependencies in test scope. Through the Jakarta EE container specific Aquillian adapter, we can run the tests in a Jakarta EE containers.</p>
+<p>In this project, we reuse the the <code>Person</code> entity we have introduced in the Hibernate section.</p>
+<p>Now let's move to persistence configuration. Create a <em>persistence.xml</em> in the <em>src/main/resources/META-INFO</em> folder.</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;persistence version=&quot;3.0&quot; xmlns=&quot;https://jakarta.ee/xml/ns/persistence&quot;
+             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+             xsi:schemaLocation=&quot;https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd&quot;&gt;
+    &lt;persistence-unit name=&quot;defaultPU&quot; transaction-type=&quot;JTA&quot;&gt;
+        &lt;jta-data-source&gt;java:comp/DefaultDataSource&lt;/jta-data-source&gt;
+        &lt;exclude-unlisted-classes&gt;false&lt;/exclude-unlisted-classes&gt;
+        &lt;properties&gt;
+            &lt;property name=&quot;jakarta.persistence.schema-generation.database.action&quot; value=&quot;drop-and-create&quot;/&gt;
+
+            &lt;!-- for  Glassfish/Payara/EclipseLink --&gt;
+            &lt;property name=&quot;eclipselink.logging.level.sql&quot; value=&quot;FINE&quot;/&gt;
+            &lt;property name=&quot;eclipselink.logging.level&quot; value=&quot;FINE&quot;/&gt;
+            &lt;property name=&quot;eclipselink.logging.parameters&quot; value=&quot;true&quot;/&gt;
+
+            &lt;!-- for WildFly/Hibernate --&gt;
+            &lt;property name=&quot;hibernate.show_sql&quot; value=&quot;true&quot;/&gt;
+            &lt;property name=&quot;hibernate.format_sql&quot; value=&quot;true&quot;/&gt;
+        &lt;/properties&gt;
+    &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+<p>The configuration is a little different from the one we introduced in the Hibernate section.</p>
+<ul>
+<li>In a container environment, we would like choose <code>JTA</code> as transaction-type.</li>
+<li>We do not setup database connection info, instead we configure a built-in DataSource. The <code>java:comp/DefaultDataSource</code> is the default DataSource for all Jakarta EE compatible products.</li>
+</ul>
+<h2 id="creating-jaxrs-resource">Creating Jaxrs Resource<a class="headerlink" href="#creating-jaxrs-resource" title="Permanent link">&para;</a></h2>
+<p>To interact with our backend database, we will create a simple complete JAXRS application, including:</p>
+<ul>
+<li>A EJB <code>@Stateless</code> bean to read data from database</li>
+<li>And expose data via a simple JAXRS resource</li>
+</ul>
+<p>OK, let's create class <code>PersonRepository</code> which is annotated with <code>@Stateless</code>. In this class, inject a <code>EntityManager</code> bean with an annotation <code>@PersistenceContext</code>, and add a new method <code>getAllResource</code> to execute a JPQL query to retrieve all persons.</p>
+<pre><code class="language-java">@Stateless
+public class PersonRepository {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    public List&lt;Person&gt; getAllPersons() {
+        return entityManager.createQuery(&quot;select p from Person p&quot;, Person.class)
+                .getResultList();
+    }
+}
+</code></pre>
+<p>Next, create a <code>PersonResource</code> to expose persons to client.</p>
+<pre><code class="language-java">@RequestScoped
+@Path(&quot;/persons&quot;)
+public class PersonResource {
+
+    @Inject
+    PersonRepository personRepository;
+
+    @Path(&quot;&quot;)
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response allPersons() {
+        var data = personRepository.getAllPersons();
+        return Response.ok(data).build();
+    }
+}
+</code></pre>
+<p>The <code>PersonResource</code> is annotated with <code>RequestScoped</code>, it is a CDI bean, the <code>@Path</code> on the class define the root path of all subresources in this class. The <code>allPersons</code> will produces all persons to client in JSON format when HTTP Client request matches HTTP GET method, and URI is <code>/persons</code> and HTTP Header Accept is compatible with <code>application/json</code>.</p>
+<p>To activate JAXRS feature, create a class to extend the JAXRS <code>Application</code>, add <code>@ApplicationPath</code> to specify the root context path of all JAXRS resources.</p>
+<pre><code class="language-java">@ApplicationPath(&quot;/rest&quot;)
+public class RestActivator extends Application {
+}
+</code></pre>
+<p>Let's create a bean to add some sample data at the application startup.</p>
+<pre><code class="language-java">@Startup
+@Singleton
+public class DataInitializer {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    @PostConstruct
+    public void init() {
+        List
+                .of(
+                        new Person(&quot;Jack&quot;, 20),
+                        new Person(&quot;Rose&quot;, 18)
+                )
+                .forEach(entityManager::persist);
+    }
+}
+</code></pre>
+<h2 id="deploying-to-jakarta-ee-containers">Deploying to Jakarta EE Containers<a class="headerlink" href="#deploying-to-jakarta-ee-containers" title="Permanent link">&para;</a></h2>
+<p>Build and package the application into a war archive. Open a terminal, switch to the project root folder, and execute the following command.</p>
+<pre><code class="language-bash">mvn clean package -DskipTests -D&quot;maven.test.skip=true&quot;
+</code></pre>
+<p>When it is done, there is war package is ready in the path <em>target/jpa-examples.war</em>.</p>
+<h3 id="glassfish-70">GlassFish 7.0<a class="headerlink" href="#glassfish-70" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Download the <a href="https://github.com/eclipse-ee4j/glassfish/releases">latest GlassFish 7.0</a>, extract files to a location, eg. D:\glassfish7, mark as <em>GlassFish_install</em>.</li>
+<li>To start GlassFish and Derby, open a terminal, enter <em>GlassFish_install/bin</em>, run <code>asadmin start-database</code> and <code>asadmin start-domain domain1</code>.</li>
+<li>Copy the above war package to <em>Glassfish_install/glassfish/domains/domain1/autodeploy</em> folder.</li>
+<li>Open <em>GlassFish_install/glassfish/domains/domain1/logs/server.log</em>, and wait the deployment is completed.</li>
+<li>
+<p>Open another terminal window, execute <code>curl http://localhost:8080/jpa-examples/rest/persons</code>. You will see the following result in the console.</p>
+<p><code>json
+[{"age":18,"birthDate":"2004-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"d8552d71-ff7f-4650-b5a0-ce1c5fb3fe0b","name":"Rose","salary":12345.678,"yearsWorked":2},{"age":20,"birthDate":"2002-11-06T14:54:05.4504678","gender":"MALE","hourlyRate":34.56,"id":"cdf94cdc-21b3-492c-b1b5-06bc8cae9947","name":"Jack","salary":12345.678,"yearsWorked":2}]</code></p>
+</li>
+<li>
+<p>To stop GlassFish and Derby, run <code>asadmin stop-database</code> and <code>asadmin stop-domain domain1</code>
+respectively.</p>
+</li>
+</ol>
+<h3 id="wildfly-preview-27">WildFly Preview 27<a class="headerlink" href="#wildfly-preview-27" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Download the latest <a href="https://wildfly.org">WildFly Preview</a>, extract files to a location, eg. D:\wildfly-preview-27.0.0.Beta1, mark as <em>WildFly_install</em>.</li>
+<li>Open a terminal, enter <em>WildFly_install/bin</em>, run <code>standalone</code> to start WildFly with the default standalone profile configuration.</li>
+<li>Copy the built war to <em>WildFly_install/standalone/deployments</em>.</li>
+<li>Wait the deployment progress is done, you can use the curl in GlassFish section to verify the application.</li>
+<li>Send a <code>CTLR+C</code> keys combination in the original WildFly startup console to stop WildFly.</li>
+</ol>
+<h2 id="deploying-application-via-maven-plugin">Deploying Application via Maven Plugin<a class="headerlink" href="#deploying-application-via-maven-plugin" title="Permanent link">&para;</a></h2>
+<h3 id="glassfish-70_1">GlassFish 7.0<a class="headerlink" href="#glassfish-70_1" title="Permanent link">&para;</a></h3>
+<p>The GlassFish project does not include an official Maven plugin to manage GlassFish server.
+But there is a community-based <code>cargo-maven3-plugin</code> which can be used to manage almost all popular Jakarta EE application servers and web servers.</p>
+<p>Add the following <code>profile</code> section to use cargo Maven plugin to manage the lifecycle of GlassFish server.</p>
+<pre><code class="language-xml">&lt;profile&gt;
+    &lt;id&gt;glassfish&lt;/id&gt;
+    &lt;activation&gt;
+        &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+    &lt;/activation&gt;
+    &lt;properties&gt;
+        &lt;cargo.zipUrlInstaller.downloadDir&gt;${project.basedir}/../installs&lt;/cargo.zipUrlInstaller.downloadDir&gt;
+    &lt;/properties&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.codehaus.cargo&lt;/groupId&gt;
+                &lt;artifactId&gt;cargo-maven3-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;container&gt;
+                        &lt;containerId&gt;glassfish7x&lt;/containerId&gt;
+                        &lt;!-- &lt;artifactInstaller&gt;
+                            &lt;groupId&gt;org.glassfish.main.distributions&lt;/groupId&gt;
+                            &lt;artifactId&gt;glassfish&lt;/artifactId&gt;
+                            &lt;version&gt;${glassfish.version}&lt;/version&gt;
+                        &lt;/artifactInstaller&gt; --&gt;
+                        &lt;zipUrlInstaller&gt;
+                            &lt;url&gt;https://github.com/eclipse-ee4j/glassfish/releases/download/${glassfish.version}/glassfish-${glassfish.version}.zip&lt;/url&gt;
+                            &lt;downloadDir&gt;${cargo.zipUrlInstaller.downloadDir}&lt;/downloadDir&gt;
+                        &lt;/zipUrlInstaller&gt;
+                    &lt;/container&gt;
+                    &lt;configuration&gt;
+                        &lt;!-- the configuration used to deploy --&gt;
+                        &lt;home&gt;${project.build.directory}/glassfish7x-home&lt;/home&gt;
+                        &lt;properties&gt;
+                            &lt;cargo.remote.password&gt;&lt;/cargo.remote.password&gt;
+                            &lt;cargo.glassfish.removeDefaultDatasource&gt;true&lt;/cargo.glassfish.removeDefaultDatasource&gt;
+                        &lt;/properties&gt;
+                        &lt;datasources&gt;
+                            &lt;datasource&gt;
+                                &lt;driverClass&gt;org.apache.derby.jdbc.EmbeddedDriver&lt;/driverClass&gt;
+                                &lt;url&gt;jdbc:derby:derbyDB;create=true&lt;/url&gt;
+                                &lt;jndiName&gt;jdbc/__default&lt;/jndiName&gt;
+                                &lt;username&gt;APP&lt;/username&gt;
+                                &lt;password&gt;nonemptypassword&lt;/password&gt;
+                            &lt;/datasource&gt;
+                        &lt;/datasources&gt;
+                    &lt;/configuration&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/profile&gt;
+</code></pre>
+<p>Unlike the approach in NetBeans IDE or Eclipse IDE with GlassFish Pack, where starting GlassFish it will start the built-in Derby at the same time. Cargo maven plugin does not start the built-in Derby as expected, to use the default DataSource in our project, we have to clear the default DataSource and add a new default DataSource using the embedded Derby which is shipped by GlassFish distributions.</p>
+<p>Run the following command.</p>
+<pre><code class="language-bash">mvn clean package cargo:run -DskipTests -Dmaven.test.skip=true
+</code></pre>
+<p>It will compile the project source codes and package the compiled resources into a war archive, then start the managed GlassFish server(with a new <code>cargo-domain</code>), and then deploy the package into the running server.</p>
+<blockquote>
+<p>Note, when you run this command at the first time, it will spend some time to download a copy of the GlassFish distribution, and extract the files into the project build folder.</p>
+</blockquote>
+<p>In another terminal window, execute <code>curl http://localhost:8080/jpa-examples/rest/persons</code> to verify the endpoint.</p>
+<p>To stop the server, just send a <code>CTRL+C</code> in the original GlassFish running console.</p>
+<h3 id="wildfly-preview-27_1">WildFly Preview 27<a class="headerlink" href="#wildfly-preview-27_1" title="Permanent link">&para;</a></h3>
+<p>The WildFly project itself provides an official WildFly Maven plugin, we will configure it in a new Maven profile.</p>
+<blockquote>
+<p>Cargo maven plugin also supports WildFly, check <a href="https://codehaus-cargo.github.io/cargo/WildFly+27.x.html">Cargo WildFly support docs</a>.</p>
+</blockquote>
+<pre><code class="language-xml">&lt;profile&gt;
+    &lt;id&gt;wildfly&lt;/id&gt;
+    &lt;properties&gt;
+        &lt;!-- Wildfly server --&gt;
+        &lt;wildfly.artifactId&gt;wildfly-preview-dist&lt;/wildfly.artifactId&gt;
+        &lt;jboss-as.home&gt;${project.build.directory}/wildfly-preview-${wildfly.version}&lt;/jboss-as.home&gt;
+    &lt;/properties&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+
+            &lt;!-- unpack a copy of WildFly--&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
+                &lt;version&gt;${maven-dependency-plugin.version}&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;unpack&lt;/id&gt;
+                        &lt;phase&gt;process-classes&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;unpack&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;artifactItems&gt;
+                                &lt;artifactItem&gt;
+                                    &lt;groupId&gt;org.wildfly&lt;/groupId&gt;
+                                    &lt;artifactId&gt;${wildfly.artifactId}&lt;/artifactId&gt;
+                                    &lt;version&gt;${wildfly.version}&lt;/version&gt;
+                                    &lt;type&gt;zip&lt;/type&gt;
+                                    &lt;overWrite&gt;false&lt;/overWrite&gt;
+                                    &lt;outputDirectory&gt;${project.build.directory}&lt;/outputDirectory&gt;
+                                &lt;/artifactItem&gt;
+                            &lt;/artifactItems&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+
+            &lt;!-- The WildFly plugin deploys your war to a local running WildFly container --&gt;
+            &lt;!-- To use, run: mvn package wildfly:deploy --&gt;
+            &lt;!-- For Jakarta EE 9, use `wildfly-preview-dist` as artifactId instead to start and deploy applications--&gt;
+            &lt;!-- Run: mvn clean wildfly:run -PWildfly -Dwildfly.artifactId=wildfly-preview-dist -Dwildfly.version=22.0.0.Alpha1 --&gt;
+            &lt;!-- or set the `jboss-as.home` to run: mvn clean wildfly:run -PWildfly -Djboss-as.home=D:\appsvr\wildfly-preview-22.0.0.Alpha1--&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.wildfly.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;wildfly-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;${wildfly-maven-plugin.version}&lt;/version&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;opensaml&lt;/id&gt;
+            &lt;url&gt;https://build.shibboleth.net/nexus/content/repositories/releases/&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+&lt;/profile&gt;
+</code></pre>
+<p>Utilize this WildFly plugin, we can deploy applications into an embedded WildFly, a managed WildFly server or a remote running WildFly server.</p>
+<pre><code class="language-bash">mvn clean wildfly:run -Pwildfly -DskipTests -Dmaven.test.skip=true
+</code></pre>
+<p>By default, if we do not setup a <code>jboss-as.home</code> or remote host connection info, it will bootstrap an embedded WildFly and run the application on the embedded server.</p>
+<p>Here we configure Maven dependency plugin to download a copy of WildFly, extract the files to the project build directory, and setup a <code>jboss-as.home</code> property, the value is the WildFly location. The WildFly plugin will manage the whole WildFly lifecycle - start the WildFly server, deploy applications into the running server, (use <code>CTRL+C</code> hotkey) stop the server.</p>
+<h2 id="testing-jpa-components">Testing JPA Components<a class="headerlink" href="#testing-jpa-components" title="Permanent link">&para;</a></h2>
+<p>Here I assume you are familiar with <a href="https://www.junit.org">JUnit</a> and <a href="https://arquillian.org">Arquillian</a>.</p>
+<blockquote>
+<p>For the developers those are new to Arqullian framework, please read the official <a href="https://arquillian.org/guides">Arquillian Guides</a> to start your first step. Note, these tutorials are available in several languages, including Simplified Chinese.</p>
+<p>If you have some basic knowledge of Arquillian, go to my <a href="https://github.com/hantsy/jakartaee8-starter-boilerplate">Jakarta EE 8 starter boilerplate project</a> and <a href="https://github.com/hantsy/jakartaee9-starter-boilerplate">Jakarta EE 9 starter boilerplate project</a> to update yourself.</p>
+</blockquote>
+<p>Since Jakarta EE 9, it begins to use the new <code>jakarta</code> namespace in all specifications. Arquillian 1.7.0.x starts to support these changes.</p>
+<h3 id="configuring-glassfish-managed-adapter">Configuring GlassFish Managed Adapter<a class="headerlink" href="#configuring-glassfish-managed-adapter" title="Permanent link">&para;</a></h3>
+<p>In the next steps, we will configure a managed GlassFish Arquillian Adapter to run the testing codes.</p>
+<pre><code class="language-xml">&lt;profile&gt;
+    &lt;id&gt;arq-glassfish-managed&lt;/id&gt;
+    &lt;properties&gt;
+        &lt;skip.unit.tests&gt;true&lt;/skip.unit.tests&gt;
+        &lt;skip.integration.tests&gt;false&lt;/skip.integration.tests&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;!-- Jersey --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.glassfish.jersey.media&lt;/groupId&gt;
+            &lt;artifactId&gt;jersey-media-sse&lt;/artifactId&gt;
+            &lt;version&gt;${jersey.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.glassfish.jersey.media&lt;/groupId&gt;
+            &lt;artifactId&gt;jersey-media-json-binding&lt;/artifactId&gt;
+            &lt;version&gt;${jersey.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.glassfish.jersey.inject&lt;/groupId&gt;
+            &lt;artifactId&gt;jersey-hk2&lt;/artifactId&gt;
+            &lt;version&gt;${jersey.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.glassfish.jersey.core&lt;/groupId&gt;
+            &lt;artifactId&gt;jersey-client&lt;/artifactId&gt;
+            &lt;version&gt;${jersey.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.github.hantsy.arquillian-container-glassfish-jakarta&lt;/groupId&gt;
+            &lt;artifactId&gt;arquillian-glassfish-managed-jakarta&lt;/artifactId&gt;
+            &lt;version&gt;${arquillian-glassfish-jakarta.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;testResources&gt;
+            &lt;testResource&gt;
+                &lt;directory&gt;src/test/resources&lt;/directory&gt;
+            &lt;/testResource&gt;
+            &lt;testResource&gt;
+                &lt;directory&gt;src/test/arq-glassfish-managed&lt;/directory&gt;
+            &lt;/testResource&gt;
+        &lt;/testResources&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
+                &lt;version&gt;${maven-dependency-plugin.version}&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;unpack&lt;/id&gt;
+                        &lt;phase&gt;pre-integration-test&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;unpack&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;artifactItems&gt;
+                                &lt;artifactItem&gt;
+                                    &lt;groupId&gt;org.glassfish.main.distributions&lt;/groupId&gt;
+                                    &lt;artifactId&gt;glassfish&lt;/artifactId&gt;
+                                    &lt;version&gt;${glassfish.version}&lt;/version&gt;
+                                    &lt;type&gt;zip&lt;/type&gt;
+                                    &lt;overWrite&gt;false&lt;/overWrite&gt;
+                                    &lt;outputDirectory&gt;${project.build.directory}&lt;/outputDirectory&gt;
+                                &lt;/artifactItem&gt;
+                            &lt;/artifactItems&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-failsafe-plugin&lt;/artifactId&gt;
+                &lt;version&gt;${maven-failsafe-plugin.version}&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;environmentVariables&gt;
+                        &lt;GLASSFISH_HOME&gt;${project.build.directory}/glassfish7&lt;/GLASSFISH_HOME&gt;
+                    &lt;/environmentVariables&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/profile&gt;
+</code></pre>
+<p>In the above configuration, we add <code>com.github.hantsy.arquillian-container-glassfish-jakarta:arquillian-glassfish-managed-jakarta</code>, which is my <a href="https://github.com/hantsy/arquillian-container-glassfish-jakarta">fork</a> of the official <a href="https://github.com/arquillian/arquillian-container-glassfish6">Arquillian Container GlassFish project</a>.</p>
+<p>Then we prepare a copy of the latest GlassFish 7.0 in the <code>pre-integration-test</code> phase. The Arquillian tests will be executed in the <code>integretion-test</code> phase.</p>
+<h3 id="creating-arquillian-tests">Creating Arquillian Tests<a class="headerlink" href="#creating-arquillian-tests" title="Permanent link">&para;</a></h3>
+<p>Let's create a simple Arquillian test to verify the UUID basic type feature in JPA 3.1.</p>
+<pre><code class="language-java">@ExtendWith(ArquillianExtension.class)
+public class UUIDStrategyTest {
+
+    private final static Logger LOGGER = Logger.getLogger(UUIDStrategyTest.class.getName());
+
+    @Deployment
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                .addClasses(Person.class, Gender.class)
+                .addAsResource(&quot;test-persistence.xml&quot;, &quot;META-INF/persistence.xml&quot;)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, &quot;beans.xml&quot;);
+    }
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Inject
+    UserTransaction ux;
+
+    @BeforeEach
+    public void before() throws Exception {
+        startTx();
+    }
+
+    private void startTx() throws Exception {
+        ux.begin();
+        em.joinTransaction();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        endTx();
+    }
+
+    private void endTx() throws Exception {
+        try {
+            if( ux.getStatus() == Status.STATUS_ACTIVE ) {
+                ux.commit();
+            }
+        } catch (Exception e) {
+            ux.rollback();
+        }
+    }
+
+    @Test
+    public void testPersistingPersons() throws Exception {
+        final Person person = new Person();
+        person.setName(&quot;Hantsy Bai&quot;);
+        em.persist(person);
+        endTx();
+
+        startTx();
+        final Person foundPerson = em.find(Person.class, person.getId());
+        assertNotNull(foundPerson.getId());
+        LOGGER.log(Level.INFO, &quot;Found person: {0}&quot;, foundPerson);
+    }
+}
+</code></pre>
+<p>The <code>@ExtendWith(ArquillianExtension.class)</code> annotation on a test class to support Arquillian test lifecycle.</p>
+<p>The <code>@Deployment</code> annotated static method defines the resources that will be packaged into the test archive and deployed into the manged GlassFish server. It is easy to use shrinkwrap to create a fine-grained deployment unit.</p>
+<p>You can inject <code>EntityManager</code> and <code>UserTransaction</code> beans in an Arquillian test like what you do in a simple CDI bean.</p>
+<p>In this test class, we setup <code>@BeforeEach</code> and <code>@AfterEach</code> hooks to start a transaction and end the transaction.</p>
+<p>The test method <code>testPersistingPersons</code> looks no difference from a plain JUnit test. Firstly we persist a person entity, and commit the transaction to ensure it will be flushed into the database as expected. Then executing a simple JPA query to verify the persisted data.</p>
+<p>Execute the following command to run the tests.</p>
+<pre><code class="language-bash">mvn clean verify -Parq-glassfish-managed
+</code></pre>
+<p>Similarly, create a test to verify the new numeric functions and datetime functions in Jakarta EE containers.</p>
+<pre><code class="language-java">@ExtendWith(ArquillianExtension.class)
+public class JPQLFunctionsTest {
+
+    private final static Logger LOGGER = Logger.getLogger(JPQLFunctionsTest.class.getName());
+
+    @Deployment
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                .addClasses(Person.class, Gender.class)
+                .addAsResource(&quot;test-persistence.xml&quot;, &quot;META-INF/persistence.xml&quot;)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, &quot;beans.xml&quot;);
+    }
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Inject
+    UserTransaction ux;
+
+    @BeforeEach
+    public void before() throws Exception {
+        clearPersons();
+        startTx();
+    }
+
+    private void clearPersons() throws Exception {
+        startTx();
+        var builder = em.getCriteriaBuilder();
+        var deletePersonQuery = builder.createCriteriaDelete(Person.class);
+        var deletedPersons = em.createQuery(deletePersonQuery).executeUpdate();
+        LOGGER.log(Level.INFO, &quot;Deleted {0} persons&quot;, deletedPersons);
+        endTx();
+    }
+
+    private void startTx() throws Exception {
+        ux.begin();
+        em.joinTransaction();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        endTx();
+    }
+
+    private void endTx() throws Exception {
+        LOGGER.log(Level.INFO, &quot;Transaction status: {0}&quot;, ux.getStatus());
+        try {
+            if (ux.getStatus() == Status.STATUS_ACTIVE) {
+                ux.commit();
+            }
+        } catch (Exception e) {
+            ux.rollback();
+        }
+    }
+
+    @Test
+    @DisplayName(&quot;&gt;&gt;&gt; test numeric functions&quot;)
+    public void testNumericFunctions() throws Exception {
+        var person = new Person(&quot;John&quot;, 30);
+        em.persist(person);
+        var id = person.getId();
+        assertNotNull(id);
+        endTx();
+
+        startTx();
+        try {
+            var queryString = &quot;&quot;&quot;
+                    SELECT p.name,
+                    CEILING(p.salary),
+                    FLOOR(p.salary),
+                    ROUND(p.salary, 1),
+                    EXP(p.yearsWorked),
+                    LN(p.yearsWorked),
+                    POWER(p.yearsWorked,2),
+                    SIGN(p.yearsWorked)
+                    FROM Person p
+                    WHERE p.id=:id
+                    &quot;&quot;&quot;;
+            var query = em.createQuery(queryString);
+
+            query.setParameter(&quot;id&quot;, id);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List&lt;Map&lt;String, Object&gt;&gt; resultList = query.getResultList();
+            LOGGER.log(Level.INFO, &quot;result size:{0}&quot;, resultList.size());
+            resultList.forEach(data -&gt; {
+                data.forEach((k, v) -&gt; LOGGER.log(Level.INFO, &quot;field:{0}, value: {1}&quot;, new Object[]{k, v}));
+            });
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+
+    @Test
+    @DisplayName(&quot;&gt;&gt;&gt; test nen datetime functions&quot;)
+    public void testDateTimeFunctions() throws Exception {
+        var person = new Person(&quot;John&quot;, 30);
+        em.persist(person);
+        assertNotNull(person.getId());
+        endTx();
+
+        startTx();
+        try {
+            var queryString = &quot;&quot;&quot;
+                    SELECT p.name as name,
+                    LOCAL TIME as localTime,
+                    LOCAL DATETIME as localDateTime,
+                    LOCAL DATE as localDate
+                    FROM Person p
+                    &quot;&quot;&quot;;
+            // for EclipseLinks
+            var query = em.createQuery(queryString);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List&lt;Map&lt;String, Object&gt;&gt; resultList = query.getResultList();
+            LOGGER.log(Level.INFO, &quot;result size:{0}&quot;, resultList.size());
+            resultList.forEach(data -&gt; {
+                data.forEach((k, v) -&gt; LOGGER.log(Level.INFO, &quot;field:{0}, value: {1}&quot;, new Object[]{k, v}));
+            });
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+
+    @Test
+    @DisplayName(&quot;&gt;&gt;&gt; test `EXTRACT` functions&quot;)
+    public void testExtractFunctions() throws Exception {
+        var person = new Person(&quot;John&quot;, 30);
+        em.persist(person);
+        assertNotNull(person.getId());
+        endTx();
+
+        startTx();
+        try {
+            var queryString = &quot;&quot;&quot;
+                    SELECT p.name as name,
+                    EXTRACT(YEAR FROM p.birthDate) as year,
+                    EXTRACT(QUARTER FROM p.birthDate) as quarter,
+                    EXTRACT(MONTH FROM p.birthDate) as month,
+                    EXTRACT(WEEK FROM p.birthDate) as week,
+                    EXTRACT(DAY FROM p.birthDate) as day,
+                    EXTRACT(HOUR FROM p.birthDate) as hour,
+                    EXTRACT(MINUTE FROM p.birthDate) as minute,
+                    EXTRACT(SECOND FROM p.birthDate) as second
+                    FROM Person p
+                    &quot;&quot;&quot;;
+            var query = em.createQuery(queryString);
+            // for EclipseLinks
+            query.setHint(QueryHints.RESULT_TYPE, ResultType.Map);
+            List&lt;Map&lt;String, Object&gt;&gt; resultList = query.getResultList();
+            LOGGER.log(Level.INFO, &quot;result size:{0}&quot;, resultList.size());
+            resultList.forEach(data -&gt; {
+                data.forEach((k, v) -&gt; LOGGER.log(Level.INFO, &quot;field:{0}, value: {1}&quot;, new Object[]{k, v}));
+            });
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+}
+</code></pre>
+<p>Alternatively, create another test to verify the new functionalities using the Criteria APIs.</p>
+<pre><code class="language-java">@ExtendWith(ArquillianExtension.class)
+public class JPQLCriteriaBuilderTest {
+
+    private final static Logger LOGGER = Logger.getLogger(JPQLCriteriaBuilderTest.class.getName());
+
+    @Deployment
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                .addClasses(Person.class, Gender.class)
+                .addAsResource(&quot;test-persistence.xml&quot;, &quot;META-INF/persistence.xml&quot;)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, &quot;beans.xml&quot;);
+    }
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Inject
+    UserTransaction ux;
+
+    @BeforeEach
+    public void before() throws Exception {
+        clearPersons();
+        startTx();
+    }
+
+    private void clearPersons() throws Exception {
+        startTx();
+        var builder = em.getCriteriaBuilder();
+        var deletePersonQuery = builder.createCriteriaDelete(Person.class);
+        var deletedPersons = em.createQuery(deletePersonQuery).executeUpdate();
+        LOGGER.log(Level.INFO, &quot;Deleted {0} persons&quot;, deletedPersons);
+        endTx();
+    }
+
+    private void startTx() throws Exception {
+        ux.begin();
+        em.joinTransaction();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        endTx();
+    }
+
+    private void endTx() throws Exception {
+        LOGGER.log(Level.INFO, &quot;Transaction status: {0}&quot;, ux.getStatus());
+        try {
+            if (ux.getStatus() == Status.STATUS_ACTIVE) {
+                ux.commit();
+            }
+        } catch (Exception e) {
+            ux.rollback();
+        }
+    }
+
+    @Test
+    @DisplayName(&quot;&gt;&gt;&gt; test numeric functions&quot;)
+    public void testNumericFunctions() throws Exception {
+        var person = new Person(&quot;John&quot;, 30);
+        em.persist(person);
+        var id = person.getId();
+        assertNotNull(id);
+        endTx();
+
+        startTx();
+        try {
+            var cb = em.getCriteriaBuilder();
+            var query = cb.createTupleQuery();
+            var root = query.from(Person.class);
+
+            query.multiselect(root.get(&quot;name&quot;),
+                    cb.ceiling(root.get(&quot;salary&quot;)),
+                    cb.floor(root.get(&quot;salary&quot;)),
+                    cb.round(root.get(&quot;salary&quot;), 1),
+                    cb.exp(root.get(&quot;yearsWorked&quot;)),
+                    cb.ln(root.get(&quot;yearsWorked&quot;)),
+                    cb.power(root.get(&quot;yearsWorked&quot;), 2),
+                    cb.sign(root.get(&quot;yearsWorked&quot;))
+            );
+            query.where(cb.equal(root.get(&quot;id&quot;), id));
+
+            var resultList = em.createQuery(query).getResultList();
+            LOGGER.log(Level.INFO, &quot;result size:{0}&quot;, resultList.size());
+            resultList.forEach(result -&gt;
+                    LOGGER.log(
+                            Level.INFO,
+                            // see: https://github.com/eclipse-ee4j/eclipselink/issues/1593
+                            // John,12,345,12,345,12,345,7.389,0.693,4,1
+                            &quot;tuple data :{0},{1},{2},{3},{4},{5},{6},{7}&quot;,
+                            new Object[]{
+                                    result.get(0, String.class),
+                                    result.get(1, BigDecimal.class), // it should return BigDecimal
+                                    result.get(2, BigDecimal.class),
+                                    result.get(3, BigDecimal.class),
+                                    result.get(4, Double.class),
+                                    result.get(5, Double.class),
+                                    result.get(6, Double.class),
+                                    result.get(7, Integer.class)
+                            }
+                    )
+            );
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+
+    @Test
+    @DisplayName(&quot;&gt;&gt;&gt; test nen datetime functions&quot;)
+    public void testDateTimeFunctions() throws Exception {
+        var person = new Person(&quot;John&quot;, 30);
+        em.persist(person);
+        var id = person.getId();
+        assertNotNull(id);
+        endTx();
+
+        startTx();
+        try {
+            var cb = em.getCriteriaBuilder();
+            var query = cb.createTupleQuery();
+            var root = query.from(Person.class);
+
+            query.multiselect(root.get(&quot;name&quot;),
+                    cb.localTime(),
+                    cb.localDateTime(),
+                    cb.localDate()
+            );
+            query.where(cb.equal(root.get(&quot;id&quot;), id));
+
+            var resultList = em.createQuery(query).getResultList();
+            LOGGER.log(Level.INFO, &quot;result size:{0}&quot;, resultList.size());
+            resultList.forEach(data -&gt;
+                    LOGGER.log(
+                            Level.INFO,
+                            &quot;tuple data :{0},{1},{2},{3}&quot;,
+                            new Object[]{
+                                    data.get(0, String.class),
+                                    data.get(1, java.time.LocalTime.class),
+                                    data.get(2, java.time.LocalDateTime.class),
+                                    data.get(3, java.time.LocalDate.class)
+                            }
+                    )
+            );
+        } catch (Exception ex) {
+            fail(ex);
+        }
+    }
+}
+</code></pre>
+<p>But unfortunately, there is a bug in the GlassFish 7.0.0-M9 will fail the test <code>JPQLFunctionsTest</code>, more details please check Github issues <a href="https://github.com/eclipse-ee4j/glassfish/issues/24120">GlassFish #24120</a>.</p>
+<p>Get a copy of <a href="https://github.com/hantsy/jakartaee10-sandbox/tree/master/jpa">sample codes</a> from my github and experience yourself.</p>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      Last update:
+      2023-11-26
+    
+  </small>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy;2022 Hantsy
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/hantsy" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://linkedin.com/in/hantsy" target="_blank" rel="noopener" title="linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://medium.com/@hantsy" target="_blank" rel="noopener" title="medium.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M180.5 74.262C80.813 74.262 0 155.633 0 256s80.819 181.738 180.5 181.738S361 356.373 361 256 280.191 74.262 180.5 74.262Zm288.25 10.646c-49.845 0-90.245 76.619-90.245 171.095s40.406 171.1 90.251 171.1 90.251-76.619 90.251-171.1H559c0-94.503-40.4-171.095-90.248-171.095Zm139.506 17.821c-17.526 0-31.735 68.628-31.735 153.274s14.2 153.274 31.735 153.274S640 340.631 640 256c0-84.649-14.215-153.271-31.742-153.271Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hantsy" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "navigation.expand", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.6c14ae12.min.js"></script>
+      
+    
+  </body>
+</html>
