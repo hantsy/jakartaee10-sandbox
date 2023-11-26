@@ -228,7 +228,7 @@ mvn clean package cargo:run
 
 Now open a browser and navigate to [http://localhost:8080/faces-examples/hello-facelet.xhtml](http://localhost:8080/faces-examples/hello-facelet.xhtml).
 
-![hello-facelets](./faces-hello-facelets.png)
+![hello-facelets](./faces-hello-facelet.png)
 
 Input your name in the input box, and you will see the screen similar to the above image.
 
