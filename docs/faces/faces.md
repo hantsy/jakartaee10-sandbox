@@ -1,7 +1,4 @@
 
-
-
-
 # New Features and Improvements
 
 Next let's explore the changes in Faces 4.0.
@@ -106,12 +103,12 @@ Now execute the following command to run the applicaion on GlassFish.
 ...
 [INFO] Building war: D:\hantsylabs\jakartaee10-sandbox\faces\target\faces-examples.war
 [INFO]
-[INFO] --- cargo-maven3-plugin:1.10.4:run (default-cli) @ faces-examples ---
-[INFO] [en3.ContainerRunMojo] Resolved container artifact org.codehaus.cargo:cargo-core-container-glassfish:jar:1.10.4 for container glassfish7x
-[INFO] [talledLocalContainer] Parsed GlassFish version = [7.0.1]
-[INFO] [talledLocalContainer] GlassFish 7.0.1 starting...
+[INFO] --- cargo-maven3-plugin:1.10.10:run (default-cli) @ faces-examples ---
+[INFO] [en3.ContainerRunMojo] Resolved container artifact org.codehaus.cargo:cargo-core-container-glassfish:jar:1.10.10 for container glassfish7x
+[INFO] [talledLocalContainer] Parsed GlassFish version = [7.0.10]
+[INFO] [talledLocalContainer] GlassFish 7.0.10 starting...
 [INFO] [talledLocalContainer] Attempting to start cargo-domain.... Please look at the server log for more details.....
-[INFO] [talledLocalContainer] GlassFish 7.0.1 started on port [8080]
+[INFO] [talledLocalContainer] GlassFish 7.0.10 started on port [8080]
 [INFO] Press Ctrl-C to stop the container...
 ```
 
@@ -123,17 +120,144 @@ Open a web browser and navigate to <http://localhost:8080/faces-examples/hello>.
 
 Input anything in the text input field and click the **Say Hello** button. You will see a greeting message displayed as the above image.
 
-## Writing Facelets in Java
+## Composing Facelets View in Java Codes
 
-In the previous version, Facelets view is a standard XHTML file. Since Faces 4.0, it is easy to compose a Faceslets view in pure Java codes.
+In the previous version, Facelets view is a standard XHTML file. Since Faces 4.0, it is possible to compose a Faceslets view in pure Java codes.
 
 The following is an example of writing Facelets view in Java.
 
 ```java
-@View("/hello-facelet")
+@View("/hello-facelet.xhtml")
 @ApplicationScoped
 public class HelloFacelet extends Facelet {
     private static final Logger LOGGER = Logger.getLogger(HelloFacelet.class.getName());
+
+    @Override
+    public void apply(FacesContext facesContext, UIComponent root) throws IOException {
+        if (!facesContext.getAttributes().containsKey(IS_BUILDING_INITIAL_STATE)) {
+            return;
+        }
+
+        ComponentBuilder components = new ComponentBuilder(facesContext);
+        List<UIComponent> rootChildren = root.getChildren();
+
+        UIOutput output = new UIOutput();
+        output.setValue("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+        rootChildren.add(output);
+
+        HtmlBody body = components.create(HtmlBody.COMPONENT_TYPE);
+        rootChildren.add(body);
+
+        var title = new UIOutput();
+        title.setValue("<h1>Facelets View written in Java</h1>");
+        body.getChildren().add(title);
+
+        HtmlForm form = components.create(HtmlForm.COMPONENT_TYPE);
+        form.setId("form");
+        form.setPrependId(false);
+        body.getChildren().add(form);
+
+        HtmlOutputText message = components.create(HtmlOutputText.COMPONENT_TYPE);
+        message.setId("message");
+        //form.getChildren().add(message); // add to the bottom of form
+
+        HtmlOutputLabel label = components.create(HtmlOutputLabel.COMPONENT_TYPE);
+        label.setValue("Enter your name");
+        form.getChildren().add(label);
+
+        HtmlInputText name = components.create(HtmlInputText.COMPONENT_TYPE);
+        name.setId("name");
+        form.getChildren().add(name);
+
+        HtmlCommandButton actionButton = components.create(HtmlCommandButton.COMPONENT_TYPE);
+        actionButton.setId("button");
+        actionButton.addActionListener(e -> {
+                    LOGGER.log(Level.INFO, "local value: {0}", name.getLocalValue());
+                    LOGGER.log(Level.INFO, "name value: {0}", name.getValue());
+                    LOGGER.log(Level.INFO, "submitted value: {0}", name.getSubmittedValue());
+                    var hello = "Hello," + name.getValue();
+                    message.setValue(hello);
+                }
+        );
+        actionButton.setValue("Say Hello");
+        form.getChildren().add(actionButton);
+
+        var br = new UIOutput();
+        br.setValue("<br/>");
+        form.getChildren().add(br);
+        form.getChildren().add(message);
+
+        output = new UIOutput();
+        output.setValue("</html>");
+        rootChildren.add(output);
+    }
+
+    private static class ComponentBuilder {
+        FacesContext facesContext;
+
+        ComponentBuilder(FacesContext facesContext) {
+            this.facesContext = facesContext;
+        }
+
+        @SuppressWarnings("unchecked")
+        <T> T create(String componentType) {
+            return (T) facesContext.getApplication().createComponent(facesContext, componentType, null);
+        }
+    }
+}
+```
+
+As you see, `HelloFacelet` view class is consist of the following facilities.
+
+* Annotate with a `@View` annotation to specify the view id
+* Extends `Facelet` and implements optional methods, one for setup Faces metadata, one for assembling the view content.
+* Add a `@ApplicationScoped` to declare it as CDI bean, thus means you can inject any CDI beans as you want in this class.
+
+In the above `HelloFacelet`, in the submit button event listener, it reads the value from input component `name`, and set the greeting message to the value of `message` component directly.
+
+Now build and run the application.
+
+```bash
+mvn clean package cargo:run
+...
+[INFO] --- cargo:1.10.10:run (default-cli) @ faces-examples ---
+...
+[INFO] [talledLocalContainer] GlassFish 7.0.10 started on port [8080]
+[INFO] Press Ctrl-C to stop the container...
+```
+
+Now open a browser and navigate to <http://localhost:8080/faces-examples/hello-facelet.xhtml>.
+
+![hello-facelets](./faces-hello-facelets.png)
+
+Input your name in the input box, and you will see the screen similar to the above image.
+
+Alternatively, like regular XHTML Facelet view, we can use *expression language* to bind a this Facelet view to a backend bean.
+
+```java
+package com.example;
+
+import jakarta.el.ELContext;
+import jakarta.el.ExpressionFactory;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.annotation.View;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.component.html.*;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.facelets.Facelet;
+import jakarta.inject.Inject;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static jakarta.faces.application.StateManager.IS_BUILDING_INITIAL_STATE;
+
+@View("/hello-facelet2.xhtml")
+@ApplicationScoped
+public class HelloFacelet2 extends Facelet {
+    private static final Logger LOGGER = Logger.getLogger(HelloFacelet2.class.getName());
 
     @Inject
     Hello hello;
@@ -158,7 +282,7 @@ public class HelloFacelet extends Facelet {
         rootChildren.add(body);
 
         var title = new UIOutput();
-        title.setValue("<h1>Facelets View written in Java</h1>");
+        title.setValue("<h1>Facelets View written in Java(using EL value/method binding)</h1>");
         body.getChildren().add(title);
 
         HtmlForm form = components.create(HtmlForm.COMPONENT_TYPE);
@@ -168,28 +292,24 @@ public class HelloFacelet extends Facelet {
 
         HtmlOutputText message = components.create(HtmlOutputText.COMPONENT_TYPE);
         message.setId("message");
-        form.getChildren().add(message);
+        message.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{hello.message}", String.class));
+        //form.getChildren().add(message);
 
-        HtmlInputText input = components.create(HtmlInputText.COMPONENT_TYPE);
-        input.setRendered(true);
-        input.setLabel("Name");
-        input.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{hello.name}", String.class));
-        form.getChildren().add(input);
+        HtmlInputText name = components.create(HtmlInputText.COMPONENT_TYPE);
+        name.setId("name");
+        name.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{hello.name}", String.class));
+        form.getChildren().add(name);
 
         HtmlCommandButton actionButton = components.create(HtmlCommandButton.COMPONENT_TYPE);
         actionButton.setId("button");
-        actionButton.addActionListener(e -> {
-                    LOGGER.log(Level.INFO, "local value: {0}", input.getLocalValue());
-                    LOGGER.log(Level.INFO, "input value: {0}", input.getValue());
-                    LOGGER.log(Level.INFO, "submitted value: {0}", input.getSubmittedValue());
-                    LOGGER.log(Level.INFO, "value binding: {0}", new Object[]{input.getValueExpression("value").getValue(elContext)});
-
-                    hello.createMessage();
-                    message.setValueExpression("value", expressionFactory.createValueExpression(elContext, "#{hello.message}", String.class));
-                }
-        );
+        actionButton.setActionExpression(expressionFactory.createMethodExpression(elContext, "#{hello.createMessage()}", Void.class, null));
         actionButton.setValue("Say Hello");
         form.getChildren().add(actionButton);
+
+        var br = new UIOutput();
+        br.setValue("<br/>");
+        form.getChildren().add(br);
+        form.getChildren().add(message);
 
         output = new UIOutput();
         output.setValue("</html>");
@@ -211,16 +331,137 @@ public class HelloFacelet extends Facelet {
 }
 ```
 
-As you see, the `HelloFacelet` extends `Facelet` and annotate with a `@View` annotation to specify the view path.
+Here, we bind the input component value to `Hello.name`, and bind submit event listener to call method expression `hello.createMessage`. 
 
-In the `HelloFacelet`, it injects the backed bean `Hello`, in the button event listener, it calls `Hello.createMessage` method to update message in view.
+Rerun the application, navigate to  <http://localhost:8080/faces-examples/hello-facelet.xhtml> in your browser.
 
-Now build and run the application.
+Input your name, you will see the following screen.
 
-```bash
-mvn clean package cargo:run
+![hello-facelet2](./faces-hello-facelet2.png)
+
+> I tried to access the Java Facelet view without extension, it does not work, see issue: https://github.com/eclipse-ee4j/mojarra/issues/5362
+
+## New Scope: ClientWindowScoped
+
+Faces 4.0 introduce a new CDI compatiable scope, a bean annotated with `@ClientWindowScoped` will be persist since the browser window/tab is open and will be destroyed till the window/tab is closed.
+
+Add the `jakarta.faces.CLIENT_WINDOW_MODE` to enable `ClientWindowScoped` support. The value `url` means it will append a query param `jfwid` to identify the current window.
+
+```xml
+<context-param>
+    <param-name>jakarta.faces.CLIENT_WINDOW_MODE</param-name>
+    <param-value>url</param-value>
+</context-param>
+```     
+You can configure `jakarta.faces.NUMBER_OF_CLIENT_WINDOWS` to specify the maximum windows number that is allowed to create in a client.
+
+```xml
+<context-param>
+    <param-name>jakarta.faces.NUMBER_OF_CLIENT_WINDOWS</param-name>
+    <param-value>50</param-value> <!-- default is 10 -->
+</context-param>
 ```
 
-Now open a browser and navigate to <http://localhost:8080/faces-examples/hello-facelet.xhtml>.
+Let's create an example to experience.
 
-![hello-facelets](./faces-hello-facelets.png)
+```java
+@Named
+@ClientWindowScoped
+public class Chat implements Serializable {
+
+    private static final Logger LOGGER = Logger.getLogger(Chat.class.getName());
+    private List<String> messages;
+
+    private String newMessage;
+
+    public void send() {
+        if(this.messages == null) {
+            this.messages = new ArrayList<>();
+        }
+
+        var hello = newMessage +" at "+ LocalDateTime.now();
+        this.messages.add(hello);
+
+        LOGGER.log(Level.INFO, "current message list: {0}", this.messages);
+        this.newMessage = null;
+    }
+
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
+    }
+
+    public String getNewMessage() {
+        return newMessage;
+    }
+
+    public void setNewMessage(String newMessage) {
+        this.newMessage = newMessage;
+    }
+}
+```
+In the above codes,
+* The `@Named` allows the bean is accessed by name `chat` in the Facelet view.
+* It is annotated with `@ClientWindowScoped`, and implements `Serializable` interface.
+
+Let's have a look at the view */chat.xhtml*.
+
+```xhtml
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html">
+<f:view>
+    <h:head>
+        <title>Chat Box </title>
+    </h:head>
+    <h:body>
+        <h1>Faces 4.0: Chat Box</h1>
+        <h:form prependId="false">
+            <label jsf:for="newMessage" jsf:required="true">Enter your message:</label>
+            <input type="text"
+                   jsf:id="newMessage"
+                   jsf:value="#{chat.newMessage}"
+                   jsf:required="true"
+                   jsf:requiredMessage="New message is required."
+                   placeholder="Type your message here..."
+                   autofocus="true"
+            />
+            <h:message for="newMessage"/>
+            <br/>
+            <input type="submit" jsf:id="submit" value="Send NOW" jsf:action="#{chat.send()}">
+<!--                <f:ajax execute="@form" render="@form"/>-->
+            </input>
+            <br/>
+            <p id="message">
+                <ul>
+                    <ui:repeat value="#{chat.messages}" var="m">
+                       <li>
+                           #{m}
+                       </li>
+                    </ui:repeat>
+                </ul>
+            </p>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
+```
+
+Run the application, and navigate to http://localhost:8080/faces-examples/chat, you will the following screen.
+
+![chat](./faces-clientwindowscoped.png)
+
+Try to input some message in the input box and hit send button, it will be displayed in the message list.
+
+Try to open a new tab in the browser, and go to http://localhost:8080/faces-examples/chat, you will there is a new window for the chat, there is no existing messages, and input some message, you will find the `jfwid` is different from the first window.
+
+>When I enabled ajax on the submit button in the view, there is no jfwid param appended to the URL in the browser window .
+
+>And for those Facelets written in Java codes, all URL are appended a jfwid param, see issue:
