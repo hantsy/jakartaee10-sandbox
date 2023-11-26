@@ -19,11 +19,12 @@
                    jsf:required="true"
                    jsf:requiredMessage="New message is required."
                    placeholder="Type your message here..."
+                   autofocus="true"
             />
             <h:message for="newMessage"/>
             <br/>
             <input type="submit" jsf:id="submit" value="Send NOW" jsf:action="#{chat.send()}">
-                <f:ajax execute="@form" render="@form"/>
+<!--                <f:ajax execute="@form" render="@form"/>-->
             </input>
             <br/>
             <p id="message">
