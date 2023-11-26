@@ -1,7 +1,7 @@
 
 # New Features and Improvements
 
-Next let's explore the changes in Faces 4.0.
+Next let's explore the amazing new features introduced in Faces 4.0.
 
 ## Extensionless Mapping
 
@@ -232,7 +232,7 @@ Now open a browser and navigate to <http://localhost:8080/faces-examples/hello-f
 
 Input your name in the input box, and you will see the screen similar to the above image.
 
-Alternatively, like regular XHTML Facelet view, we can use *expression language* to bind a this Facelet view to a backend bean.
+Alternatively, like regular XHTML Facelet view, we can use *expression language* to bind the input value and method in this Facelet view to a backend bean.
 
 ```java
 package com.example;
@@ -331,15 +331,15 @@ public class HelloFacelet2 extends Facelet {
 }
 ```
 
-Here, we bind the input component value to `Hello.name`, and bind submit event listener to call method expression `hello.createMessage`. 
+Here, we bind the input component value to a value expression `Hello.name`, and bind submit event listener to a method expression `hello.createMessage`. 
 
-Rerun the application, navigate to  <http://localhost:8080/faces-examples/hello-facelet.xhtml> in your browser.
+Rerun the application, navigate to <http://localhost:8080/faces-examples/hello-facelet.xhtml> in your browser.
 
-Input your name, you will see the following screen.
+Input your name, you will see the screen similar to the following.
 
 ![hello-facelet2](./faces-hello-facelet2.png)
 
-> I tried to access the Java Facelet view without extension, it does not work, see issue: https://github.com/eclipse-ee4j/mojarra/issues/5362
+> I try to access the Java Facelet view via the URL without an extension, it does not work, see issue: https://github.com/eclipse-ee4j/mojarra/issues/5362
 
 ## New Scope: ClientWindowScoped
 
@@ -454,14 +454,136 @@ Let's have a look at the view */chat.xhtml*.
 </html>
 ```
 
-Run the application, and navigate to http://localhost:8080/faces-examples/chat, you will the following screen.
+Build and run the application.
+
+```bash
+mvn clean package cargo:run
+```
+
+Open a browser and navigate to http://localhost:8080/faces-examples/chat, you will the following screen.
 
 ![chat](./faces-clientwindowscoped.png)
 
-Try to input some message in the input box and hit send button, it will be displayed in the message list.
+Try to type something in the input box and hit send button, the new message will be appended to in the existing message list.
 
-Try to open a new tab in the browser, and go to http://localhost:8080/faces-examples/chat, you will there is a new window for the chat, there is no existing messages, and input some message, you will find the `jfwid` is different from the first window.
+Try to open a new tab in the browser, and go to http://localhost:8080/faces-examples/chat, you will there is a new window for the chat conversation, there is no existing messages, and input some message, you will find a new `jfwid` in the URL is used for this new window.
 
->When I enabled ajax on the submit button in the view, there is no jfwid param appended to the URL in the browser window .
+>When I enabled ajax on the submit button in the view, there is no jfwid param appended to the URL in the browser window, see issue: https://github.com/eclipse-ee4j/mojarra/issues/5366
 
->And for those Facelets written in Java codes, all URL are appended a jfwid param, see issue:
+>And for those Facelet views written in Java codes, all URL are appended a jfwid param, see issue: https://github.com/eclipse-ee4j/mojarra/issues/5365
+
+## Input File Component Improvement
+
+The new input file component add two new attributes, `accept` and `multiple`.
+* The `accept` can limit the upload file types.
+* The `multiple="true"` allows you to upload multiple files at the same time.
+
+Let's create an example to experience.
+
+Firstly let's have a look at the Facelet view file - *inputFiles.xhtml*.
+
+```xhtml
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html">
+<f:view>
+    <h:head>
+        <title>New attribute `accept` and `multiple` in inputFile tag!</title>
+    </h:head>
+    <h:body>
+        <h1>New attribute `accept` and `multiple` in inputFile tag!</h1>
+        <h:form prependId="false" enctype="multipart/form-data">
+            <label jsf:for="files">Upload files:</label>
+            <h:inputFile
+                    multiple="true"
+                    accept="image/png,image/jpeg,image/gif"
+                    id="files"
+                    value="#{inputFiles.files}"
+                    required="true"
+                    requiredMessage="Files is required."
+                    placeholder="Choose files from Disk..."
+            />
+            <h:message for="files"/>
+            <br/>
+            <input type="submit" jsf:id="submit" value="Upload Now" jsf:action="#{inputFiles.submit()}">
+            </input>
+            <br/>
+            <p>#{inputFiles.uploadedFiles}</p>
+            <h:message globalOnly="true" showSummary="true"></h:message>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
+```
+The backend bean - *InputFiles.java*.
+
+```java
+
+@Named
+@RequestScoped
+public class InputFiles {
+    private static final Logger LOGGER = Logger.getLogger(InputFiles.class.getSimpleName());
+
+    @Inject
+    FacesContext facesContext;
+
+    private List<Part> files;
+
+    private List<String> uploadedFiles = new ArrayList<>();
+
+    public List<Part> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<Part> files) {
+        this.files = files;
+    }
+
+    public List<String> getUploadedFiles() {
+        return uploadedFiles;
+    }
+
+    public void submit() {
+        LOGGER.log(Level.INFO, "uploaded file size:{0}", files.size());
+        for (Part part : files) {
+            String submittedFilename = part.getSubmittedFileName();
+            String name = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+            long size = part.getSize();
+            String contentType = part.getContentType();
+            LOGGER.log(Level.INFO, "uploaded file: submitted filename: {0}, name:{1}, size:{2}, content type: {3}", new Object[]{
+                    submittedFilename, name, size, contentType
+            });
+
+            part.getHeaderNames()
+                    .forEach(headerName ->
+                            LOGGER.log(Level.INFO, "header name: {0}, value: {1}", new Object[]{
+                                    headerName, part.getHeader(headerName)
+                            })
+                    );
+
+            uploadedFiles.add(submittedFilename);
+            facesContext.addMessage(null, new FacesMessage(name + " was uploaded successfully!"));
+        }
+    }
+
+}
+```
+
+Build and run the application.
+
+```bash
+mvn clean package cargo:run
+```
+
+Open a browser and navigate to http://localhost:8080/faces-examples/inputFiles.
+
+![InputFiles](./faces-upload1.png)
+
+Click the button *Choose Files*, it will open the system file chooser, which has already filter the files by type that set in the `accept` attribute.
+
+Choose some files, and press the *Upload Now* button. You wil see the following messages in the screen.
+
+![InputFiles 2](./faces-upload2.png)
