@@ -35,7 +35,7 @@
         <logback.version>1.4.14</logback.version>
         <lombok.version>1.18.30</lombok.version>
         <!-- requires 6.1.2.Final or higher -->
-        <hibernate.version>6.4.0.Final</hibernate.version>
+        <hibernate.version>6.4.1.Final</hibernate.version>
         <h2.version>2.2.224</h2.version>
 
         <!-- Arquillian BOM -->
