@@ -52,7 +52,7 @@
 
         <!-- WildFly -->
         <wildfly.version>30.0.0.Final</wildfly.version>
-        <wildfly-maven-plugin.version>4.2.1.Final</wildfly-maven-plugin.version>
+        <wildfly-maven-plugin.version>5.0.0.Final</wildfly-maven-plugin.version>
         <resteasy.version>6.2.7.Final</resteasy.version>
 
         <!-- by default skip tests -->
