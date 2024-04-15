@@ -268,7 +268,7 @@ under the License.
                                         <artifactItem>
                                             <groupId>org.eclipse.persistence</groupId>
                                             <artifactId>org.eclipse.persistence.asm</artifactId>
-                                            <version>9.4.0</version>
+                                            <version>9.7.0</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                         </artifactItem>
